@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>C++ Primer | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="整理C++常用的知识点, 内容来自技术博客和相关书籍  参考书 : C++ Primer 中文版（第5版）">
+<meta name="keywords" content="C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ Primer">
+<meta property="og:url" content="http://simtalk.cn/2016/08/18/CppPrimer/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="整理C++常用的知识点, 内容来自技术博客和相关书籍  参考书 : C++ Primer 中文版（第5版）">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++ Primer">
+<meta name="twitter:description" content="整理C++常用的知识点, 内容来自技术博客和相关书籍  参考书 : C++ Primer 中文版（第5版）">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-CppPrimer" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/18/CppPrimer/" class="article-date">
+  	<time datetime="2016-08-18T11:06:36.000Z" itemprop="datePublished">2016-08-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      C++ Primer
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/笔记/">笔记</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#引用与指针"><span class="toc-text">引用与指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造函数"><span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#g-的安装与编译"><span class="toc-text">g++的安装与编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译源代码"><span class="toc-text">编译源代码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译指令"><span class="toc-text">编译指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#建议"><span class="toc-text">建议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#文件重定向"><span class="toc-text">文件重定向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#函数重载的底层实现"><span class="toc-text">函数重载的底层实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#引用"><span class="toc-text">引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#左值"><span class="toc-text">左值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类"><span class="toc-text">类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#迭代器"><span class="toc-text">迭代器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#const"><span class="toc-text">const</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构造函数-1"><span class="toc-text">构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见问题"><span class="toc-text">常见问题</span></a></li></ol>
+        </div>
+        
+        <p>整理C++常用的知识点, 内容来自技术博客和相关书籍</p>
+<blockquote>
+<p>参考书 : <a href="https://book.douban.com/subject/25708312/" target="_blank" rel="noopener">C++ Primer 中文版（第5版）</a></p>
+</blockquote>
+<a id="more"></a>
+<blockquote>
+<p>优秀博文:</p>
+</blockquote>
+<ul>
+<li><p><a href="http://chenqx.github.io/2014/09/25/Cpp-Memory-Management/" target="_blank" rel="noopener">C/C++内存管理详解</a></p>
+</li>
+<li><p><a href="http://www.cnblogs.com/Joe-BM/articles/2613245.html" target="_blank" rel="noopener">C++类型安全</a></p>
+</li>
+<li><p><a href="http://www.cnblogs.com/webary/p/4731457.html" target="_blank" rel="noopener">关于C++虚函数表的那些事儿</a></p>
+</li>
+<li><p><a href="http://www.cnblogs.com/webary/p/4754522.html" target="_blank" rel="noopener">struct/class等内存字节对齐问题详解</a></p>
+</li>
+<li><p><a href="https://www.devbean.net/2014/02/cpp-create-object-on-heap-or-stack/" target="_blank" rel="noopener">C++：在堆上创建对象，还是在栈上？</a></p>
+</li>
+<li><a href="http://www.cnblogs.com/fuzhe1989/p/3554345.html" target="_blank" rel="noopener">C++总结：C++中的const和constexpr</a></li>
+</ul>
+<h3 id="引用与指针"><a href="#引用与指针" class="headerlink" title="引用与指针"></a><strong>引用与指针</strong></h3><p>引用是C++中的概念，程序中，n是m的一个引用（reference），m是被引用物（referent）。<br><code>int m;</code><br><code>int &amp;n = m;</code><br>n相当于m的别名（绰号），对n的任何操作就是对m的操作, 所以n既不是m的拷贝，也不是指向m的指针，其实n就是m它自己。 </p>
+<p><strong>引用的规则：</strong> </p>
+<p>（1）引用被创建的同时必须被初始化（指针则可以在任何时候被初始化）。<br>（2）不能有NULL引用，引用必须与合法的存储单元关联（指针则可以是NULL）。<br>（3）一旦引用被初始化，就不能改变引用的关系（指针则可以随时改变所指的对象）。 </p>
+<p>以下示例程序中，k被初始化为i的引用。<br>语句k = j并不能将k修改成为j的引用，只是把k的值改变成为6。<br>由于k是i的引用，所以i的值也变成了6。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int i = 5; </span><br><span class="line">int j = 6; </span><br><span class="line">int &amp;k = i; </span><br><span class="line">k = j; // k和i的值都变成了6;</span><br></pre></td></tr></table></figure></p>
+<p><strong>引用的主要功能是传递函数的参数和返回值。</strong> </p>
+<p>C++语言中，函数的参数和返回值的传递方式有三种：<strong>值传递、指针传递和引用传递</strong> </p>
+<p>以下是”值传递”的示例程序: </p>
+<p>由于Func1函数体内的x是外部变量n的一份拷贝，改变x的值不会影响n, 所以n的值仍然是0。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">void Func1(int x) </span><br><span class="line">&#123; </span><br><span class="line">x = x + 10; </span><br><span class="line">&#125; </span><br><span class="line">int n = 0; </span><br><span class="line">Func1(n); </span><br><span class="line">cout &lt;&lt; &quot;n = &quot; &lt;&lt; n &lt;&lt; endl; // n = 0</span><br></pre></td></tr></table></figure></p>
+<p>以下是”指针传递”的示例程序:<br>由于Func2函数体内的x是指向外部变量n的指针，改变该指针的内容将导致n的值改变，所以n的值成为10。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void Func2(int *x) </span><br><span class="line">&#123; </span><br><span class="line">(* x) = (* x) + 10; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">int n = 0; </span><br><span class="line">Func2(&amp;n); </span><br><span class="line">cout &lt;&lt; &quot;n = &quot; &lt;&lt; n &lt;&lt; endl; // n = 10</span><br></pre></td></tr></table></figure></p>
+<p>以下是”引用传递”的示例程序: </p>
+<p>由于Func3函数体内的x是外部变量n的引用，x和n是同一个东西，改变x等于改变n，所以n的值成为10。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">void Func3(int &amp;x) </span><br><span class="line">&#123; </span><br><span class="line">x = x + 10; </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">int n = 0; </span><br><span class="line">Func3(n); </span><br><span class="line">cout &lt;&lt; &quot;n = &quot; &lt;&lt; n &lt;&lt; endl; // n = 10</span><br></pre></td></tr></table></figure></p>
+<p>对比上述三个示例程序，会发现”引用传递”的性质象”指针传递”，而书写方式象”值传递”。 </p>
+<h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a><strong>构造函数</strong></h3><p><strong>构造函数作用</strong></p>
+<ul>
+<li>构造函数的作用：初始化对象的数据成员</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Counter</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="comment">// 类Counter的构造函数</span></span><br><span class="line">        <span class="comment">// 特点：以类名作为函数名，无返回类型</span></span><br><span class="line">        Counter()</span><br><span class="line">        &#123;</span><br><span class="line">            m_value = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="comment">// 数据成员</span></span><br><span class="line">      <span class="keyword">int</span> m_value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建类的实例</span></span><br><span class="line">Counter c1;</span><br></pre></td></tr></table></figure>
+<p>编译系统为对象c1的每个数据成员(m_value)分配内存空间，并调用构造函数Counter()自动地初始化对象c1的m_value值设置为0</p>
+<p><strong>构造函数的种类</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Complex</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> :</span><br><span class="line">    <span class="keyword">double</span> m_real;</span><br><span class="line">    <span class="keyword">double</span> m_imag;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 无参数构造函数</span></span><br><span class="line">    <span class="comment">// 如果创建一个类你没有写任何构造函数,则系统会自动生成默认的无参构造函数，函数为空，什么都不做</span></span><br><span class="line">    <span class="comment">// 只要你写了一个下面的某一种构造函数，系统就不会再自动生成这样一个默认的构造函数，如果希望有一个这样的无参构造函数，则需要自己显示地写出来</span></span><br><span class="line">    Complex(<span class="keyword">void</span>)</span><br><span class="line">    &#123;</span><br><span class="line">         m_real = <span class="number">0.0</span>;</span><br><span class="line">         m_imag = <span class="number">0.0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 一般构造函数（也称重载构造函数）</span></span><br><span class="line">    <span class="comment">// 一般构造函数可以有各种参数形式,一个类可以有多个一般构造函数，前提是参数的个数或者类型不同（基于c++的重载函数原理）</span></span><br><span class="line">    <span class="comment">// 例如：你还可以写一个 Complex( int num)的构造函数出来</span></span><br><span class="line">    <span class="comment">// 创建对象时根据传入的参数不同调用不同的构造函数</span></span><br><span class="line">    Complex(<span class="keyword">double</span> real, <span class="keyword">double</span> imag)</span><br><span class="line">    &#123;</span><br><span class="line">         m_real = real;</span><br><span class="line">         m_imag = imag;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 复制构造函数（也称为拷贝构造函数）</span></span><br><span class="line">    <span class="comment">// 复制构造函数参数为类对象本身的引用，用于根据一个已存在的对象复制出一个新的该类的对象，一般在函数中会将已存在对象的数据成员的值复制一份到新创建的对象中</span></span><br><span class="line">    <span class="comment">// 若没有显示的写复制构造函数，则系统会默认创建一个复制构造函数，但当类中有指针成员时，由系统默认创建该复制构造函数会存在风险，具体原因请查询有关 “浅拷贝” 、“深拷贝”的文章论述</span></span><br><span class="line">    Complex(<span class="keyword">const</span> Complex &amp; c)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 将对象c中的数据成员值复制过来</span></span><br><span class="line">        m_real = c.m_real;</span><br><span class="line">        m_img  = c.m_img;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 类型转换构造函数，根据一个指定的类型的对象创建一个本类的对象</span></span><br><span class="line">    <span class="comment">// 例如：下面将根据一个double类型的对象创建了一个Complex对象</span></span><br><span class="line">    Complex::Complex(<span class="keyword">double</span> r)</span><br><span class="line">    &#123;</span><br><span class="line">        m_real = r;</span><br><span class="line">        m_imag = <span class="number">0.0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 等号运算符重载</span></span><br><span class="line">    <span class="comment">// 注意，这个类似复制构造函数，将=右边的本类对象的值复制给等号左边的对象，它不属于构造函数，等号左右两边的对象必须已经被创建</span></span><br><span class="line">    <span class="comment">// 若没有显示的写=运算符重载，则系统也会创建一个默认的=运算符重载，只做一些基本的拷贝工作</span></span><br><span class="line">    Complex &amp;<span class="keyword">operator</span>=(<span class="keyword">const</span> Complex &amp;rhs)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 首先检测等号右边的是否就是左边的对象本，若是本对象本身,则直接返回</span></span><br><span class="line">        <span class="keyword">if</span> ( <span class="keyword">this</span> == &amp;rhs )</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 复制等号右边的成员到左边的对象中</span></span><br><span class="line">        <span class="keyword">this</span>-&gt;m_real = rhs.m_real;</span><br><span class="line">        <span class="keyword">this</span>-&gt;m_imag = rhs.m_imag;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 把等号左边的对象再次传出</span></span><br><span class="line">        <span class="comment">// 目的是为了支持连等 eg:    a=b=c 系统首先运行 b=c</span></span><br><span class="line">        <span class="comment">// 然后运行 a= ( b=c的返回值,这里应该是复制c值后的b对象)</span></span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 调用了无参构造函数，数据成员初值被赋为0.0</span></span><br><span class="line">    Complex c1，c2;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用一般构造函数，数据成员初值被赋为指定值</span></span><br><span class="line">    <span class="function">Complex <span class="title">c3</span><span class="params">(<span class="number">1.0</span>,<span class="number">2.5</span>)</span></span>;</span><br><span class="line">    <span class="comment">// 也可以使用下面的形式</span></span><br><span class="line">    Complex c3 = Complex(<span class="number">1.0</span>,<span class="number">2.5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 把c3的数据成员的值赋值给c1</span></span><br><span class="line">    <span class="comment">// 由于c1已经事先被创建，故此处不会调用任何构造函数</span></span><br><span class="line">    <span class="comment">// 只会调用 = 号运算符重载函数</span></span><br><span class="line">    c1 = c3;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用类型转换构造函数</span></span><br><span class="line">    <span class="comment">// 系统首先调用类型转换构造函数，将5.2创建为一个本类的临时对象，然后调用等号运算符重载，将该临时对象赋值给c1</span></span><br><span class="line">    c2 = <span class="number">5.2</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用拷贝构造函数( 有下面两种调用方式)</span></span><br><span class="line">    <span class="function">Complex <span class="title">c5</span><span class="params">(c2)</span></span>;</span><br><span class="line">    Complex c4 = c2;  <span class="comment">// 注意和 = 运算符重载区分,这里等号左边的对象不是事先已经创建，故需要调用拷贝构造函数，参数为c2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>浅拷贝与深拷贝</strong></p>
+<p>如果没有自定义复制构造函数，则系统会创建默认的复制构造函数，但系统创建的默认复制构造函数只会执行“浅拷贝”，即将被拷贝对象的数据成员的值一一赋值给新创建的对象，若该类的数据成员中有指针成员，则会使得新的对象的指针所指向的地址与被拷贝对象的指针所指向的地址相同，delete该指针时则会导致两次重复delete而出错。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span> :</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造函数</span></span><br><span class="line">    Person(<span class="keyword">char</span> * pN)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"一般构造函数被调用 !\n"</span>;</span><br><span class="line">        m_pName = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="built_in">strlen</span>(pN) + <span class="number">1</span>];</span><br><span class="line">        <span class="comment">//在堆中开辟一个内存块存放pN所指的字符串</span></span><br><span class="line">        <span class="keyword">if</span>(m_pName != <span class="literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">           <span class="comment">//如果m_pName不是空指针，则把形参指针pN所指的字符串复制给它</span></span><br><span class="line">             <span class="built_in">strcpy</span>(m_pName ,pN);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 系统创建的默认复制构造函数，只做位模式拷贝</span></span><br><span class="line">    Person(Person &amp; p)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//使两个字符串指针指向同一地址位置</span></span><br><span class="line">        m_pName = p.m_pName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~Person( )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">delete</span> m_pName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> :</span><br><span class="line">    <span class="keyword">char</span> * m_pName;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">( )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">Person <span class="title">man</span><span class="params">(<span class="string">"shangyan"</span>)</span></span>;</span><br><span class="line">    <span class="function">Person <span class="title">woman</span><span class="params">(man)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 结果导致   man 和    woman 的指针都指向了同一个地址</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 函数结束析构时</span></span><br><span class="line">    <span class="comment">// 同一个地址被delete两次</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 下面自己设计复制构造函数，实现“深拷贝”，即不让指针指向同一地址，而是重新申请一块内存给新的对象的指针数据成员</span></span><br><span class="line">Person(Person &amp; chs);</span><br><span class="line">&#123;</span><br><span class="line">     <span class="comment">// 用运算符new为新对象的指针数据成员分配空间</span></span><br><span class="line">     m_pName=<span class="keyword">new</span> <span class="keyword">char</span>[<span class="built_in">strlen</span>(p.m_pName)+ <span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">     <span class="keyword">if</span>(m_pName)</span><br><span class="line">     &#123;</span><br><span class="line">             <span class="comment">// 复制内容</span></span><br><span class="line">            <span class="built_in">strcpy</span>(m_pName ,chs.m_pName);</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 则新创建的对象的m_pName与原对象chs的m_pName不再指向同一地址了</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://www.cplusplus.com/" target="_blank" rel="noopener">C++开发文档</a></p>
+</blockquote>
+<h3 id="g-的安装与编译"><a href="#g-的安装与编译" class="headerlink" title="g++的安装与编译"></a><strong>g++的安装与编译</strong></h3><ol>
+<li><p>下载源码</p>
+<p><code>wget ftp://ftp.gnu.org/gnu/gcc/gcc-4.8.5/gcc-4.8.5.tar.gz</code></p>
+</li>
+<li><p>下载依赖包</p>
+<ul>
+<li>编译安装 GCC 需要依赖 mpc，mpfr，gmp包。好在 GCC 源码里自带脚本可以轻松下载依赖包。</li>
+</ul>
+<p><code>tar zxf gcc-4.8.5.tar.gz</code><br><code>cd gcc-4.8.5</code><br><code>./contrib/download_prerequisites</code></p>
+<ul>
+<li>用vim查看文件, 在此脚本里可以看到依赖包的版本号依次是 mpc-0.8.1，mpfr-2.4.2，gmp-4.3.2。</li>
+</ul>
+</li>
+<li><p>编译安装</p>
+<p><code>mkdir gcc-build-4.8.5</code><br><code>cd gcc-build-4.8.5</code><br><code>../configure -enable-checking=release -enable-languages=c,c++ -disable-multilib</code><br><code>make &amp;&amp; make install</code></p>
+<ul>
+<li>为了避免安装后系统里出现多个版本的 GCC，这里直接将编译安装的目录指定为 /usr，如果不指定 –prefix，则会默认安装到 /usr/local 下。</li>
+<li>GCC 4.8.5 光是源代码就有105MB，因此可以预见整个编译过程需要很长时间（差不多 2 个小时左右）。</li>
+</ul>
+</li>
+<li><p>查看版本号</p>
+<p><code>gcc --version</code><br>gcc (GCC) 4.8.5</p>
+<p><code>which gcc</code><br>/usr/bin/gcc</p>
+<p><code>which g++</code><br>/usr/bin/g++</p>
+</li>
+</ol>
+<p><strong>支持C++11特性</strong></p>
+<p>如果用命令 g++ -g -Wall main.cpp  编译以下代码 ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">    file : main.cpp</span><br><span class="line">*/</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line"> </span><br><span class="line">int main() &#123;</span><br><span class="line">    int a[5] = &#123; 1, 2, 2, 5, 1 &#125;;</span><br><span class="line">    for( int i:a ) &#123;</span><br><span class="line">        printf( &quot;%d\n&quot;, a[i] );</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>提示错误:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">main.cpp: In function ‘int main()’:</span><br><span class="line">main.cpp:5:13: error: range-based ‘for’ loops are not allowed in C++98 mode</span><br><span class="line">  for( int i:a ) &#123;</span><br></pre></td></tr></table></figure>
+<p>在C++98中不支持此循环方式，因为这是C++11新增的循环方式。</p>
+<p>那么如果一定要编译呢？</p>
+<p>通过命令man g++可以得知以下方法：</p>
+<p><code>g++ -g -Wall -std=c++11 main.cpp</code></p>
+<p>除了g++ , gcc 也可以类似方法支持C11</p>
+<p><code>gcc -g -Wall -std=c11 main.cpp</code></p>
+<p>生成可执行文件:</p>
+<p><code>g++ -std=c++11 -o main main.cpp</code></p>
+<h3 id="编译源代码"><a href="#编译源代码" class="headerlink" title="编译源代码"></a><strong>编译源代码</strong></h3><p><code>gcc</code>和<code>g++</code>分别是GNU的C和C++的编译器, 我们拿<code>hello world</code>来举例子, </p>
+<p><code>g++指令的一般格式为：g++ [选项] 要编译的文件 [选项] [目标文件]</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"hello world"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>预处理器对<code>.cpp</code>文件进行预处理生成<code>.i</code>文件, 预处理做了宏的替换，还有注释的消除，可以理解为无关代码的清除</p>
+<p><code>g++ -E hello.cpp &gt; hello.i</code></p>
+<ul>
+<li>如果不重定向, 只激活预处理,这个命令不生成文件, 你需要把它重定向到一个输出文件里<code>hello.i</code></li>
+</ul>
+<p><code>vim hello.i</code>打开生成的文件可以看到头文件被替换</p>
+</li>
+<li><p>编译器对<code>.cpp</code>文件进行编译生成包含汇编指令的<code>.s</code>文件</p>
+<p><code>g++ -S hello.cpp</code></p>
+<ul>
+<li><code>.s</code>文件表示是汇编文件，用Vim编辑器打开就都是汇编指令</li>
+</ul>
+</li>
+<li><p>汇编器对汇编指令变为目标代码(机器代码), 即将<code>.s</code>文件生成<code>.o</code>文件</p>
+<p><code>g++ -c hello.s</code></p>
+</li>
+<li><p>链接器将目标代码链接起来生成可执行文件</p>
+<p><code>g++ hello.o -o hello</code></p>
+<ul>
+<li>注意, 以上命令可以从源文件<code>.cpp</code>一次性编译, <code>g++ -o hello hello.cpp</code> : 将.cpp文件直接编译成名为<code>hello</code>的可执行文件</li>
+<li>在Linux系统中, 生成名为<code>hello</code>的没有后缀的可执行文件, 用<code>./hello</code>执行;如果没有<code>-o hello</code>参数, 会生成名为<code>a.out</code>的文件, <code>./a.out</code>执行</li>
+<li>Windows系统中生成<code>.exe</code>文件</li>
+</ul>
+</li>
+</ol>
+<h3 id="编译指令"><a href="#编译指令" class="headerlink" title="编译指令"></a><strong>编译指令</strong></h3><p><code>#空指令</code></p>
+<ul>
+<li>无任何效果</li>
+</ul>
+<p><code>#include</code></p>
+<ul>
+<li>包含一个源代码文件<br><code>#define</code></li>
+<li>定义宏<br><code>#undef</code></li>
+<li>取消已定义的宏<br><code>#if</code></li>
+<li>如果给定条件为真，则编译下面代码<br><code>#ifdef</code></li>
+<li>如果宏已经定义，则编译下面代码<br><code>#ifndef</code></li>
+<li>如果宏没有定义，则编译下面代码<br><code>#elif</code></li>
+<li>如果前面的<code>#if</code>等条件不为真，当前条件为真，则编译下面代码, 相当于<code>elseif</code><br><code>#endif</code></li>
+<li>结束一个<code>#if……#else</code>条件编译块<br><code>#error</code></li>
+<li>停止编译并显示错误信息</li>
+</ul>
+<p><strong>常用参数</strong></p>
+<ul>
+<li><code>-E</code>参数 : 指示编译器仅对输入文件进行预处理。当这个选项被使用时, 预处理器的输出被送到标准输出而不是储存在文件里, 所以需要重定向保存为<code>.i</code>文件</li>
+<li><code>-S</code>参数 : 指示编译器对<code>.cpp</code>文件产生汇编语言文件后停止编译, 产生的汇编语言文件的缺省扩展名是<code>.s</code></li>
+<li><code>-c</code>参数 : 指示编译器仅把源代码编译为目标代码(<code>.o</code>文件)</li>
+<li><code>-o</code>参数 : 指示编译器为将产生的可执行文件用指定的文件名, Linux下没有后缀</li>
+</ul>
+<h3 id="建议"><a href="#建议" class="headerlink" title="建议"></a><strong>建议</strong></h3><ol>
+<li>在 C++中几乎不需要用宏，用 <code>const</code> 或 <code>enum</code> 定义显式的常量，用 <code>inline</code> 避免函数调用的额外开销，用模板去刻画一族函数或类型，用 <code>namespace</code> 去避免命名冲突。</li>
+<li>不要在你需要变量之前去声明，以保证你能立即对它进行初始化。</li>
+<li>不要用 <code>malloc</code>,<code>new</code> 运算会做的更好。</li>
+<li>避免使用 <code>void*</code>、指针算术、联合和强制，大多数情况下，强制都是设计错误的指示器。</li>
+<li>尽量少用<code>数组</code>和<code>C</code>风格的字符串，标准库中的<code>string</code> 和 <code>vector</code>可以简化程序。</li>
+<li>更加重要的是，试着将程序考虑为一组由<code>类和对象</code>表示的相互作用的概念，而不是一堆数据结构和一些可以拨弄的二进制。</li>
+</ol>
+<h3 id="文件重定向"><a href="#文件重定向" class="headerlink" title="文件重定向"></a><strong>文件重定向</strong></h3><p>在<code>C++ Primer</code>的$P_{19}$页</p>
+<ul>
+<li>在编译好的<code>.exe</code>文件拷贝到<code>数据</code>目录下, 执行<code>$ EXEFilename &lt;infile&gt;output.txt</code></li>
+</ul>
+<p><code>./a.out &lt;./data/word_echo&gt;a</code></p>
+<ul>
+<li><code>可执行文件a.out</code>在当前目录</li>
+<li>将<code>word_echo</code>文件的内容作为可执行文件<code>a.out</code>的输入</li>
+<li>可执行文件<code>a.out</code>的输出重定向到<code>a文件</code>里</li>
+</ul>
+<h3 id="函数重载的底层实现"><a href="#函数重载的底层实现" class="headerlink" title="函数重载的底层实现"></a><strong>函数重载的底层实现</strong></h3><blockquote>
+<p><code>Name Mangling</code>是一种在编译过程中，将函数、变量的名称重新改编的机制，简单来说就是编译器为了区分各个函数，将函数通过一定算法，重新修饰为一个全局唯一的名称。</p>
+</blockquote>
+<ul>
+<li><p><code>C++</code>利用name mangling(倾轧)技术将函数重命名, 区分参数不同的同名函数</p>
+</li>
+<li><p>倾轧技术发生在<code>.cpp</code>文件的编译阶段, 即将编译输出文件中的函数根据一定的规则重命名; 和<code>.h</code>文件的声明阶段, 在头文件中声明的函数也要重命名, 很显然, 如果只有其中的一个阶段发生倾轧, 那么在链接时就会出现函数未定义的错误</p>
+</li>
+<li><p>注意:C++完全兼容C语言，那就面临着，<code>完全兼容C的类库</code>。由<code>.c 文件</code>的类库文件中函数名并没有发生name mangling 行为，而我们在<code>.cpp文件中</code>包含<code>.c 文件所对应的.h 文件</code>时，<code>.h 文件</code>要发生name manling 行为，因而会发生在<code>链接的时候</code>的错误。</p>
+</li>
+<li>C++为了避免上述错误的发生，重载了关键字<code>extern</code>。要避免 name manling的函数前，加 <code>extern &quot;C&quot;</code> 如有多个函数声明要避免，则放入<code>extern &quot;C&quot;{}</code></li>
+</ul>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a><strong>引用</strong></h3><ul>
+<li>需求 :　进行参数的传递</li>
+<li><p>本质 :　引用是个特殊的指针, 对指针的包装，扩展了指针的作用域，　不会暴露地址，　也不必开辟地址空间</p>
+</li>
+<li><p>变量名，本身是一段内存的引用, 是为己有变量起一个别名</p>
+</li>
+<li>引用没有定义，是一种关系型声明, 类型与原类型保持一致，且不分配内存, 被引用的变量有相同的地址</li>
+<li>必须初始化, 一经初始化, 该引用不可变更</li>
+<li>可以对引用再次建立引用，也就是某一变量可以具有多个别名, 但是不能破坏原有的引用关系</li>
+<li>重载<code>&amp;</code>符号:前面有数据类型时是引用, 其它皆为取地址</li>
+<li>可以定义指针的引用<code>int* &amp;ref</code>, 不能定义引用的引用<code>int&amp;&amp; ref</code></li>
+<li>可以定义指针的指针<code>int** val</code>, 不能定义引用的指针<code>int&amp; *ref</code></li>
+<li>可以定义数组的引用<code>int (&amp;arr)[3]=数组名</code>, 不能定义引用数组<code>int&amp; refArr[] = {}</code>,但是可以定义指针数组<code>int* arr[]={存放指针变量}</code></li>
+<li>当<code>const</code>修饰的时候, 引用就开辟了一块未命名的空间</li>
+</ul>
+<blockquote>
+<p>一个验证引用的例子:</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">using std::cout; using std::endl;</span><br><span class="line"></span><br><span class="line">#include &lt;string&gt;</span><br><span class="line">using std::string;</span><br><span class="line"></span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">using std::vector;</span><br><span class="line"></span><br><span class="line">#include &lt;iterator&gt;</span><br><span class="line">using std::begin; </span><br><span class="line">using std::end;  </span><br><span class="line"></span><br><span class="line">void printVec(vector&lt;int&gt;&amp; vec)</span><br><span class="line">&#123;</span><br><span class="line">	for (auto index = vec.begin(); index != vec.end(); ++index)</span><br><span class="line">		cout &lt;&lt; *index &lt;&lt; &quot; &quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	vector&lt;int&gt; val = &#123; 1, 2, 3, 4, 5, 6, 7, 8, 9 &#125;;</span><br><span class="line">	for (auto v : val)</span><br><span class="line">	&#123;</span><br><span class="line">		v *= v;</span><br><span class="line">		cout &lt;&lt; v &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	printVec(val);</span><br><span class="line">	for (auto &amp;v : val)</span><br><span class="line">	&#123;</span><br><span class="line">		v *= v;</span><br><span class="line">		cout &lt;&lt; v &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">	printVec(val);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="左值"><a href="#左值" class="headerlink" title="左值"></a><strong>左值</strong></h3><p><code>左值</code>指的是可以取地址的变量，记住: 左值与右值的根本区别在于能否获取内存地址，而能否赋值不是区分的依据。</p>
+<h3 id="类"><a href="#类" class="headerlink" title="类"></a><strong>类</strong></h3><ul>
+<li>本质:类名本质上就是一个命名空间</li>
+</ul>
+<blockquote>
+<p>在C++中<code>class</code> 和<code>struct</code> 的唯一区别 : class的访问权限是private的, 而struct是public的; 但是在C语言中, class只是一些数据的集合, 没有C++中类的特性</p>
+</blockquote>
+<h3 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a><strong>迭代器</strong></h3><blockquote>
+<p><a href="http://www.cnblogs.com/yc_sunniwell/archive/2010/06/25/1764934.html" target="_blank" rel="noopener">C++迭代器 iterator</a></p>
+</blockquote>
+<ul>
+<li><p>容器是数据结构的泛指，迭代器是指针的泛指, C++迭代器<code>Interator</code>就是一个指向某种<code>STL对象的指针</code>, 是一种检查容器内元素并遍历元素的<code>数据类型</code></p>
+</li>
+<li><p><code>指针</code>也是迭代器</p>
+</li>
+</ul>
+<h3 id="const"><a href="#const" class="headerlink" title="const"></a><strong>const</strong></h3><blockquote>
+<p><a href="http://www.cnblogs.com/Fancyboy2004/archive/2008/12/23/1360810.html" target="_blank" rel="noopener">关键字：Const，Const函数，Const变量，函数后面的Const</a></p>
+</blockquote>
+<p><strong>摘要</strong></p>
+<ul>
+<li><p>对于非内部数据类型的输入参数，应该将<code>值传递</code>的方式改为<code>const 引用传递</code>，目的是提高效率。例如将<code>void Func(A a)</code>改为<code>void Func(const A &amp;a)</code></p>
+</li>
+<li><p>对于内部数据类型的输入参数，<code>不要将“值传递”的方式改为“const 引用传递”</code>, 否则既达不到提高效率的目的，又降低了函数的可理解性。例如<code>void Func(int x)</code> <code>不应该</code>改为<code>void Func(const int &amp;x)</code></p>
+</li>
+<li><p>如果给以“指针传递”方式的函数返回值加const 修饰，那么函数返回值（即指针）的内容不能被修改，该返回值只能被赋给加const 修饰的同类型指针</p>
+</li>
+<li><p>如果函数返回值采用“值传递方式”，由于函数会把返回值复制到外部临时的存储单元中，加const 修饰没有任何价值。例如不要把函数int GetInt(void) 写成const int GetInt(void)</p>
+</li>
+<li><p>任何<code>不会修改数据成员的函数</code>都应该声明为const 类型, 例如<code>int GetCount(void) const; // const 成员函数</code>, 如果在编写const 成员函数时，不慎修改了数据成员，或者调用了其它非const 成员函数，编译器将指出错误</p>
+</li>
+</ul>
+<p><strong>关于Const函数的几点规则：</strong></p>
+<ul>
+<li>const对象只能访问const成员函数, 而非const对象可以访问任意的成员函数,包括const成员函数</li>
+<li>const对象的成员是不可修改的, 然而const对象通过指针维护的对象却是可以修改的</li>
+<li>const成员函数不可以修改对象的数据, 不管对象是否具有const性质, 它在编译时, 以是否修改成员数据为依据, 进行检查;</li>
+<li>但是加上<code>mutable</code>修饰符的数据成员, 对于任何情况下通过任何手段都可修改, 自然此时的const成员函数是可以修改它的</li>
+</ul>
+<h3 id="构造函数-1"><a href="#构造函数-1" class="headerlink" title="构造函数"></a><strong>构造函数</strong></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a><strong>常见问题</strong></h3><ul>
+<li><p><code>VS2013窗口一闪而过</code> : <code>Ctrl+F5</code>运行程序</p>
+</li>
+<li><p>用<code>while</code>作为循环输入的时候, 用<code>Ctrl+Z</code>结束</p>
+</li>
+<li><p>设置一个断点, 然后点击<code>本地Windows调试器</code></p>
+</li>
+<li><p>所谓的段错误<code>segmentation fault</code>就是指访问的内存超出了系统所给这个程序的内存空间</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/21/Caffe-in-docker/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Caffe in Docker
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/17/Docker镜像与仓库/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Docker镜像与仓库</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

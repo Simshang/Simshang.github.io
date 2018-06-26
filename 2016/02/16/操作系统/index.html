@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>操作系统 | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="参考书 : 操作系统:精髓与设计原理(第六版)参考书 : 深入理解计算机系统（原书第2版）">
+<meta name="keywords" content="OS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统">
+<meta property="og:url" content="http://simtalk.cn/2016/02/16/操作系统/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="参考书 : 操作系统:精髓与设计原理(第六版)参考书 : 深入理解计算机系统（原书第2版）">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/操作系统/stack.png">
+<meta property="og:image" content="http://simtalk.cn/img/操作系统/segment.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/操作系统/run.png">
+<meta property="og:image" content="http://simtalk.cn/img/操作系统/process.png">
+<meta property="og:image" content="http://simtalk.cn/img/操作系统/process1.png">
+<meta property="og:image" content="http://simtalk.cn/img/操作系统/process2.png">
+<meta property="og:image" content="http://simtalk.cn/img/操作系统/process3.png">
+<meta property="og:image" content="http://simtalk.cn/img/操作系统/thread.png">
+<meta property="og:image" content="http://simtalk.cn/img/操作系统/thread1.png">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.957Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作系统">
+<meta name="twitter:description" content="参考书 : 操作系统:精髓与设计原理(第六版)参考书 : 深入理解计算机系统（原书第2版）">
+<meta name="twitter:image" content="http://simtalk.cn/img/操作系统/stack.png">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-操作系统" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/16/操作系统/" class="article-date">
+  	<time datetime="2016-02-16T12:41:26.000Z" itemprop="datePublished">2016-02-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      操作系统
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OS/">OS</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/计算机/">计算机</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#调用栈和段"><span class="toc-text">调用栈和段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行时存储器映像"><span class="toc-text">运行时存储器映像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程与线程"><span class="toc-text">进程与线程</span></a></li></ol>
+        </div>
+        
+        <blockquote>
+<p>参考书 : <a href="https://book.douban.com/subject/5064311/" target="_blank" rel="noopener">操作系统:精髓与设计原理(第六版)</a><br>参考书 : <a href="https://book.douban.com/subject/5333562/" target="_blank" rel="noopener">深入理解计算机系统（原书第2版）</a><br><a id="more"></a></p>
+</blockquote>
+<h3 id="调用栈和段"><a href="#调用栈和段" class="headerlink" title="调用栈和段"></a><strong>调用栈和段</strong></h3><blockquote>
+<p>要想理解数据结构的栈结构, 写个简单的递归程序, 调试的时候查看调用栈(Call Stack),调试一遍就知道了</p>
+</blockquote>
+<p><code>调用栈</code>描述了函数之间的调用关系, 由多个<code>栈帧(Stack Frame)</code>组成, 每个栈帧代表着一个未运行完的函数, 栈帧中保存着函数的返回地址和局部变量</p>
+<p><img src="/img/操作系统/stack.png" alt=""></p>
+<ul>
+<li>图示:</li>
+</ul>
+<ol>
+<li><p><code>esp</code>是栈指针,始终指向栈顶元素 <code>ebp</code>是帧指针, 二者共同组成栈帧的界限</p>
+</li>
+<li><p>栈帧的末尾存放<code>主调函数的返回地址</code></p>
+</li>
+<li><p><code>返回地址</code>就是当被调函数结束后, 在主调函数继续执行的地方, 本质上就是在栈帧中会存放上一个栈帧的起始地址</p>
+</li>
+</ol>
+<ul>
+<li>由图可知, </li>
+</ul>
+<ol>
+<li><code>函数1</code>调用<code>函数2</code>, <code>函数2</code>调用<code>函数3</code></li>
+<li>随着函数调用层数的增加, 栈是向低地址方向增长的</li>
+<li>当<code>函数3</code>调用结束之后, 保存的数据会出栈, <code>esp</code>会向高地址移动, 当<code>esp</code>与<code>ebp</code>重合时说明<code>函数3</code>执行过程完全结束, 这时根据保存的上一个栈帧的地址, 使得<code>ebp</code>指向<code>函数2</code>的栈帧地址,<code>esp</code>始终指向栈顶, 这时就界定出<code>函数2</code>的栈帧, 也就是返回到了主调函数<code>函数2</code>继续执行</li>
+<li>就这样一步步结束了整个调用过程</li>
+</ol>
+<blockquote>
+<p>栈溢出 : 每一次的函数调用都会向调用栈中增加一个<code>栈帧</code>, 当栈顶越界是时导致<code>栈溢出(Stack Overflow)</code></p>
+</blockquote>
+<p><img src="/img/操作系统/segment.jpg" alt=""></p>
+<p><code>段(Segments)</code>是可执行文件中的概念, 指的是二进制文件内的区域, 该区域包含加载程序到存储器并运行的所有信息</p>
+<ul>
+<li><code>正文段.text</code>用于存储指令, 是只读存储段</li>
+<li><code>数据段.data</code>用于存储已经初始化的全局变量</li>
+<li><code>.rodata</code> ：只读数据</li>
+<li><code>BSS段.bss</code>用于存储未赋值的全局变量所需的空间</li>
+<li><code>节头部表(Section Haeders)</code>用于描述不同节的位置和大小，目标文件中每个节都有一个固定大小的表目</li>
+<li><code>段头部表</code>用于描述不同段的位置和大小, 分为<code>代码段</code>和<code>数据段</code></li>
+</ul>
+<h3 id="运行时存储器映像"><a href="#运行时存储器映像" class="headerlink" title="运行时存储器映像"></a><strong>运行时存储器映像</strong></h3><p><img src="/img/操作系统/run.png" alt=""></p>
+<ul>
+<li>由图可知,</li>
+</ul>
+<ol>
+<li>用户栈和动态内存分配都是在运行时创建的</li>
+<li>调用栈所在的段称为<code>堆栈段(Stack Segment)</code></li>
+</ol>
+<blockquote>
+<p>堆栈段也有自己的大小, 当越界访问时会出现<code>段错误</code></p>
+</blockquote>
+<h3 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a><strong>进程与线程</strong></h3><p><code>进程</code>是指一个具有一定<code>独立功能</code>的程序在一个<code>数据集合</code>上的一次<code>动态执行</code>过程, 进程的两个基本元素是<code>程序代码</code>和<code>与程序代码相关的数据集</code></p>
+<ul>
+<li><p>在进程执行时, 描述该进程的所有信息组成<code>进程控制块</code>(一种数据结构), 正是因为<code>进程控制块</code>的存在才使得操作系统有了多进程和多处理的能力, 因为进程控制块保存了关于进程的所有信息, 使得当执行中的进程中断之后再次执行时就好像没有中断过一样</p>
+</li>
+<li><p>在单处理器多道程序系统中, 多个进程的执行可以在同一时间交叉进行, 在多处理器系统中, 不仅多个进程可以交叉执行而且可以同步执行</p>
+</li>
+</ul>
+<blockquote>
+<p>在前面几个部分, 我们简单的介绍了程序执行中的内存分配等部分, 那么程序和进程之间的关系是什么呢?</p>
+</blockquote>
+<p><img src="/img/操作系统/process.png" alt=""></p>
+<ul>
+<li>操作系统将处于执行状态的程序抽象为<code>进程</code>, 进程是一种动态的概念, 是执行中的程序(程序+执行状态)</li>
+<li>同一个程序多次执行对应着不同的进程, 在物理内存中时被加载到不同的进程空间地址中, 也就是说即使同一个程序, 执行过程中被加载到不同的进程控制块中, 就是不同的进程</li>
+<li>程序是静态的, 存储在文件系统中, 执行中的程序抽象为进程, 进程需要CPU和内存等资源</li>
+</ul>
+<p><strong>进程的特点</strong></p>
+<p><img src="/img/操作系统/process1.png" alt=""></p>
+<p>假设有ABCD四个程序代码加载到内存当中, 进程的切换就是指的CPU从执行A的指令变为执行B的指令</p>
+<ul>
+<li><p>并发执行 : 在CPU的物理指令指针依然每次只执行一条指令, 但是通过进程的切换我们可以理解为在程序层面上有4个指令指针在同时并发执行</p>
+</li>
+<li><p>在时间轴上, ABCD四个程序在交替运行, 宏观上4个程序在并发执行</p>
+</li>
+</ul>
+<p><strong>五状态模型</strong></p>
+<p><img src="/img/操作系统/process2.png" alt=""></p>
+<p>其中<code>运行</code>, <code>就绪</code>, <code>等待(阻塞)</code>是核心的三种状态, 假设计算机只有一个处理器, 这样一次最多只有一个进程处于运行状态; <code>创建和结束</code>的状态只会出现一次, 属于过渡状态</p>
+<ul>
+<li><code>运行</code>指进程正在处理器上执行</li>
+<li><code>就绪</code>指除了处理器资源没有获得, 其他资源都已获得, 一旦获得处理器就进入<code>运行</code>状态</li>
+<li><code>等待</code>指进程在等待某个事件而暂停运行, 当特定事件发生时, 就进入<code>就绪</code>状态</li>
+</ul>
+<p>为了减少内存的耗用, 将进程的一部分或者进程的全部存储到外存上, 这样就和虚拟存储相关联起来, 这样就多了<code>就绪挂起</code>和<code>等待挂起</code>, <code>挂起</code>就是将进程从内存转到外存, <code>激活</code>与挂起相反</p>
+<p><img src="/img/操作系统/process3.png" alt=""></p>
+<ul>
+<li><code>就绪</code> : 进程在内存中, 可以被执行</li>
+<li><code>等待(阻塞)</code> : 进程在内存中, 等待时间的发生 </li>
+<li><code>就绪挂起</code> : 进程存储在外存, 一旦进入内存即可运行</li>
+<li><code>等待挂起</code> : 进程存储在外存, 等待事件的发生</li>
+</ul>
+<blockquote>
+<p>为什么引入<code>线程</code>? 因为我们希望在一个进程里面进一步提高并发性, 那么为什么我们不用多进程去实现相应的功能呢, 因为进程的引入是为了更好的隔离执行中的程序, 但是有些程序实现的功能需要共享程序执行所需的数据, 那么进程就不适用了, 那么我们需要将共享数据的程序集成到一个进程里并发执行, 这样就引入了线程(thread)</p>
+</blockquote>
+<p><code>线程</code>是进程的一部分，描述<code>指令流的执行状态</code>, 它是进程中的<code>指令执行流</code>的最小单元，是CPU调度的基本单位</p>
+<p><img src="/img/操作系统/thread.png" alt=""></p>
+<p><code>线程</code> = <code>进程</code> - <code>共享数据</code></p>
+<ul>
+<li><code>优点</code> : 一个进程中可以存在多个线程, 各个线程之间可以并发地执行, 并且可以共享地址空间和文件等资源</li>
+<li><code>缺点</code> : 一个线程崩溃，会导致其所属进程的所有线程崩溃</li>
+<li>进程变为资源分配的单位 : 进程由一组相关资源构成，包括地址空间（代码段、数据段）、打开的文件等各种资源</li>
+<li>线程CPU调度的单位 : 每一个线程会在一个相同的进程地址空间内分配一个对应的线程控制块, 一个进程中的所有线程共享这个进程中的数据</li>
+</ul>
+<p><strong>线程和进程的关系</strong></p>
+<p><img src="/img/操作系统/thread1.png" alt=""></p>
+<ul>
+<li>进程是资源分配单位，线程是CPU调度单位</li>
+<li>进程拥有一个完整的资源平台，而线程只独享指令流执行的必要资源，如寄存器和栈</li>
+<li>线程具有就绪、等待和运行三种基本状态和状态间的转换关系</li>
+<li>线程能减少并发执行的时间和空间开销, 由于同一进程的各线程间共享内存和文件资源，可不通过内核进行直接通信, 所以线程的创建时间, 终止时间, 切换时间都比进程要短</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/02/24/谈谈摇滚和科特·柯本/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          谈谈摇滚和科特·柯本
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/01/17/忽然之间/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">忽然之间 - 莫文蔚</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

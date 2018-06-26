@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>从线性模型到神经网络 | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="2016年9月12日组会报告">
+<meta name="keywords" content="梯度下降法,神经网络,线性模型,正则化,最小二乘法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从线性模型到神经网络">
+<meta property="og:url" content="http://simtalk.cn/2016/08/23/从线性模型到神经网络/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="2016年9月12日组会报告">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/rank.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/cost.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/cost1.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/cost2.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/cost3.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/cost4.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/sgn.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/sigmoid.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/sigmoid1.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/unconvex.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/logicost.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/separable.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/separable3d.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/and.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/or.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/xor.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/xor1.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/sigmoid2.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/mp.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/mp1.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/nn.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/nnmath1.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/overfitting.png">
+<meta property="og:image" content="http://simtalk.cn/img/从线性模型到神经网络/overfitting1.png">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.955Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从线性模型到神经网络">
+<meta name="twitter:description" content="2016年9月12日组会报告">
+<meta name="twitter:image" content="http://simtalk.cn/img/从线性模型到神经网络/rank.JPG">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-从线性模型到神经网络" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/23/从线性模型到神经网络/" class="article-date">
+  	<time datetime="2016-08-23T03:09:48.000Z" itemprop="datePublished">2016-08-23</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      从线性模型到神经网络
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/最小二乘法/">最小二乘法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/梯度下降法/">梯度下降法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/正则化/">正则化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/神经网络/">神经网络</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线性模型/">线性模型</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/机器学习/">机器学习</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#线性模型基本形式"><span class="toc-text">线性模型基本形式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分类与回归"><span class="toc-text">分类与回归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线性回归"><span class="toc-text">线性回归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最小二乘法"><span class="toc-text">最小二乘法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#梯度下降法"><span class="toc-text">梯度下降法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#逻辑回归"><span class="toc-text">逻辑回归</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对于逻辑回归的模型优化"><span class="toc-text">对于逻辑回归的模型优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线性可分与线性不可分"><span class="toc-text">线性可分与线性不可分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#神经网络"><span class="toc-text">神经网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#神经网络模型"><span class="toc-text">神经网络模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#神经网络的数学描述"><span class="toc-text">神经网络的数学描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#过拟合问题"><span class="toc-text">过拟合问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正则化-regularization"><span class="toc-text">正则化(regularization)</span></a></li></ol>
+        </div>
+        
+        <blockquote>
+<p>2016年9月12日组会报告</p>
+</blockquote>
+<p><img src="/img/从线性模型到神经网络/rank.JPG" alt=""></p>
+<a id="more"></a>
+<p>截止于2016年8月23日, 阿法狗占据世界职业围棋排名榜<a href="http://www.goratings.org/" target="_blank" rel="noopener">Go Ratings</a>的第二名, 再一次证明了人工智能的魅力, 当今的人工智能严格意义上讲, 并没有确切的理论让我们计算出某个节点的具体参数设置, 也就是说在前几十年就出现的基础理论框架之下, 当今的人工智能不得不说还处于实验科学的阶段, 但是我们不可否认的一点是, 数据量的增大和计算能力的提高确实大大提升了模型的效果, 以及各式各样的调参技巧, 这些都是基于大量的试错的, 但是了解并掌握模型的基础理论依然是相当重要的, 下面讲一讲神经网络的基本理论, 在理解神经网络之前, 首先讲解线性模型, 然后从线性模型过渡到神经网络</p>
+<h3 id="线性模型基本形式"><a href="#线性模型基本形式" class="headerlink" title="线性模型基本形式"></a><strong>线性模型基本形式</strong></h3><p>假设模型由$d$个特征描述, 则可以得出模型的输入向量为$$\vec{x}=(x_1;x_2;\ldots;x_d)$$</p>
+<ul>
+<li>其中, $x_i$是$\vec{x}$在第$i$个属性上的取值</li>
+</ul>
+<p>线性模型的本质是 : 经过模型训练确定一个各个特征的<code>线性组合</code>来进行预测的函数, 其形式如下$$f(\vec{x})=w_1x_1+w_2x_2+\ldots+w_dx_d+b$$<br>一般用向量形式表示: $$f(\vec{x})=\vec{w}^T\vec{x}+b$$</p>
+<ul>
+<li>其中, 参数向量$\vec{w}=(w_1;w_2;\ldots;w_d)$</li>
+</ul>
+<blockquote>
+<p>模型训练的目的就是要确定参数向量 $\vec{w}$和偏置参数$b$, 得到一个确定的线性函数, 当新数据进入模型时, 就会得到相应的输出, 实现预测的目的</p>
+</blockquote>
+<h3 id="分类与回归"><a href="#分类与回归" class="headerlink" title="分类与回归"></a><strong>分类与回归</strong></h3><ul>
+<li><p>分类问题是对<code>离散变量</code>的预测, 比如预测明天是阴、晴还是雨，就是一个分类问题</p>
+</li>
+<li><p>回归问题是对<code>连续变量</code>的预测, 比如预测明天的气温是多少度，这是一个回归问题</p>
+</li>
+</ul>
+<p>通常我们在线性模型中常说的<code>线性回归</code>和<code>逻辑回归</code>等模型所确定的线性函数, 有时候我们拿这个训练出来的线性函数做分类任务,有时候做回归任务, 因为二者本质上都是确定一个线性函数$f(\vec{x})$, 只是输出的映射不一样而已, 通常用<code>线性回归做预测, 逻辑回归做分类</code></p>
+<h3 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a><strong>线性回归</strong></h3><p>给定数据集$$D= \lbrace (\vec{x_1},y_1),(\vec{x_2},y_2),\ldots,(\vec{x_m},y_m) \rbrace$$<br>其中,</p>
+<ul>
+<li>$\vec{x_i} = (x_1; x_2; \ldots ;x_d)_i$</li>
+</ul>
+<p>$x_d$表示第$i$个数据样本中第$d$个特征的取值</p>
+<ul>
+<li>$y_i\in\Re$ </li>
+</ul>
+<p>$y$属于实数集</p>
+<p><strong>线性回归模型试图通过模型训练达到</strong>$$f(\vec{x_i})= \vec{w}^T \vec{x_i}+b, 使得f(\vec{x_i}) \simeq y_i$$</p>
+<blockquote>
+<p>那么如何确定$\vec{w}$和$b$呢? </p>
+<ul>
+<li>基本思路就是衡量$f(\vec{x_i})$和$y_i$之间的差别, 并找到一种方式去优化参数向量$\vec{w}$和偏置量$b$, 使得$f(\vec{x_i})$和$y_i$之间的差别越来越小, 直到得出最优模型, 下面我们介绍<code>最小二乘法</code>和<code>梯度下降法</code></li>
+</ul>
+</blockquote>
+<h3 id="最小二乘法"><a href="#最小二乘法" class="headerlink" title="最小二乘法"></a><strong>最小二乘法</strong></h3><ul>
+<li>均方误差定义:</li>
+</ul>
+<p>$$ J(\vec{w}^T,b) = \sum_{i=1}^{m}(f(\vec{x_i})-y_i)^2 $$</p>
+<p>$$ = \sum_{i=1}^{m}(y_i-\vec{w}^T\vec{x_i}-b)^2 $$</p>
+<ul>
+<li>均方误差具有非常好的几何意义, 本质上就是<code>欧氏距离</code>, 基于均方误差最小化进行模型求解的方法称为<code>最小二乘法</code></li>
+<li>$J(\vec{w}^T,b)$也可以称为<code>损失函数</code></li>
+</ul>
+<p>在最小二乘法当中, 我们用<code>均方误差</code>来衡量模型输出和真实值之间的差异程度, 因此我们只要让均方误差最小化就可以得到最优模型, 即</p>
+<p>$$(w^*,b^*)= \mathop {\arg min }\limits_{(w,b)} J(\vec{w}^T,b)$$</p>
+<ul>
+<li><p>上式的物理意义就是试图找到一个边界, 这个边界可能是一条直线, 一个平面, 或者是一个超平面, 使得所有样本到这个边界的欧氏距离之和最小, 这个求解最优模型的过程就称作<code>线性回归模型的最小二乘&quot;参数估计&quot;</code></p>
+</li>
+<li><p><strong>优化模型求解过程</strong></p>
+</li>
+</ul>
+<p>对于由$d$个特征描述的$m$个样本组成的数据集$D$, 利用最小二乘法对$\vec{w}$和$b$进行估计, 我们将其描述为线性方程组</p>
+<p>$$\vec{\hat{y}}=X\vec{\hat{w}}=<br>    \begin{pmatrix}<br>         x_1^1 &amp; x_1^2 &amp; x_1^3 &amp; \cdots &amp; x_1^d &amp; 1 \\<br>         x_2^1 &amp; x_2^2 &amp; x_2^3 &amp; \cdots &amp; x_2^d &amp; 1 \\<br>         \vdots&amp; \vdots&amp; \vdots&amp; \ddots &amp; \vdots &amp; \vdots \\<br>         x_m^1 &amp; x_m^2 &amp; x_m^3 &amp; \cdots &amp; x_m^d &amp; 1<br>    \end{pmatrix}<br>            \begin{pmatrix}<br>                 w_1 \\<br>                 w_2 \\<br>                 \vdots \\<br>                 w_d \\<br>                 b<br>            \end{pmatrix}\\<br>    =<br>        \begin{pmatrix}<br>             \vec{x_1}^T &amp; 1 \\<br>             \vec{x_2}^T &amp; 1 \\<br>             \vdots &amp; \vdots \\<br>             \vec{x_m}^T &amp; 1<br>        \end{pmatrix}<br>        \begin{pmatrix}<br>             \vec{w} \\<br>             b<br>        \end{pmatrix}<br>    =<br>        \begin{pmatrix}<br>            \hat{y_1}\\<br>            \hat{y_2}\\<br>            \vdots   \\<br>            \hat{y_m}<br>        \end{pmatrix}<br>$$</p>
+<ul>
+<li>其中方程组$\hat{y_m}$表示模型对于第$m$个样本预测的值, $\hat{w}$表示参数向量加上偏置量$b$的增广矩阵</li>
+</ul>
+<p>既然我们的线性模型确定了, 那么我们的优化模型也就确定了, 也就是说找到一组确定的$\vec{\hat{w}}$使得均方误差最小, 即:</p>
+<p>$$\hat{w}^*= \mathop {\arg min }\limits_{\hat{w}} J(\hat{w})$$</p>
+<p>$$=\mathop {\arg min }\limits_{\hat{w}} (\vec{y}-\vec{\hat{y}})^T(\vec{y}-\vec{\hat{y}})$$</p>
+<p>$$=\mathop {\arg min }\limits_{\hat{w}} (\vec{y}-X\vec{\hat{w}})^T(\vec{y}-X\vec{\hat{w}})$$</p>
+<ul>
+<li>其中, $\vec{y}$ 表示真实的值</li>
+<li>注意:我们由线性代数的基本性质可知, 一个列向量的转置与其自身相乘就是这个列向量的模的平方</li>
+</ul>
+<p>令, $E_\hat{w}=(\vec{y}-X\vec{\hat{w}})^T(\vec{y}-X\vec{\hat{w}})$, 对$\hat{w}$求导得,</p>
+<p>$$\frac{\partial E_\hat{w}}{\partial \hat{w}}= 2X^T(X\vec{\hat{w}}-\vec{y}) = 0$$</p>
+<p>这里涉及到的矩阵运算不过分讲解,当$X^TX$为满秩矩阵或者正定矩阵时,得到$\vec{\hat{w}}$的最优解, 即:</p>
+<p>$$\vec{\hat{w}}^*=(X^TX)^{-1}X^T\vec{y}$$ </p>
+<p>至此, 我们完成了线性回归模型的参数向量的求解</p>
+<p>对于一组新的数据$\vec{x_n}$, 加上偏置量$\vec{\hat{x_n}}=(\vec{x_i};1)$, 由我们学习的模型就可以计算其预测值:</p>
+<p>$$ \hat{y_n}= f(\vec{\hat{x_n}})= \vec{\hat{x_n}}^T\vec{\hat{w}}^*=\vec{\hat{x_n}}^T(X^TX)^{-1}X^T\vec{y} $$</p>
+<ul>
+<li>但是在现实生活中$X^TX$大都不是满秩的, 对于有些问题我们选取的特征维数甚至比样本数目还多, 导致$X$的列数多于行数, 显然可以解出多个$\vec{\hat{w}}^*$, 他们都能使模型最优化, 但是不一定每个优化的模型都适合回归任务, 选择哪一个解输出通常由算法的归纳偏好决定, 常见的做法是<code>引入正则化项</code></li>
+</ul>
+<h3 id="梯度下降法"><a href="#梯度下降法" class="headerlink" title="梯度下降法"></a><strong>梯度下降法</strong></h3><p>在梯度下降法中, 我们将代价函数定义为:</p>
+<p>$$J(\hat{w}) =J(b,w_1,w_2,\ldots,w_d)$$</p>
+<p>$$= \frac{1}{2m}\sum_{i=1}^{m}(f(\vec{x_i})-y_i)^2 $$</p>
+<p>确定了代价函数也就确定了要优化的方向, 与最小二乘法的基本思想类似, 我们要通过一种方式使得代价函数最小, 即:</p>
+<p>$$\hat{w}^*= \mathop {\arg min }\limits_{\hat{w}} J(\hat{w})$$</p>
+<ul>
+<li>与最小二乘法不同的是: <code>梯度下降法是一种通过迭代进行参数更新从而达到全局最优的方法, 基于这种思想衍生出很多优化算法, 不仅仅用在线性回归, 其他机器学习算法也适用, 尤其是深度学习中的参数优化求解</code></li>
+</ul>
+<p>我们拿最简单的$f(x)= w_1x + w_2x$来看看梯度下降法的整体思路是什么样的, 首先我们要确定$w$和$b$的值使得代价函数$J(w,b)$最小, 如下图所示也就是不断将参数调整使得代价函数取图中蓝色区域部分</p>
+<p><img src="/img/从线性模型到神经网络/cost.png" alt=""></p>
+<p>假如我们每一次迭代都是沿着最大的坡度向下走, 那么我们就会以最快的方式收敛得到最优模型, 即</p>
+<p><img src="/img/从线性模型到神经网络/cost1.png" alt=""></p>
+<p>下面我们看一下梯度下降法是如何更新参数的, 这里需要注意一下`最好在计算完所有新参数之后再同步更新, 梯度下降法更新参数公式如下:</p>
+<ol>
+<li><p>计算所有参数的新的参数值</p>
+<p> $$\dot{b}=b-\alpha\frac{\partial J(w,b)}{\partial b}$$</p>
+<p> $$\dot{w}=w-\alpha\frac{\partial J(w,b)}{\partial w}$$</p>
+</li>
+<li><p>同步更新模型中的所有参数</p>
+<p> $$b=\dot{b}$$</p>
+<p> $$w=\dot{w}$$</p>
+</li>
+</ol>
+<ul>
+<li><p>初始参数随机赋值</p>
+</li>
+<li><p><code>求导得目的</code>: 判定梯度的方向</p>
+</li>
+<li><p>$\alpha$表示学习率, 它决定了我们沿着能让代价函数下降程度最大的方向向下迈出的步子有多大, 本质上是每次迭代下降的步长, 取值在$(0,1)$</p>
+</li>
+</ul>
+<blockquote>
+<p>为什么这样更新就可以达到最优解呢?</p>
+</blockquote>
+<p>我们固定只针对一个参数$w_1$来讨论, 如下图所示, 你可以理解为将$w_2$的值固定, 也就是说垂直于$w_1,w_2$轴沿着$w_1$方向做切面所得,</p>
+<p><img src="/img/从线性模型到神经网络/cost2.png" alt=""></p>
+<p>由上图可知,</p>
+<ul>
+<li><p>当$w&gt;0$时, $\frac{\partial J(w,b)}{\partial w}$为<code>正</code>, 也就是说更新之后的$w$变小, 由图可知$w$<code>变小</code>使得$J(w)$<code>变小</code>, 直到$\frac{\partial J(w,b)}{\partial w}=0$, 参数就不再变化</p>
+</li>
+<li><p>当$w&lt;0$时, $\frac{\partial J(w,b)}{\partial w}$为<code>负</code>, 也就是说更新之后的$w$变大, 由图可知$w$<code>变大</code>使得$J(w)$<code>变小</code>, 直到$\frac{\partial J(w,b)}{\partial w}=0$, 参数就不再变化</p>
+</li>
+</ul>
+<p>随着不断的迭代, 最终得到$J(w)$的最优化模型, 这里我们对于多参数模型也是一样, 就相当于在不同的方向上做切面, 但是对于每个参数而言这种更新方式使得自身不断趋于最优解, 每个参数都以这种方式趋于最优解, 最终达到全局最优解</p>
+<p><img src="/img/从线性模型到神经网络/cost3.png" alt=""></p>
+<p>由上图可知,</p>
+<ul>
+<li>最终梯度下降的方向是由多个参数的下降方向合成的, 最终误差函数的梯度为:</li>
+</ul>
+<p>$$\nabla{E}=\lbrack \frac{\partial E(\vec{w})}{\partial w_0},\frac{\partial E(\vec{w})}{\partial w_2},\ldots,\frac{\partial E(\vec{w})}{\partial w_n} \rbrack$$</p>
+<ul>
+<li><strong>这里注意</strong>, 我们的学习率$\alpha$不能选择太大, 因为步长太大有可能使得更新的点在$w&gt;0$和$w&lt;0$之间来回跳动, 甚至发散, 最终导致模型无法收敛</li>
+</ul>
+<p><img src="/img/从线性模型到神经网络/cost4.png" alt=""></p>
+<blockquote>
+<p>最小二乘法和梯度下降法的比较</p>
+</blockquote>
+<ol>
+<li><p><strong>二者本质相同</strong>: 两种方法都是在给定已知数据的前提下通过对模型参数的求解得出一个一般性的估值函数, 然后通过这个估值函数对新数据进行估算。</p>
+</li>
+<li><p><strong>优化原理相同</strong>: 在已知数据的框架内，使得估算值与实际值的总平方项的差值尽量更小</p>
+</li>
+<li><p><strong>求解方式不同</strong>: 最小二乘法是直接对误差函数求导找出全局最小，是非迭代法。而梯度下降法是一种迭代法，先给定一个初始参数，然后向初始参数下降最快的方向调整参数向量 ，在若干次迭代之后找到局部最小。</p>
+</li>
+</ol>
+<h3 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a><strong>逻辑回归</strong></h3><blockquote>
+<p>我们已经了解了用线性回归进行模型的学习, 但是要做分类任务的话该怎么办呢?</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>其实思想很简单, 如果我们将预测函数$f(\vec{x_i})$的预测值$\hat{y}$进行一个相应的函数映射, 并通过划分输出区间进行分类就可以了, 即</li>
+</ul>
+</blockquote>
+<p>$$\hat{y}=g(f(\vec{x_i}))= g(\vec{w}^T\vec{x}+b)$$</p>
+<p>对于二分类问题, 如果通过最后的函数映射, 只输出两个值就再好不过了, 比如令$g(x)= sgn(x)$来映射, 如图所示,</p>
+<p><img src="/img/从线性模型到神经网络/sgn.png" alt=""></p>
+<p>由上图可知, $\hat{y}$的取值只有1和-1, 这样就将样本数据分成了两类, 但是由于$sgn(x)$函数的微分性质并不理想, 所以在实际应用中我们常常以$g(x)=sigmoid(x)$<br>来替代$sgn(x)$函数, 如图所示</p>
+<p><img src="/img/从线性模型到神经网络/sigmoid.png" alt=""></p>
+<p>让门看一下$sigmoid(x)$的微分特性:</p>
+<p><img src="/img/从线性模型到神经网络/sigmoid1.png" alt=""></p>
+<ul>
+<li>$sigmoid(x)$的微分特性非常好,我们可以在只知道$f(x)$的值的情况下求出$f(x)$的导数值, 而我们在利用梯度下降法调整参数时就是依赖于求导数实现的。</li>
+</ul>
+<p>我们基于线性回归的基础上, 将线性回归的输出通过$g(x)=sigmoid(x)$函数进行映射, 便得到了<code>逻辑回归</code>模型, 可用于分类任务通过映射关系后的模型为</p>
+<p>$$\hat{y}=g(f(\vec{x_i}))= g(\vec{w}^T\vec{x}+b)= sigmoid(\vec{w}^T\vec{x}+b)$$</p>
+<p>$$= \frac{1}{1+e^{-(\vec{w}^T\vec{x}+b)}} $$</p>
+<p>对于二分类问题,</p>
+<ul>
+<li><p>当$\hat{y}&gt;0.5$时, 分为正类 </p>
+</li>
+<li><p>当$\hat{y}&lt;0.5$时, 分为负类</p>
+</li>
+</ul>
+<p>当然, 对于基于逻辑回归的多分类任务, 请看 <a href="http://ufldl.stanford.edu/wiki/index.php/Softmax%E5%9B%9E%E5%BD%92" target="_blank" rel="noopener">Softmax回归</a></p>
+<h3 id="对于逻辑回归的模型优化"><a href="#对于逻辑回归的模型优化" class="headerlink" title="对于逻辑回归的模型优化"></a>对于逻辑回归的模型优化</h3><p>在逻辑回归的模型优化依然采用梯度下降法, 由于引入了$g(x)=sigmoid(x)$映射, 导致按照原来的代价函数形式求解, 使得代价函数成为非凸函数, 意味着我们的代价函数有许多局部最小值，这将影响梯度下降算法寻找全局最小值</p>
+<p><img src="/img/从线性模型到神经网络/unconvex.png" alt=""></p>
+<ul>
+<li>由上图可知, 代价函数很容易陷入局部最优解, 并不能有效的找到全局最优解, 所以在代价函数的构造方面要有所调整, 具体请查看 <a href="http://www.csuldw.com/2016/03/26/2016-03-26-loss-function/" target="_blank" rel="noopener">机器学习-损失函数</a></li>
+</ul>
+<p><strong>逻辑回归惩罚函数定义:</strong></p>
+<p>$$<br> Cost(\hat{y},y) =<br>    \begin{cases}<br>    -log(\hat{y}),  &amp; \text{if $y=1$ } \\[2ex]<br>    -log(1-\hat{y}), &amp; \text{if $y=0$ }<br>    \end{cases}<br>$$</p>
+<p>$$= -ylog(\hat{y})-(1-y)log(1-\hat{y}) $$</p>
+<ul>
+<li>上述代价函数是基于惩罚的思想, 下图中横坐标为逻辑回归模型的预测值$\hat{y}$</li>
+</ul>
+<p><img src="/img/从线性模型到神经网络/logicost.PNG" alt=""></p>
+<p>由上图可知,</p>
+<ul>
+<li>如果真实值为1, 当预测值越接近于1的时候, 代价越小; 如果真实值为0, 当预测值越接近于0的时候, 代价越小</li>
+</ul>
+<p>将上式中的惩罚函数带入逻辑回归的代价函数,</p>
+<p>$$J(\vec{w},b)=\frac 1m \sum_{i=1}^{m} Cost(\hat{y},y)$$</p>
+<p>$$= -\frac 1m \sum_{i=1}^{m} y_ilog(\hat{y}_i)+(1-y_i)log(1-\hat{y}_i)$$</p>
+<ul>
+<li>此时的代价函数是一个凸函数, 利用梯度下降法求得最优解</li>
+</ul>
+<h3 id="线性可分与线性不可分"><a href="#线性可分与线性不可分" class="headerlink" title="线性可分与线性不可分"></a><strong>线性可分与线性不可分</strong></h3><p>以上我们都是假设我们的数据集是线性可分的, 所谓的线性可分就是</p>
+<ol>
+<li><p>在二维平面上可以找到<code>一条直线</code>作为决策边界(两个特征)</p>
+<p> <img src="/img/从线性模型到神经网络/separable.JPG" alt=""></p>
+</li>
+<li><p>在三维立体空间中可以找到<code>一个平面</code>作为决策边界(三个特征)</p>
+<p> <img src="/img/从线性模型到神经网络/separable3d.JPG" alt=""></p>
+</li>
+<li><p>在模型特征多余三个时, 也就是说在高维空间中可以找到一个<code>线性超平面</code>作为决策边界</p>
+</li>
+</ol>
+<blockquote>
+<p>是否可以用线性模型解决非线性问题呢? 我们来看一个最简单的例子</p>
+</blockquote>
+<ol>
+<li><p><strong>与问题</strong><br> <img src="/img/从线性模型到神经网络/and.JPG" alt=""><br> 假设由上图的数据可以训练出的模型为$$f(\vec{x})=x_1+x_2-1.5$$, 然后$sigmoid(x_1+x_2-1.5)$得出$y$值</p>
+</li>
+<li><p><strong>或问题</strong><br> <img src="/img/从线性模型到神经网络/or.JPG" alt=""><br> 假设由上图的数据可以训练出的模型为$$f(\vec{x})=x_1+x_2-0.5$$, 然后$sigmoid(x_1+x_2-0.5)$得出$y$值</p>
+</li>
+<li><p><strong>异或问题</strong><br> <img src="/img/从线性模型到神经网络/xor.JPG" alt=""></p>
+<ul>
+<li>由于<code>异或问题</code>并不是一个线性可分问题, 所以用单纯的线性方法无法找到一个边界, 需要更复杂模型解决异或问题</li>
+</ul>
+</li>
+</ol>
+<p><img src="/img/从线性模型到神经网络/xor1.JPG" alt=""></p>
+<p>由上图可得, 我们通过对3个线性方程的组合, 并在输出端通过变形的$sigmoid(x)$函数进行映射, 达到异或的求解模型: </p>
+<ul>
+<li>为了方便讨论假设3个线性函数的所有偏置量$b=0$ </li>
+</ul>
+<p>图中(1)的输出为: $$f_1(x_1,x_2)=\hat{sigmoid}(x_1-x_2)$$<br>图中(2)的输出为: $$f_2(x_1,x_2)=\hat{sigmoid}(-x_1+x_2)$$<br>图中(3)的输出为: $$f_3(f_1,f_2)=\hat{sigmoid}(f_1+f_2)$$</p>
+<ul>
+<li><p><a href="http://www.cnblogs.com/21207-iHome/p/5227868.html" target="_blank" rel="noopener">Python代码实现</a></p>
+</li>
+<li><p>为了方便讨论, 映射函数采用下图中$a$趋于无穷的情况</p>
+</li>
+</ul>
+<p><img src="/img/从线性模型到神经网络/sigmoid2.jpg" alt=""></p>
+<blockquote>
+<p>通过对三个线性函数的组合我们解决了异或问题, 其实异或模型就是一个基本的神经网络, 输入特征为2个的输入层, 包含2个基本单元的隐含层, 只有1个输出单元的输出层, 虽然这是一个简单的模型, 但是说明了一个道理就是, <code>复杂的问题(比如非线性问题)需要复杂模型(比如神经网络)去处理, 而复杂的模型(比如神经网络)的基本单元是简单模型(比如逻辑回归)</code>, 下面正式介绍神经网络</p>
+</blockquote>
+<blockquote>
+<p><strong>了解更多</strong> : </p>
+</blockquote>
+<ul>
+<li><a href="http://vision.stanford.edu/teaching/cs231n/linear-classify-demo/" target="_blank" rel="noopener">Linear Classification Loss Visualization</a></li>
+</ul>
+<h3 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a><strong>神经网络</strong></h3><p><img src="/img/从线性模型到神经网络/mp.png" alt=""></p>
+<p>在生物神经网络中，神经元是神经网络的基本单元，<code>树突</code>接收来自其他神经元的传递电信号(电信号有两种：兴奋信号和抑制信号)， <code>轴突</code>用来传输细胞体产生的输出电信号,一个神经元把来自不同树突的兴奋性或抑制性输入信号 （突触后膜电位）累加求和，当膜电位高于阈值，细胞被激活，并通过突触把产生的电信号传递给其他神经细胞。</p>
+<p><strong>神经元模型</strong></p>
+<p>通过对生物神经元的仿真，建立抽象的神经元模型，神经元接收来自$n$个其他神经元传递的输入信号，并把这些输入信号通过带权重的连接进行传递, 神经元通过接受到的总输入值与神经元的阈值相比较, 通过激活函数处理已产生神经元的输出, 如下图所示:</p>
+<p><img src="/img/从线性模型到神经网络/mp1.png" alt=""></p>
+<ul>
+<li>神经元模型的数学表示</li>
+</ul>
+<p>$$ O_j = f(\sum_{i=1}^{n}x_iw_{ij}-\theta_j) $$</p>
+<p>其中, </p>
+<ul>
+<li>$w_{i j}$ 表示第$j$个神经元的第$i$个输入的权值</li>
+<li>$\theta_j$ 表示第$j$个神经元的阈值</li>
+<li>$f(\odot)$表示激活函数, 比如$sigmoid(x)$函数</li>
+</ul>
+<blockquote>
+<p>我们可以看出, 这个<code>单一神经元</code>的输入到输出映射关系其实就是一个逻辑回归（logistic regression）, 将这些神经元按照一定的层次连接起来, 就像解决上一节中的异或问题一样, 就得到了神经网络, 神经网络可以理解为包含了许多参数的数学模型, 这个数学模型是由多个函数(比如$O_j$)嵌套而成的, 而我们的目的就是通过一定数据的训练, 通过最优化算法去确定模型中的参数, 使得整个模型的代价函数最小</p>
+</blockquote>
+<h3 id="神经网络模型"><a href="#神经网络模型" class="headerlink" title="神经网络模型"></a><strong>神经网络模型</strong></h3><p>所谓神经网络就是将许多个单一<code>神经元</code>联结在一起，这样一个<code>神经元</code>的输出就可以是另一个<code>神经元</code>的输入。</p>
+<ul>
+<li>下图就是一个简单的神经网络：</li>
+</ul>
+<p><img src="/img/从线性模型到神经网络/nn.png" alt=""></p>
+<p>图中,</p>
+<ul>
+<li><p><code>+1</code>的圆圈被称为<code>偏置节点</code>，也就是截距项$b$</p>
+</li>
+<li><p><code>蓝色圆圈</code>表示神经元的输入, <code>橙色圆圈</code>表示基本神经元</p>
+</li>
+<li><p>神经网络最左边的一层叫做<code>输入层</code>，最右的一层叫做<code>输出层</code>, 中间所有节点组成的一层叫做<code>隐藏层</code>，因为我们不能在训练样本集中观测到它们的值</p>
+</li>
+<li><p>$n_l$表示神经网络的层数, 本例中$n_l=3$</p>
+</li>
+<li><p>$L_i$ 表示第$i$层, $L_1$ 为输入层 </p>
+</li>
+<li><p>$L_{n_l}$ 为输出层, 本例中输出层为 $L_3$</p>
+</li>
+</ul>
+<p>神经网络的参数: $$ (W,b)= (W^{(1)},b^{(1)},W^{(2)},b^{(2)}) $$</p>
+<p>其中,</p>
+<ul>
+<li><p>$W^{(i)},b^{(i)}$ 为列向量, 分别表示第$i$层的<code>权值向量</code>和<code>偏置向量</code></p>
+</li>
+<li><p>在权值向量中, $W_{ij}^{(l)}$ 表示第$l$ 层第$j$单元与第$l+1$ 层第$i$单元之间的连接权重</p>
+</li>
+<li><p>在偏置向量中, $b_i^{(l)}$ 表示第$l+1$层第$i$单元的偏置项, <strong>注意</strong>:偏置单元没有输入，因为它们总是输出<code>+1</code></p>
+</li>
+</ul>
+<h3 id="神经网络的数学描述"><a href="#神经网络的数学描述" class="headerlink" title="神经网络的数学描述"></a><strong>神经网络的数学描述</strong></h3><p><img src="/img/从线性模型到神经网络/nnmath1.png" alt=""></p>
+<p>式中,</p>
+<ul>
+<li>$a_i^{(l)}$ 表示第$l$层第$i$个单元的输出值, <strong>注意</strong>, 当$l=1$时, $a_i^{(1)}$是神经网络的第$i$个输入特征的取值, 即: $a_i^{(1)}=x_i$</li>
+</ul>
+<p>因为在网络结构上没有闭环或回路, 上面的计算步骤叫做<code>前向传播</code>,  也就是说, 当我们已知一组特征属性的取值, 通过这种计算方式, 将上一层的输出值作为下一层的输入值, 以此类推直到得到最终结果, 如果我们将参数向量矩阵化, 就可以利用线性代数中的相关理论快速求解</p>
+<blockquote>
+<p><strong>了解更多</strong> : 神经网络中的梯度下降法—<a href="http://ufldl.stanford.edu/wiki/index.php/%E5%8F%8D%E5%90%91%E4%BC%A0%E5%AF%BC%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">反向传播算法</a> </p>
+</blockquote>
+<h3 id="过拟合问题"><a href="#过拟合问题" class="headerlink" title="过拟合问题"></a><strong>过拟合问题</strong></h3><p><img src="/img/从线性模型到神经网络/overfitting.png" alt=""></p>
+<p>在上图中,假设我们训练出来的函数由左到右分别是</p>
+<p>$$ Y_1=w_0+w_1x$$</p>
+<p>$$ Y_2=w_0+w_1x+w_2x^2$$</p>
+<p>$$ Y_3=w_0+w_1x+w_2x^2+w_3x^3+w_4x^4$$</p>
+<p>图中我们可以看到, 对于相同的训练数据</p>
+<ul>
+<li><p>$Y_1$特征集合过小, 不能很好的适应训练数据,叫做<code>欠拟合</code></p>
+</li>
+<li><p>$Y_3$特征集合过大, 对所有训练数据都拟合得很好, 但是这样对于新数据的预测能力就很差, 即泛化能力很差, 叫做<code>过拟合</code></p>
+</li>
+<li><p>规律 : 模型越复杂越容易过拟合</p>
+</li>
+</ul>
+<p><img src="/img/从线性模型到神经网络/overfitting1.png" alt=""></p>
+<p>下面我们来看一下如何判断过拟合和欠拟合:</p>
+<ul>
+<li><p><code>欠拟合</code>特征 : 训练误差很高 , 测试误差也很高</p>
+</li>
+<li><p><code>过拟合</code>特征 : 训练误差很低 , 测试误差也很高</p>
+</li>
+</ul>
+<p>解决过拟合:</p>
+<ol>
+<li><p>减少特征维数</p>
+</li>
+<li><p>获得更多的训练数据</p>
+</li>
+<li><p>增大正则化系数</p>
+</li>
+</ol>
+<p>解决欠拟合:</p>
+<ol>
+<li><p>增大特征维数</p>
+</li>
+<li><p>减小正则化系数</p>
+</li>
+</ol>
+<h3 id="正则化-regularization"><a href="#正则化-regularization" class="headerlink" title="正则化(regularization)"></a><strong>正则化(regularization)</strong></h3><p>我们知道, 由$Y_1$到$Y_3$模型的复杂度越来越高, 就越容易出现过拟合的问题, 而且正是那些高阶项导致的过拟合, 如果我们找一种方法可以使得高阶项的系数接近于0, 那么高阶项的作用就不大了, 模型的过拟合问题就会减轻, 这就是正则化的基本思想</p>
+<blockquote>
+<p><strong>目的</strong> : 在规则化参数的同时最小化训练误差</p>
+</blockquote>
+<p>首先最小化训练误差并不是我们的最终目的, 我们的最终目的是让预测误差很小, 如果模型过拟合, 虽然训练误差很小, 但是预测误差就很大了, 所以我们要保证模型尽量简单的情况下, 使得训练误差很小, 这样得到的模型才有很好的泛化能力</p>
+<ul>
+<li><strong>正则化后的目标函数</strong></li>
+</ul>
+<p>$$(w^*,b^*)= \mathop {\arg min }\limits_{(w,b)} J(\vec{w}^T,b) + \lambda\Omega(\vec{w}^T)$$</p>
+<p>式中, </p>
+<ul>
+<li><p>$\lambda$ 称为正则化参数, 通常选取的值很大</p>
+</li>
+<li><p>$\lambda\Omega(\vec{w}^T)$ 为正则化项, 也叫惩罚项</p>
+</li>
+<li><p>$\Omega(\vec{w}^T)$ 是对参数$\vec{w}$的规则化函数, 其作用是去约束模型尽量的简单, 该函数根据具体的机器学习模型而定</p>
+</li>
+<li><p>规则化函数$\Omega(\vec{w}^T)$一般是模型复杂度的单调递增函数，模型越复杂，规则化值就越大</p>
+</li>
+</ul>
+<p>比如, 对于$Y_3$模型, 我们选择</p>
+<p>$$\Omega(\vec{w}^T)= \lambda\sum_{j=1}^n{w_j^2}$$</p>
+<ul>
+<li>$n$表示n个参数</li>
+<li>根据惯例不对$w_0$进行惩罚</li>
+</ul>
+<p>假设我们想使得参数$w_3$和$w_4$的值很小, $\lambda =10000$那么最终的优化目标函数为:</p>
+<p>$$ (w^*,b^*)= \mathop {\arg min }\limits_{(w,b)} J(\vec{w}^T,b) + \lambda\sum_{j=1}^n{w_j^2} $$</p>
+<p>$$ = \mathop {\arg min }\limits_{(w,b)} J(\vec{w}^T,b) + 10000w_3 + 10000w_4  $$</p>
+<ul>
+<li>下面我们看看为什么加入正则化项会使得参数$w_3$和$w_4$变小?</li>
+</ul>
+<p>一个直观的解释: 为了使得目标函数最小, 由于$\lambda$的值很大, 所以要将参数$w_3$和$w_4$的值尽可能的小才行</p>
+<ul>
+<li>当然, 在实际的模型中, 我们的正则化项时从$i=1$到$i=n$的, 这样就会在全局上对参数进行一个惩罚, 如果$<br>lambda$过大, 除了$w_0$之外, 所有参数几乎为零, 那么模型是一条水平的直线, 模型欠拟合; 如果$\lambda$过小, 对参数惩罚不够模型过拟合, 所以要选择合适的正则化参数</li>
+</ul>
+<blockquote>
+<p>参考资料 : <a href="http://blog.csdn.net/zouxy09/article/details/24971995" target="_blank" rel="noopener">机器学习中的范数规则化之（一）L0、L1与L2范数</a></p>
+</blockquote>
+<blockquote>
+<p>了解更多 : <a href="https://www.zhihu.com/question/27068705/answer/82132134" target="_blank" rel="noopener">机器学习中的Bias(偏差)，Error(误差)，和Variance(方差)有什么区别和联系？</a></p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/29/Catch单元测试/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Catch单元测试
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/22/kNN/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">kNN</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

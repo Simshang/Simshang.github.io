@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>HDRNET | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本篇介绍一篇基于CNN的实时图像增强的方法, Deep Bilateral Learning for Real-Time Image Enhancement">
+<meta name="keywords" content="图像增强">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HDRNET">
+<meta property="og:url" content="http://simtalk.cn/2018/02/05/HDRNET/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="本篇介绍一篇基于CNN的实时图像增强的方法, Deep Bilateral Learning for Real-Time Image Enhancement">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/gaussian_kernel.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/bilateral_kernel.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/bilateral_definition.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/bilateral_definition1.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/bilateral1.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/bilateral2.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/bilateral3.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/bilateral4.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/bilateral5.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/bilateral6.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/grid1.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/grid2.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/hdrnet1.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/hdrnet2.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/HDRNET/hdrnet3.jpg">
+<meta property="og:updated_time" content="2018-02-07T09:22:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HDRNET">
+<meta name="twitter:description" content="本篇介绍一篇基于CNN的实时图像增强的方法, Deep Bilateral Learning for Real-Time Image Enhancement">
+<meta name="twitter:image" content="http://simtalk.cn/img/HDRNET/gaussian_kernel.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-HDRNET" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/02/05/HDRNET/" class="article-date">
+  	<time datetime="2018-02-05T07:42:43.000Z" itemprop="datePublished">2018-02-05</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      HDRNET
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/图像增强/">图像增强</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/深度学习/">深度学习</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#双边滤波"><span class="toc-text">双边滤波</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#快速双边滤波"><span class="toc-text">快速双边滤波</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#双边网格"><span class="toc-text">双边网格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HDRNET"><span class="toc-text">HDRNET</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络架构"><span class="toc-text">网络架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码分析"><span class="toc-text">代码分析</span></a></li></ol>
+        </div>
+        
+        <p>本篇介绍一篇基于CNN的实时图像增强的方法, <a href="https://groups.csail.mit.edu/graphics/hdrnet/" target="_blank" rel="noopener">Deep Bilateral Learning for Real-Time Image Enhancement</a></p>
+<a id="more"></a>
+<p>在正式介绍论文之前, 我们先了解一下基本概念:</p>
+<h3 id="双边滤波"><a href="#双边滤波" class="headerlink" title="双边滤波"></a><strong>双边滤波</strong></h3><p><code>双边滤波器</code>和高斯滤波器相同, 都是采用加权平均的方式用相邻的像素点亮度来代表某个像素点的亮度, 由于双边滤波器考虑了像素间的欧式距离和像素值域的差异使得双边滤波器具有保持边缘的同时又具有平滑降噪的效果.</p>
+<p><strong>如下图所示, 高斯滤波器的滤波效果:</strong></p>
+<p><img src="/img/HDRNET/gaussian_kernel.jpg" alt=""></p>
+<ul>
+<li>高斯滤波器在图像的任意位置采用相同的高斯核, 这种处理的缺点是在实现对图像的有效平滑的同时也模糊了边缘信息, 图像的边缘区域不能很好的保持</li>
+</ul>
+<p>效果如图:</p>
+<p><img src="/img/HDRNET/bilateral_kernel.jpg" alt=""></p>
+<p><strong>如下图所示, 双边滤波器的定义:</strong></p>
+<p><img src="/img/HDRNET/bilateral_definition.jpg" alt=""></p>
+<p>由定义可以看出, 在高斯滤波的基础上双边滤波器加入了正则系数和值域权重, 双边滤波里的两个权重域的概念：<code>空间域（spatial domain S）</code>和<code>像素值域（range domain R）</code>,这个是它跟高斯滤波等方法的最大不同点。</p>
+<ul>
+<li><p>在图像的平坦区域，像素值变化很小，对应的像素范围域权重接近于1，此时空间域权重起主要作用，相当于进行高斯模糊</p>
+</li>
+<li><p>在图像的边缘区域，像素值变化很大，像素范围域权重变大，从而保持了边缘的信息</p>
+</li>
+</ul>
+<p>在二维图像上的效果如图所示:</p>
+<p><img src="/img/HDRNET/bilateral_definition1.jpg" alt=""></p>
+<p>双边滤波是一种非线性（两个高斯核的乘积）的滤波方法，是结合图像的空间邻近度和像素值相似度的一种折中处理，同时考虑空域信息和灰度相似性，达到保边去噪的目的。</p>
+<h3 id="快速双边滤波"><a href="#快速双边滤波" class="headerlink" title="快速双边滤波"></a><strong>快速双边滤波</strong></h3><p>在介绍双边网格之前, 我们先了解一个双边滤波器的快速算法, <a href="http://www.cis.rit.edu/~cnspci/references/dip/filtering/paris2006.pdf" target="_blank" rel="noopener">A Fast Approximation of the Bilateral Filter using a Signal Processing Approach</a> , 该方法的核心思想是将双边滤波器的公式改写为齐次坐标的形式, 引入一个新的函数将公式从二维空间拓展到三维空间(即一个2D的空间域和一个1D的值域/亮度域), 改进后的双边滤波过程如下:</p>
+<p><img src="/img/HDRNET/bilateral1.jpg" alt=""></p>
+<p>由于采样定理，可以通过对图像下采样做卷积处理，再上采样恢复原式分辨率，达到快速的目的:</p>
+<p><img src="/img/HDRNET/bilateral2.jpg" alt=""></p>
+<p><strong>算法流程如下:</strong></p>
+<p><img src="/img/HDRNET/bilateral3.jpg" alt=""></p>
+<p>假设输入为一个1维的信号如下图所示, </p>
+<p><img src="/img/HDRNET/bilateral4.jpg" alt=""></p>
+<p>算法的处理流程如下:</p>
+<p><img src="/img/HDRNET/bilateral5.jpg" alt=""></p>
+<p>高斯滤波和双边滤波的对比:</p>
+<p><img src="/img/HDRNET/bilateral6.jpg" alt=""></p>
+<h3 id="双边网格"><a href="#双边网格" class="headerlink" title="双边网格"></a><strong>双边网格</strong></h3><p><code>双边网格</code>本质上是一个可以保存边缘信息的3维的数据结构, 就像前面我们提到双边滤波器可以将边缘信息保存下来, 如图所示:</p>
+<p><img src="/img/HDRNET/grid1.jpg" alt=""></p>
+<ul>
+<li>对于一张2维图片, 在2维空间中增加了一维代表像素的强度</li>
+</ul>
+<p><strong>假设输入数据为1维信号:</strong></p>
+<p><img src="/img/HDRNET/grid2.jpg" alt=""></p>
+<p>双边网格的滤波主要分以下步骤:</p>
+<ul>
+<li><p>创建双边网格, 将整个网格初始化为<code>0</code>, 通过在像素值域(range)和空间域(space)进行采样, 每个值域内的亮度值可由加权平均获得, 将采样点取整后放入对应的坐标上形成二维的双边网格, 对于图像来说就是一个3D双边网格, 这样任何处理图片的操作都可以处理这个Grid</p>
+</li>
+<li><p>处理双边网格, 通过高斯核对填充后的双边网格进行卷积操作生成了更加平滑的双边网格, 但是由于采样对于图像来说就是低分辨率的图像</p>
+</li>
+<li><p>通过将平滑后的双边网格和输入信号进行slice操作(上采样)就得到输出信号, 其中Slice操作就是选择一个参考图(一般由输入信号生成), 对参考图任意一个像素进行空间域和像素值域进行采样, 然后使用三线性插值的方法实现未知范围的亮度值的计算得到高分辨率的输出</p>
+</li>
+</ul>
+<h3 id="HDRNET"><a href="#HDRNET" class="headerlink" title="HDRNET"></a><strong>HDRNET</strong></h3><p>在<code>Bilateral Guided Upsampling</code>这篇文章中, 介绍了如何用双边网格实现图像的操作算子的加速, 算法的核心思想是将一副高分辨率的图像通过下采样转换成一个双边网格, 在双边网格中每个格子就是一个图像的仿射变换算子, 它的原理是在空间与值域相近的区域内, 相似输入图像的亮度经算子变换后也应该是相似的, 因此在每个格子里的操作算子可以看成是输入/输出的近似曲线, 而对于双边网格中的不同格子, 通过给定输入和标签去训练整个双边网格实现其仿射模型的全局分段平滑, 最后通过上采样获得高分辨率的处理后的图像。</p>
+<p>算法架构如下图:</p>
+<p><img src="/img/HDRNET/hdrnet1.jpg" alt=""></p>
+<p>如上图所示:</p>
+<ol>
+<li><p>通过对原始图像进行下采样得到低分辨率的图像, 然后通过传统图像算子处理得到低分辨率下的训练标签</p>
+</li>
+<li><p>通过在低分辨率的输入和标签训练得到双边网格的仿射变换参数</p>
+</li>
+<li><p>通过用双边网格对原始图像进行操作(仿射变换和上采样)得到相应的传统图像算子相近似的处理效果</p>
+</li>
+</ol>
+<ul>
+<li><strong>通过利用双边网格的特性可以通过GPU并行加速图像算子的运算</strong></li>
+</ul>
+<h3 id="网络架构"><a href="#网络架构" class="headerlink" title="网络架构"></a><strong>网络架构</strong></h3><p>有了以上的处理框架, 接下来让我们看一下HDRNET的处理流程:</p>
+<p><img src="/img/HDRNET/hdrnet2.jpg" alt=""></p>
+<p>由图可知, HDRNET存在两个数据处理流:</p>
+<ul>
+<li><p><code>红色</code>: 通过下采样的低分辨率图像输入CNN得到3D的双边网格参数, </p>
+</li>
+<li><p><code>紫色和绿色</code>: 在原始分辨率上通过像素级操作得到Guidance Map, 然后通过3D的双边网格做仿射变换, 最后结合原图得到输出图</p>
+</li>
+</ul>
+<p>用传统的方法进行图像算子的运算有两个缺点, 一个是当图片分辨率太大时, 传统方法的运算量过大导致计算资源不够用; 二是在优化性能方面由于数据的依赖性很难做到并行加速, 如果我们将整个图像算子看作是黑箱, 那么我们可以使用神经网络去学习这种仿射关系, 如下图所示:</p>
+<p><img src="/img/HDRNET/hdrnet3.jpg" alt=""></p>
+<ul>
+<li>与<code>Bilateral Guided Upsampling</code>中的Slicing不同的是, 在HDRNET中, Slicing中的上采样参数是可以学习的, 是一种更加鲁棒的上采样方式.</li>
+</ul>
+<h3 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a><strong>代码分析</strong></h3><p>下面我们结合具体的部分代码解释一下整个流程:</p>
+<p><strong>模型的整个前馈代码为:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">inference</span><span class="params">(cls, lowres_input, fullres_input, params,</span></span></span><br><span class="line"><span class="function"><span class="params">              is_training=False)</span>:</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">with</span> tf.variable_scope(<span class="string">'coefficients'</span>):</span><br><span class="line">    bilateral_coeffs = cls._coefficients(lowres_input, params, is_training)</span><br><span class="line">    tf.add_to_collection(<span class="string">'bilateral_coefficients'</span>, bilateral_coeffs)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">with</span> tf.variable_scope(<span class="string">'guide'</span>):</span><br><span class="line">    guide = cls._guide(fullres_input, params, is_training)</span><br><span class="line">    tf.add_to_collection(<span class="string">'guide'</span>, guide)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">with</span> tf.variable_scope(<span class="string">'output'</span>):</span><br><span class="line">    output = cls._output(</span><br><span class="line">        fullres_input, guide, bilateral_coeffs)</span><br><span class="line">    tf.add_to_collection(<span class="string">'output'</span>, output)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>coefficients</code>是由低分辨率图像进行前馈得到的</p>
+</li>
+<li><p><code>guide</code>是通过一个简单的全连接层进行前馈得到的</p>
+</li>
+</ul>
+<blockquote>
+<p>低分辨率数据流: input为<code>256x256</code>的低分辨率图, 最终获得三维的双边网格</p>
+</blockquote>
+<p><strong>浅层图像的特征提取代码:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.variable_scope(<span class="string">'splat'</span>):</span><br><span class="line">  n_ds_layers = int(np.log2(params[<span class="string">'net_input_size'</span>]/spatial_bin))</span><br><span class="line"></span><br><span class="line">  current_layer = input_tensor</span><br><span class="line">  <span class="keyword">for</span> i <span class="keyword">in</span> range(n_ds_layers):</span><br><span class="line">    <span class="keyword">if</span> i &gt; <span class="number">0</span>:  <span class="comment"># don't normalize first layer</span></span><br><span class="line">      use_bn = params[<span class="string">'batch_norm'</span>]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      use_bn = <span class="keyword">False</span></span><br><span class="line">    current_layer = conv(current_layer, cm*(<span class="number">2</span>**i)*gd, <span class="number">3</span>, stride=<span class="number">2</span>,</span><br><span class="line">                         batch_norm=use_bn, is_training=is_training,</span><br><span class="line">                         scope=<span class="string">'conv&#123;&#125;'</span>.format(i+<span class="number">1</span>))</span><br><span class="line">  splat_features = current_layer</span><br></pre></td></tr></table></figure>
+<p><strong>local features path 的代码:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.variable_scope(<span class="string">'local'</span>):</span><br><span class="line">  current_layer = splat_features</span><br><span class="line">  current_layer = conv(current_layer, <span class="number">8</span>*cm*gd, <span class="number">3</span>, </span><br><span class="line">                       batch_norm=params[<span class="string">'batch_norm'</span>], </span><br><span class="line">                       is_training=is_training,</span><br><span class="line">                       scope=<span class="string">'conv1'</span>)</span><br><span class="line">  <span class="comment"># don't normalize before fusion</span></span><br><span class="line">  current_layer = conv(current_layer, <span class="number">8</span>*cm*gd, <span class="number">3</span>, activation_fn=<span class="keyword">None</span>,</span><br><span class="line">                       use_bias=<span class="keyword">False</span>, scope=<span class="string">'conv2'</span>)</span><br><span class="line">  grid_features = current_layer</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用local path提取图像的局部特征, 共2个卷积层, 卷积核为<code>3×3</code>, <code>stride=1</code>,第一个卷积层采用<code>batchnorm</code>处理</li>
+</ul>
+<p><strong>global features path 的代码:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.variable_scope(<span class="string">'global'</span>):</span><br><span class="line">  n_global_layers = int(np.log2(spatial_bin/<span class="number">4</span>))  <span class="comment"># 4x4 at the coarsest lvl</span></span><br><span class="line"></span><br><span class="line">  current_layer = splat_features</span><br><span class="line">  <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2</span>):</span><br><span class="line">    current_layer = conv(current_layer, <span class="number">8</span>*cm*gd, <span class="number">3</span>, stride=<span class="number">2</span>,</span><br><span class="line">        batch_norm=params[<span class="string">'batch_norm'</span>], is_training=is_training,</span><br><span class="line">        scope=<span class="string">"conv&#123;&#125;"</span>.format(i+<span class="number">1</span>))</span><br><span class="line">  _, lh, lw, lc = current_layer.get_shape().as_list()</span><br><span class="line">  current_layer = tf.reshape(current_layer, [bs, lh*lw*lc])</span><br><span class="line"></span><br><span class="line">  current_layer = fc(current_layer, <span class="number">32</span>*cm*gd, </span><br><span class="line">                     batch_norm=params[<span class="string">'batch_norm'</span>], is_training=is_training,</span><br><span class="line">                     scope=<span class="string">"fc1"</span>)</span><br><span class="line">  current_layer = fc(current_layer, <span class="number">16</span>*cm*gd, </span><br><span class="line">                     batch_norm=params[<span class="string">'batch_norm'</span>], is_training=is_training,</span><br><span class="line">                     scope=<span class="string">"fc2"</span>)</span><br><span class="line">  <span class="comment"># don't normalize before fusion</span></span><br><span class="line">  current_layer = fc(current_layer, <span class="number">8</span>*cm*gd, activation_fn=<span class="keyword">None</span>, scope=<span class="string">"fc3"</span>)</span><br><span class="line">  global_features = current_layer</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用global path提取全局特征, 共2个卷积层, 卷积核为<code>3×3</code>, <code>stride=2</code>, 卷积层之后是3个<code>FC层</code></li>
+</ul>
+<p><strong>对local feature和global feature进行汇聚:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.name_scope(<span class="string">'fusion'</span>):</span><br><span class="line">  fusion_grid = grid_features</span><br><span class="line">  fusion_global = tf.reshape(global_features, [bs, <span class="number">1</span>, <span class="number">1</span>, <span class="number">8</span>*cm*gd])</span><br><span class="line">  fusion = tf.nn.relu(fusion_grid+fusion_global)</span><br></pre></td></tr></table></figure>
+<p><strong>计算双边网格的仿射参数:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.variable_scope(<span class="string">'prediction'</span>):</span><br><span class="line">  current_layer = fusion</span><br><span class="line">  current_layer = conv(current_layer, gd*cls.n_out()*cls.n_in(), <span class="number">1</span>,</span><br><span class="line">                              activation_fn=<span class="keyword">None</span>, scope=<span class="string">'conv1'</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">with</span> tf.name_scope(<span class="string">'unroll_grid'</span>):</span><br><span class="line">    current_layer = tf.stack(</span><br><span class="line">        tf.split(current_layer, cls.n_out()*cls.n_in(), axis=<span class="number">3</span>), axis=<span class="number">4</span>)</span><br><span class="line">    current_layer = tf.stack(</span><br><span class="line">        tf.split(current_layer, cls.n_in(), axis=<span class="number">4</span>), axis=<span class="number">5</span>)</span><br><span class="line">  tf.add_to_collection(<span class="string">'packed_coefficients'</span>, current_layer)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>高分辨率数据流: input为原始图像, 最终获得增强后的图像</p>
+</blockquote>
+<p><strong>guidance map的计算:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_guide</span><span class="params">(cls, input_tensor, params, is_training)</span>:</span></span><br><span class="line">  npts = <span class="number">16</span>  <span class="comment"># number of control points for the curve</span></span><br><span class="line">  nchans = input_tensor.get_shape().as_list()[<span class="number">-1</span>]</span><br><span class="line"></span><br><span class="line">  guidemap = input_tensor</span><br><span class="line"></span><br><span class="line">  <span class="comment"># Color space change</span></span><br><span class="line">  idtity = np.identity(nchans, dtype=np.float32) + np.random.randn(<span class="number">1</span>).astype(np.float32)*<span class="number">1e-4</span></span><br><span class="line">  ccm = tf.get_variable(<span class="string">'ccm'</span>, dtype=tf.float32, initializer=idtity)</span><br><span class="line">  <span class="keyword">with</span> tf.name_scope(<span class="string">'ccm'</span>):</span><br><span class="line">    ccm_bias = tf.get_variable(<span class="string">'ccm_bias'</span>, shape=[nchans,], dtype=tf.float32, initializer=tf.constant_initializer(<span class="number">0.0</span>))</span><br><span class="line"></span><br><span class="line">    guidemap = tf.matmul(tf.reshape(input_tensor, [<span class="number">-1</span>, nchans]), ccm)</span><br><span class="line">    guidemap = tf.nn.bias_add(guidemap, ccm_bias, name=<span class="string">'ccm_bias_add'</span>)</span><br><span class="line"></span><br><span class="line">    guidemap = tf.reshape(guidemap, tf.shape(input_tensor))</span><br><span class="line"></span><br><span class="line">  <span class="comment"># Per-channel curve</span></span><br><span class="line">  <span class="keyword">with</span> tf.name_scope(<span class="string">'curve'</span>):</span><br><span class="line">    shifts_ = np.linspace(<span class="number">0</span>, <span class="number">1</span>, npts, endpoint=<span class="keyword">False</span>, dtype=np.float32)</span><br><span class="line">    shifts_ = shifts_[np.newaxis, np.newaxis, np.newaxis, :]</span><br><span class="line">    shifts_ = np.tile(shifts_, (<span class="number">1</span>, <span class="number">1</span>, nchans, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">    guidemap = tf.expand_dims(guidemap, <span class="number">4</span>)</span><br><span class="line">    shifts = tf.get_variable(<span class="string">'shifts'</span>, dtype=tf.float32, initializer=shifts_)</span><br><span class="line"></span><br><span class="line">    slopes_ = np.zeros([<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, nchans, npts], dtype=np.float32)</span><br><span class="line">    slopes_[:, :, :, :, <span class="number">0</span>] = <span class="number">1.0</span></span><br><span class="line">    slopes = tf.get_variable(<span class="string">'slopes'</span>, dtype=tf.float32, initializer=slopes_)</span><br><span class="line"></span><br><span class="line">    guidemap = tf.reduce_sum(slopes*tf.nn.relu(guidemap-shifts), reduction_indices=[<span class="number">4</span>])</span><br><span class="line"></span><br><span class="line">  guidemap = tf.contrib.layers.convolution2d(</span><br><span class="line">      inputs=guidemap,</span><br><span class="line">      num_outputs=<span class="number">1</span>, kernel_size=<span class="number">1</span>, </span><br><span class="line">      weights_initializer=tf.constant_initializer(<span class="number">1.0</span>/nchans),</span><br><span class="line">      biases_initializer=tf.constant_initializer(<span class="number">0</span>),</span><br><span class="line">      activation_fn=<span class="keyword">None</span>, </span><br><span class="line">      variables_collections=&#123;<span class="string">'weights'</span>:[tf.GraphKeys.WEIGHTS], <span class="string">'biases'</span>:[tf.GraphKeys.BIASES]&#125;,</span><br><span class="line">      outputs_collections=[tf.GraphKeys.ACTIVATIONS],</span><br><span class="line">      scope=<span class="string">'channel_mixing'</span>)</span><br><span class="line"></span><br><span class="line">  guidemap = tf.clip_by_value(guidemap, <span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">  guidemap = tf.squeeze(guidemap, squeeze_dims=[<span class="number">3</span>,])</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> guidemap</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在Slicing的操作中, 3D双边网格参考<code>guidance map</code>进行插值上采样, 有代码可知, <code>guidance map</code>也是由一个简单的神经网络通过前馈获得的, 这种映射关系也是可学习的</li>
+</ul>
+<p><strong>Slicing和output的代码:</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_output</span><span class="params">(cls, im, guide, coeffs)</span>:</span></span><br><span class="line">  <span class="keyword">with</span> tf.device(<span class="string">'/gpu:0'</span>):</span><br><span class="line">    out = bilateral_slice_apply(coeffs, guide, im, has_offset=<span class="keyword">True</span>, name=<span class="string">'slice'</span>)</span><br><span class="line">  <span class="keyword">return</span> out</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bilateral_slice_apply</span><span class="params">(grid, guide, input_image, has_offset=True, name=None)</span>:</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">with</span> tf.name_scope(name):</span><br><span class="line">    gridshape = grid.get_shape().as_list()</span><br><span class="line">    <span class="keyword">if</span> len(gridshape) == <span class="number">6</span>:</span><br><span class="line">      gs = tf.shape(grid)</span><br><span class="line">      _, _, _, _, n_out, n_in = gridshape</span><br><span class="line">      grid = tf.reshape(grid, tf.stack([gs[<span class="number">0</span>], gs[<span class="number">1</span>], gs[<span class="number">2</span>], gs[<span class="number">3</span>], gs[<span class="number">4</span>]*gs[<span class="number">5</span>]]))</span><br><span class="line">      <span class="comment"># grid = tf.concat(tf.unstack(grid, None, axis=5), 4)</span></span><br><span class="line"></span><br><span class="line">    sliced = hdrnet_ops.bilateral_slice_apply(grid, guide, input_image, has_offset=has_offset)</span><br><span class="line">    <span class="keyword">return</span> sliced</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>综上所述, HDRNET利用3D双边网格进行并行加速计算, 同时在产生3D双边网格和上采样的参考图时引入了深度学习的方法保持对传统算子仿射变换的拟合, 从而使得在手机端实现了对传统的运算复杂的算子的处理.</p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/01/12/ModelTransfer/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">模型另存为</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

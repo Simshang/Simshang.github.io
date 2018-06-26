@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>GoogLeNet | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="GoogLeNet的特点是提升了计算资源的利用率，可以在保持网络计算资源不变的前提下，通过工艺上的设计来增加网络的宽度和深度，基于Hebbian法则和多尺度处理来优化性能。 在深度学习中, 提升网络性能最直接的办法就是增加网络深度和宽度, 这也就意味着巨量的参数。但是, 巨量参数容易产生过拟合也会大大增加计算量。">
+<meta name="keywords" content="GoogLeNet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GoogLeNet">
+<meta property="og:url" content="http://simtalk.cn/2016/10/09/GoogLeNet/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="GoogLeNet的特点是提升了计算资源的利用率，可以在保持网络计算资源不变的前提下，通过工艺上的设计来增加网络的宽度和深度，基于Hebbian法则和多尺度处理来优化性能。 在深度学习中, 提升网络性能最直接的办法就是增加网络深度和宽度, 这也就意味着巨量的参数。但是, 巨量参数容易产生过拟合也会大大增加计算量。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/GoogLeNet/Inception1.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/GoogLeNet/Inception2.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/GoogLeNet/Inception3.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/GoogLeNet/Inception.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/GoogLeNet/net.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/GoogLeNet/net.jpg">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.947Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GoogLeNet">
+<meta name="twitter:description" content="GoogLeNet的特点是提升了计算资源的利用率，可以在保持网络计算资源不变的前提下，通过工艺上的设计来增加网络的宽度和深度，基于Hebbian法则和多尺度处理来优化性能。 在深度学习中, 提升网络性能最直接的办法就是增加网络深度和宽度, 这也就意味着巨量的参数。但是, 巨量参数容易产生过拟合也会大大增加计算量。">
+<meta name="twitter:image" content="http://simtalk.cn/img/GoogLeNet/Inception1.PNG">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-GoogLeNet" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/09/GoogLeNet/" class="article-date">
+  	<time datetime="2016-10-09T03:38:39.000Z" itemprop="datePublished">2016-10-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      GoogLeNet
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GoogLeNet/">GoogLeNet</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/深度学习/">深度学习</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Inception模块"><span class="toc-text">Inception模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#网络结构"><span class="toc-text">网络结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#训练策略"><span class="toc-text">训练策略</span></a></li></ol>
+        </div>
+        
+        <p>GoogLeNet的特点是提升了计算资源的利用率，可以在保持网络计算资源不变的前提下，通过工艺上的设计来增加网络的宽度和深度，基于Hebbian法则和多尺度处理来优化性能。 在深度学习中, 提升网络性能最直接的办法就是增加网络深度和宽度, 这也就意味着巨量的参数。但是, 巨量参数<code>容易产生过拟合</code>也会大大<code>增加计算量</code>。</p>
+<a id="more"></a>
+<blockquote>
+<p>论文:<a href="https://arxiv.org/pdf/1409.4842v1.pdf" target="_blank" rel="noopener">Going deeper with convolutions</a></p>
+</blockquote>
+<p>对于大规模稀疏的神经网络，可以通过分析激活值的统计特性和对高度相关的输出进行聚类来逐层构建出一个最优网络, <code>这点表明臃肿的稀疏网络可能被不失性能地简化</code>。解决<code>过拟合</code>和<code>计算成本</code>的根本方法是将全连接甚至一般的卷积都转化为稀疏连接, 早在AlexNet中使用的Dropout就是将网络之间的连接转变为<code>稀疏连接</code>从而减少参数的数据以防止模型过拟合, 但是，计算机软硬件对非均匀稀疏数据的计算效率很差，所以在AlexNet中又重新启用了全连接层，目的是为了更好地优化并行运算。</p>
+<ul>
+<li><code>GoogLeNet</code>而非<code>GoogleNet</code>是为了向早期的LeNet致敬!</li>
+</ul>
+<h3 id="Inception模块"><a href="#Inception模块" class="headerlink" title="Inception模块"></a><strong>Inception模块</strong></h3><p>那么如何<code>既能保持网络结构的稀疏性，又能利用密集矩阵的高计算性能</code>呢? 在GoogLeNet中提出了<code>Inception</code>结构来实现的, 采用将多个稀疏矩阵合并成相关的稠密子矩阵的方法来解决:</p>
+<p><img src="/img/GoogLeNet/Inception1.PNG" alt=""></p>
+<ul>
+<li>采用不同大小的卷积核意味着不同大小的感受野，最后的<code>Filter concatenation</code>意味着不同尺度特征的融合</li>
+<li>卷积核大小采用1、3和5，主要是为了方便对齐。设定卷积步长stride=1之后，只要分别设定pad=0、1、2，那么卷积之后便可以得到相同维度的特征，然后这些特征就可以直接拼接在一起了</li>
+<li>网络越到后面(滤波器变大)，特征越抽象，而且每个特征所涉及的感受野也更大</li>
+</ul>
+<p><strong>特征聚合过程:</strong></p>
+<p><img src="/img/GoogLeNet/Inception2.jpg" alt=""></p>
+<ul>
+<li>如上图所示, 我们在相同的一块区域中, 使用不同大小的滤波器进行特征提取, 然后将通过聚类算法将高相关性的区域聚集到一起, filter越来越大, 聚类的数目越来越少</li>
+</ul>
+<p><img src="/img/GoogLeNet/Inception3.jpg" alt=""></p>
+<ul>
+<li>在pooling层添加一个额外的并行pooling路径用于提高效率</li>
+</ul>
+<p>采用上面的模块有一个大问题是: 在卷积层顶端由于滤波器太多，即使是5x5的卷积都会让计算成本太高, 于是有了改进的版本:</p>
+<p><img src="/img/GoogLeNet/Inception.PNG" alt=""></p>
+<p><strong>采用1x1卷积核来进行降维:</strong></p>
+<p>上一层的输出为100x100x128，经过具有256个输出的5x5卷积层之后(stride=1，pad=2)，输出数据为100x100x256。其中，卷积层的参数为128x5x5x256。假如上一层输出先经过具有32个输出的1x1卷积层，再经过具有256个输出的5x5卷积层，那么最终的输出数据仍为为100x100x256，但卷积参数量已经减少为128x1x1x32 + 32x5x5x256，大约减少了4倍。</p>
+<h3 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a><strong>网络结构</strong></h3><p><a href="http://ethereon.github.io/netscope/#/gist/bacf1b6d20fc2f98e094626ab231346c" target="_blank" rel="noopener">GoogleNet模型结构</a></p>
+<p><img src="/img/GoogLeNet/net.PNG" alt=""></p>
+<p><img src="/img/GoogLeNet/net.jpg" alt=""></p>
+<ul>
+<li>GoogLeNet采用了模块化的结构，方便增添和修改</li>
+<li>网络最后采用了average pooling来代替全连接层, 实际在最后还是加了一个全连接层，主要是为了方便以后大家finetune</li>
+<li>虽然移除了全连接，但是网络中依然使用了Dropout</li>
+<li>为了避免梯度消失，网络额外增加了2个辅助的softmax用于向前传导梯度。文章中说这两个辅助的分类器的loss应该加一个衰减系数，但看caffe中的model也没有加任何衰减。此外，实际测试的时候，这两个额外的softmax会被去掉。</li>
+<li>线性层将softmax损失作为分类器</li>
+<li>所有的reduction/projection层都利用了修正线性激活</li>
+</ul>
+<h3 id="训练策略"><a href="#训练策略" class="headerlink" title="训练策略"></a><strong>训练策略</strong></h3><ul>
+<li>利用分布式机器学习系统和数据并行来训练网络，虽然实现时只用了CPU，但是是可以用个别高端的GPU一周达到收敛的。采用异步随机梯度下降，动量为0.9，学习率每8个epoch下降4%。用Polyak平均来创建最后的模型。 </li>
+<li>图像采样的patch大小从图像的8%到100%，选取的长宽比在3/4到4/3之间，光度扭曲也有利于减少过拟合，还使用随机插值方法结合其他超参数的改变来调整图像大小。</li>
+</ul>
+<blockquote>
+<p>参考博客: <a href="http://blog.csdn.net/liumaolincycle/article/details/50471289" target="_blank" rel="noopener">读DL论文心得之GoogLeNet</a><br><a href="https://zhuanlan.zhihu.com/p/22817228" target="_blank" rel="noopener">机器学习进阶笔记之四 | 深入理解GoogLeNet</a></p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/10/11/Caffeproto/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Caffe.proto
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/10/05/Network-In-Network/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Network In Network</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

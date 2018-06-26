@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Back Propagation | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在介绍了梯度下降法进行模型优化的思想之后, 在介绍神经网络之前, 我们需要对反向传播算法有一个直观的理解, 因为在神经网络中, 包含大量的函数嵌套的前向运算, 在利用梯度下降法求导的时候, 通常需要链式法则来进行微分项的计算">
+<meta name="keywords" content="反向传播算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Back Propagation">
+<meta property="og:url" content="http://simtalk.cn/2016/09/07/Backpropagation/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="在介绍了梯度下降法进行模型优化的思想之后, 在介绍神经网络之前, 我们需要对反向传播算法有一个直观的理解, 因为在神经网络中, 包含大量的函数嵌套的前向运算, 在利用梯度下降法求导的时候, 通常需要链式法则来进行微分项的计算">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/Backpropagation/bp1.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/Backpropagation/backfunc.png">
+<meta property="og:image" content="http://simtalk.cn/img/Backpropagation/bp.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/Backpropagation/bp2.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/Backpropagation/bp3.PNG">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.943Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Back Propagation">
+<meta name="twitter:description" content="在介绍了梯度下降法进行模型优化的思想之后, 在介绍神经网络之前, 我们需要对反向传播算法有一个直观的理解, 因为在神经网络中, 包含大量的函数嵌套的前向运算, 在利用梯度下降法求导的时候, 通常需要链式法则来进行微分项的计算">
+<meta name="twitter:image" content="http://simtalk.cn/img/Backpropagation/bp1.PNG">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Backpropagation" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/07/Backpropagation/" class="article-date">
+  	<time datetime="2016-09-07T07:29:19.000Z" itemprop="datePublished">2016-09-07</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Back Propagation
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/反向传播算法/">反向传播算法</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/cs231n/">cs231n</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是梯度"><span class="toc-text">什么是梯度?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#链式法则"><span class="toc-text">链式法则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sigmoid函数"><span class="toc-text">Sigmoid函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运算的形象解释"><span class="toc-text">运算的形象解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码向量化"><span class="toc-text">代码向量化</span></a></li></ol>
+        </div>
+        
+        <p>在介绍了<code>梯度下降法</code>进行模型优化的思想之后, 在介绍神经网络之前, 我们需要对反向传播算法有一个直观的理解, 因为在神经网络中, 包含大量的函数嵌套的前向运算, 在利用梯度下降法求导的时候, 通常需要<code>链式法则</code>来进行微分项的计算 </p>
+<a id="more"></a>
+<h3 id="什么是梯度"><a href="#什么是梯度" class="headerlink" title="什么是梯度?"></a><strong>什么是梯度?</strong></h3><p>假设有一个二元函数$f(x,y) = x y$, 分别对$x,y$求偏导得到,</p>
+<p>$$ f(x,y) = x y \hspace{0.5in} \rightarrow \hspace{0.5in} \frac{\partial f}{\partial x} = y \hspace{0.5in} \frac{\partial f}{\partial y} = x $$</p>
+<p>那么$f(x,y)$的梯度为</p>
+<p>$$\nabla f = [\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}] = [y, x]$$</p>
+<p>对于<strong>乘法</strong>运算来说, 在$x$方向上的变化率是和$y$相关的, 在$y$方向上的变化率是和$x$相关的, 在后向传播中,乘法运算具有<code>交换的作用</code></p>
+<ul>
+<li><strong>注意</strong>, 偏导数的意义是<code>在一个极小的区域内, 函数在某个方向的变化率</code>, 回顾一下倒数的定义:</li>
+</ul>
+<p>$$\frac{df(x)}{dx} = \lim_{h\ \to 0} \frac{f(x + h) - f(x)}{h}$$</p>
+<p>等价于</p>
+<p>$$f(x + h) = f(x) + h \frac{df(x)}{dx}$$</p>
+<ul>
+<li>由上式可得, 在这个极小的区域内, 自变量$x$增加$h$, 因变量增加的$h$的$\frac{df(x)}{dx}$倍, <code>微分的大小代表着整个表达式对于该变量在这个极小区域内的敏感程度</code></li>
+</ul>
+<p>对于<strong>加法</strong>运算, 偏导数如下:</p>
+<p>$$f(x,y) = x + y \hspace{0.5in} \rightarrow \hspace{0.5in} \frac{\partial f}{\partial x} = 1 \hspace{0.5in} \frac{\partial f}{\partial y} = 1$$</p>
+<ul>
+<li>无论其值如何，$x,y$的导数均为1。因为无论增加$x,y$中任一个的值，函数$f$的值都会增加，并且增加的变化率独立于$x,y$的具体值, 并且与$x,y$的系数有关, 在后向传播中, 加法运算具有<code>分发的作用</code></li>
+</ul>
+<p>对于<strong>最大值</strong>运算, 偏导数如下:</p>
+<p>$$f(x,y) = \max(x, y) \hspace{0.5in} \rightarrow \hspace{0.5in} \frac{\partial f}{\partial x} = \mathbb{1}(x &gt;= y) \hspace{0.5in} \frac{\partial f}{\partial y} = \mathbb{1}(y &gt;= x)$$</p>
+<ul>
+<li>如果该变量比另一个变量大，那么梯度是1，反之为0, 在后向传播中,max运算具有<code>路由的作用</code>, 即选择哪个传播路径继续传递参数</li>
+</ul>
+<p>这里我们举个例子来深入的理解一下$max(x)$函数, 假如$x = 4,y = 2$, 那么$\frac{\partial f}{\partial x} =1, \frac{\partial f}{\partial y} =0$, 也就是说在$y$方向上没有任何变化, 即使在$y$方向上增加$h$, $max$输出依然为4, 当然$y$如果增加过了2, 那么函数输出就变了, 但是在偏导数上并不能指明这种变化, 因为导数的定义是$\lim_{h \rightarrow 0}$, 增量无限小的情况</p>
+<h3 id="链式法则"><a href="#链式法则" class="headerlink" title="链式法则"></a><strong>链式法则</strong></h3><p>$$f(x,y,z) = (x + y) z$$</p>
+<p>$$= q z$$</p>
+<ul>
+<li>其中, $q = x + y$, 根据链式法则求微分如下:</li>
+</ul>
+<p>$$\frac{\partial f}{\partial x} = \frac{\partial f}{\partial q} \frac{\partial q}{\partial x}$$</p>
+<p>$$\frac{\partial f}{\partial y} = \frac{\partial f}{\partial q} \frac{\partial q}{\partial y}$$</p>
+<p>$$= z$$</p>
+<ul>
+<li>其中, $\frac{\partial f}{\partial q} = z, \frac{\partial f}{\partial z} = q$ 二者组成乘法器</li>
+<li>$\frac{\partial q}{\partial x} = 1, \frac{\partial q}{\partial y} = 1$ 二者组成加法器</li>
+</ul>
+<p>假如$x = -2,y = 5, z = -4$, 我们来看一下前向传播和后向传播的过程:</p>
+<p><img src="/img/Backpropagation/bp1.PNG" alt=""></p>
+<ol>
+<li><p>前向传播过程 : 绿色数字代表计算结果, 向前传播</p>
+</li>
+<li><p>后向传播过程 : 红色数字代表计算结果, 向后传播</p>
+<ul>
+<li><p><strong>$q,z$组成乘法器</strong> : 前面我们讲到, 乘法运算在后向传播中, 乘法运算具有交换作用, 前向传播中$q=3,z=-4$, 但是后向传播二者交换了值</p>
+</li>
+<li><p><strong>$x,y$组成加法器</strong> : 前面我们讲到, 加法运算在后向传播中, 加法运算具有分发作用, 将$-4$分发给$x,y$</p>
+</li>
+<li><p>一个运算单元可以得到<code>前向输出值</code>和<code>基于前向输出值的局部梯度</code>, 这两个计算是完全独立的</p>
+</li>
+<li><p>一旦前向传播完毕，在反向传播的过程中，运算单元将最终获得整个网络的最终输出值在自己的输出值上的梯度</p>
+</li>
+</ul>
+</li>
+<li><p>一些更加复杂的函数传播</p>
+</li>
+</ol>
+<p><img src="/img/Backpropagation/backfunc.png" alt=""></p>
+<blockquote>
+<p>根据链式法则，运算单元应该将回传的梯度(比如加法器中q回传的-4)乘以它对其的输入的局部梯度(比如加法器中的$\frac{\partial q}{\partial x} = 1, \frac{\partial q}{\partial y} = 1$，$x,y$收到-4, 表明$x,y$需要减小, 那么$q$减小, 使得模型输出值增大) 从而得到整个网络的输出对该运算单元的每个输入值的梯度, 再通过迭代使得模型得到优化</p>
+</blockquote>
+<p><img src="/img/Backpropagation/bp.PNG" alt=""></p>
+<p>让我们再看一个包含了$Sigmoid$函数的例子 : </p>
+<p>假设数学表达为:</p>
+<p>$$f(w,x) = \frac{1}{1+e^{-(w_0x_0 + w_1x_1 + w_2)}}$$</p>
+<ul>
+<li>上式就是一个通过$Sigmoid$函数激活, 具有三个输入(2个特征,1个偏置项)的基本神经元结构, 在图中可知是由多个运算单元组成的</li>
+</ul>
+<p>计算流图如下:</p>
+<p><img src="/img/Backpropagation/bp2.PNG" alt=""></p>
+<p>由后往前, 每个运算单元的微分形式如下:</p>
+<p>$$<br>f(x) = \frac{1}{x}<br>\hspace{1in} \rightarrow \hspace{1in}<br>\frac{df}{dx} = -1/x^2<br>\\<br>f_c(x) = c + x<br>\hspace{1in} \rightarrow \hspace{1in}<br>\frac{df}{dx} = 1<br>\\<br>f(x) = e^x<br>\hspace{1in} \rightarrow \hspace{1in}<br>\frac{df}{dx} = e^x<br>\\<br>f_a(x) = ax<br>\hspace{1in} \rightarrow \hspace{1in}<br>\frac{df}{dx} = a<br>$$</p>
+<h3 id="Sigmoid函数"><a href="#Sigmoid函数" class="headerlink" title="Sigmoid函数"></a><strong>Sigmoid函数</strong></h3><p>我们来看一下$Sigmoid(x)$的微分特性:</p>
+<p>$$<br>\sigma(x) = \frac{1}{1+e^{-x}} \\<br>\rightarrow \hspace{0.3in} \frac{d\sigma(x)}{dx} = \frac{e^{-x}}{(1+e^{-x})^2} = \left( \frac{1 + e^{-x} - 1}{1 + e^{-x}} \right) \left( \frac{1}{1+e^{-x}} \right)<br>= \left( 1 - \sigma(x) \right) \sigma(x)<br>$$</p>
+<p>由上式可知, 我们在计算$Sigmoid$的微分时可以利用$Sigmoid$函数的输出值直接计算得来, 这在编程上提供了很大的便利</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">w = [<span class="number">2</span>,<span class="number">-3</span>,<span class="number">-3</span>] <span class="comment"># assume some random weights and data</span></span><br><span class="line">x = [<span class="number">-1</span>, <span class="number">-2</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># forward pass</span></span><br><span class="line">dot = w[<span class="number">0</span>]*x[<span class="number">0</span>] + w[<span class="number">1</span>]*x[<span class="number">1</span>] + w[<span class="number">2</span>]</span><br><span class="line">f = <span class="number">1.0</span> / (<span class="number">1</span> + math.exp(-dot)) <span class="comment"># sigmoid function</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># backward pass through the neuron (backpropagation)</span></span><br><span class="line">ddot = (<span class="number">1</span> - f) * f <span class="comment"># gradient on dot variable, using the sigmoid gradient derivation</span></span><br><span class="line">dx = [w[<span class="number">0</span>] * ddot, w[<span class="number">1</span>] * ddot] <span class="comment"># backprop into x</span></span><br><span class="line">dw = [x[<span class="number">0</span>] * ddot, x[<span class="number">1</span>] * ddot, <span class="number">1.0</span> * ddot] <span class="comment"># backprop into w</span></span><br><span class="line"><span class="comment"># we're done! we have the gradients on the inputs to the circuit</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>在上述代码中, 创建了一个中间变量dot，它装着w和x的点乘结果f, 在反向传播的时，就可以（反向地）计算出装着w和x等的梯度的对应的变量（比如ddot，dx和dw）</li>
+</ul>
+<ol>
+<li><p>对前向传播变量进行缓存：在计算反向传播时，前向传播过程中得到的一些中间变量非常有用, 这样在反向传播的时候也能用上它们, 如果这样做过于困难，也可以重新计算它们, 但是浪费了计算资源</p>
+</li>
+<li><p>在不同分支的梯度要相加：如果变量x，y在前向传播的表达式中出现多次，那么进行反向传播的时候就要非常小心，使用+=而不是=来累计这些变量的梯度, 这是遵循了在微积分中的多元链式法则，该法则指出如果变量在计算流中走向不同的部分，那么梯度在回传的时候，就应该进行累加。</p>
+</li>
+</ol>
+<h3 id="运算的形象解释"><a href="#运算的形象解释" class="headerlink" title="运算的形象解释"></a><strong>运算的形象解释</strong></h3><p><img src="/img/Backpropagation/bp3.PNG" alt=""></p>
+<p>由上图可得,</p>
+<p><code>乘法</code> : 局部梯度是输入值，但是是相互交换之后的，然后根据链式法则乘以输出值的梯度。<br><code>加法</code> : 把输出的梯度相等地分发给它所有的输入，这一行为与输入值在前向传播时的值无关。<br><code>最大值</code> : 把梯度转给其中一个输入，这个输入是在前向传播中值最大的那个输入。</p>
+<h3 id="代码向量化"><a href="#代码向量化" class="headerlink" title="代码向量化"></a><strong>代码向量化</strong></h3><p>上述内容考虑的都是单个变量情况，但是所有概念都适用于矩阵和向量操作。然而，在操作的时候要注意关注维度和转置操作。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># forward pass</span></span><br><span class="line">W = np.random.randn(<span class="number">5</span>, <span class="number">10</span>)</span><br><span class="line">X = np.random.randn(<span class="number">10</span>, <span class="number">3</span>)</span><br><span class="line">D = W.dot(X)</span><br><span class="line"></span><br><span class="line"><span class="comment"># now suppose we had the gradient on D from above in the circuit</span></span><br><span class="line">dD = np.random.randn(*D.shape) <span class="comment"># same shape as D</span></span><br><span class="line">dW = dD.dot(X.T) <span class="comment">#.T gives the transpose of the matrix</span></span><br><span class="line">dX = W.T.dot(dD)</span><br></pre></td></tr></table></figure>
+<p><strong>技巧</strong> : 写出一个很小很明确的向量化例子，在纸上演算梯度，然后对其一般化，得到一个高效的向量化操作形式。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/08/Neural-Network/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Neural Network
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/05/Gradient-Descent/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Gradient Descent</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

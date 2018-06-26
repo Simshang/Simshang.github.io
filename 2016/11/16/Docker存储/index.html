@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Docker存储 | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在布置caffe in docker的过程中, 发现docker容器的存储空间不够用了, 记录一下怎么给容器扩容">
+<meta name="keywords" content="Container">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker存储">
+<meta property="og:url" content="http://simtalk.cn/2016/11/16/Docker存储/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="在布置caffe in docker的过程中, 发现docker容器的存储空间不够用了, 记录一下怎么给容器扩容">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker存储">
+<meta name="twitter:description" content="在布置caffe in docker的过程中, 发现docker容器的存储空间不够用了, 记录一下怎么给容器扩容">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Docker存储" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/11/16/Docker存储/" class="article-date">
+  	<time datetime="2016-11-16T02:52:52.000Z" itemprop="datePublished">2016-11-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Docker存储
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Container/">Container</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Docker/">Docker</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本信息"><span class="toc-text">基本信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容器扩容"><span class="toc-text">容器扩容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容器瘦身"><span class="toc-text">容器瘦身</span></a></li></ol>
+        </div>
+        
+        <p>在布置caffe in docker的过程中, 发现docker容器的存储空间不够用了, 记录一下怎么给容器扩容</p>
+<a id="more"></a>
+<h3 id="基本信息"><a href="#基本信息" class="headerlink" title="基本信息"></a><strong>基本信息</strong></h3><p>docker默认单个容器可以使用数据空间大小10GB，docker可用数据总空间100GB，元数据可用总空间2GB。</p>
+<ul>
+<li><code>docker info</code>可以查看Data Space Total、Metadata Space Total等信息:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Containers: 18</span><br><span class="line"> Running: 6</span><br><span class="line"> Paused: 0</span><br><span class="line"> Stopped: 12</span><br><span class="line">Images: 171</span><br><span class="line">Server Version: 1.12.1</span><br><span class="line">Storage Driver: devicemapper</span><br><span class="line"> Pool Name: docker-253:0-25952953-pool</span><br><span class="line"> Pool Blocksize: 65.54 kB</span><br><span class="line"> Base Device Size: 10.74 GB</span><br><span class="line"> Backing Filesystem: xfs</span><br><span class="line"> Data file: /dev/loop0</span><br><span class="line"> Metadata file: /dev/loop1</span><br><span class="line"> Data Space Used: 63.73 GB</span><br><span class="line"> Data Space Total: 107.4 GB</span><br><span class="line"> Data Space Available: 43.64 GB</span><br><span class="line"> Metadata Space Used: 54.65 MB</span><br><span class="line"> Metadata Space Total: 2.147 GB</span><br><span class="line"> Metadata Space Available: 2.093 GB</span><br><span class="line"> Thin Pool Minimum Free Space: 10.74 GB</span><br><span class="line">Kernel Version: 3.10.0-327.36.2.el7.x86_64</span><br><span class="line">Operating System: CentOS Linux 7 (Core)</span><br><span class="line">OSType: linux</span><br><span class="line">Architecture: x86_64</span><br><span class="line">CPUs: 32</span><br><span class="line">Total Memory: 62.7 GiB</span><br><span class="line">Name: GPU-48</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>ll /var/lib/docker/devicemapper/devicemapper/ -h</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">总用量 60G</span><br><span class="line">-rw-------. 1 root root 100G 11月 16 10:48 data</span><br><span class="line">-rw-------. 1 root root 2.0G 11月 16 10:56 metadata</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>docker exec caffe_gpu_shang df -hT</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Filesystem                                                                                         Type   Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/docker-253:0-25952953-e44d175cbcf2a014478cbe0207f2709f96fa595a259404c8b1780a8552d67697 xfs     10G  9.8G  233M  98% /</span><br><span class="line">tmpfs                                                                                              tmpfs   32G     0   32G   0% /dev</span><br><span class="line">tmpfs                                                                                              tmpfs   32G     0   32G   0% /sys/fs/cgroup</span><br><span class="line">/dev/mapper/centos_gpu--48-home                                                                    ext4   887G   82G  760G  10% /home</span><br><span class="line">/dev/mapper/centos_gpu--48-root                                                                    ext4   1.4T  128G  1.3T  10% /etc/hosts</span><br><span class="line">shm                                                                                                tmpfs   64M     0   64M   0% /dev/shm</span><br></pre></td></tr></table></figure>
+<p>可看到存储空间9.8G已占用98%, 当一个容器的数据空间大于10GB后，那么这个容器将不能写入新的数据文件。</p>
+<h3 id="容器扩容"><a href="#容器扩容" class="headerlink" title="容器扩容"></a><strong>容器扩容</strong></h3><p>默认来说，如果你使用 Device Mapper 的存储插件，所有的镜像和容器是从一个初始 10G 的文件系统中创建的。</p>
+<p>由于需要修改 Device Mapper 管理中的一些卷的信息，我们现在用 root 的身份来运行一些命令。所有以＃开头的命令都必须以 root 身份来执行。只要能访问 Docker 的 Socket 服务，你也可以用普通用户的身份来执行其他的命令（以$开头）。</p>
+<ul>
+<li>让我们看一下 /dev/mapper ，那里应该有一个对应容器文件系统的符号链接，以 docker-X:Y-Z- 开头：</li>
+</ul>
+<p><code>cd /dev/mapper/</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">centos_gpu--48-home</span><br><span class="line">centos_gpu--48-root</span><br><span class="line">centos_gpu--48-swap</span><br><span class="line">control</span><br><span class="line">docker-253:0-25952953-3617340e14b404910420956b8b7668551e632e0745e7f73c05809607dc0773c6</span><br><span class="line">docker-253:0-25952953-3c748974ebd27c722dcbdd0f48c62da0dba377b8fd5cbe37a67378f55fcc9817</span><br><span class="line">docker-253:0-25952953-4c12e865da624e71e96e81c4b41db9ff17f53b6d98d4a5a76ec955498fb62b4a</span><br><span class="line">docker-253:0-25952953-68e8e3af52018ad6cb87b2b0f7f477784551e36ba084134b0c23580b2705da73</span><br><span class="line">docker-253:0-25952953-76530f664d713798f5e6c2bde785a3f9659f2649b564b1bbc6733b3249f6cb82</span><br><span class="line">docker-253:0-25952953-e44d175cbcf2a014478cbe0207f2709f96fa595a259404c8b1780a8552d67697</span><br><span class="line">docker-253:0-25952953-pool</span><br></pre></td></tr></table></figure>
+<ul>
+<li>进入自己的容器使用<code>df -h</code>查看:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Filesystem                                                                                          Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/docker-253:0-25952953-e44d175cbcf2a014478cbe0207f2709f96fa595a259404c8b1780a8552d67697   10G  9.8G  262M  98% /</span><br><span class="line">tmpfs                                                                                                32G     0   32G   0% /dev</span><br><span class="line">tmpfs                                                                                                32G     0   32G   0% /sys/fs/cgroup</span><br><span class="line">/dev/mapper/centos_gpu--48-home                                                                     887G   82G  761G  10% /home</span><br><span class="line">/dev/mapper/centos_gpu--48-root                                                                     1.4T  128G  1.3T  10% /etc/hosts</span><br><span class="line">shm                                                                                                  64M     0   64M   0% /dev/shm</span><br></pre></td></tr></table></figure>
+<ul>
+<li>返回到Host中的<code>/dev/mapper</code>文件夹执行:</li>
+</ul>
+<p><code>ls -l /dev/mapper/docker-*-e44d175cbcf2a014478cbe0207f2709f96fa595a259404c8b1780a8552d67697</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lrwxrwxrwx. 1 root root 7 11月 15 21:18 /dev/mapper/docker-253:0-25952953-e44d175cbcf2a014478cbe0207f2709f96fa595a259404c8b1780a8552d67697 -&gt; ../dm-8</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看当前卷的信息表</li>
+</ul>
+<p><code>dmsetup table docker-253:0-25952953-e44d175cbcf2a014478cbe0207f2709f96fa595a259404c8b1780a8552d67697</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0 20971520 thin 253:3 1966</span><br><span class="line"></span><br><span class="line">第二个数字是设备的大小，表示有20971520个` 512－bytes `的扇区. 这个值略高于` 10GB `的大小</span><br></pre></td></tr></table></figure>
+<ul>
+<li>来计算一下一个<code>20GB</code>的卷需要多少扇区</li>
+</ul>
+<p><code>echo $((20*1024*1024*1024/512))</code><br>41943040</p>
+<p>精简快照目标的一个神奇的特点是它不会限制卷的大小。当你创建它的时候，一个精简的卷使用0个块，当你开始往块里面写入的时候，它们会从共用的块池中进行分配。你可以写0个块，或者是10亿个块，这个和精简快照目标没关系。文件系统的大小只和 Device Mapper 表有关系，只是需要装载一个新的表，这个完全和之前的是一样的，但是有更多的扇区。</p>
+<ul>
+<li>改变第二个数字，要非常小心保持其他的值不变</li>
+</ul>
+<p><code>echo 0 41943040 thin 253:3 1966 | dmsetup load docker-253:0-25952953-e44d175cbcf2a014478cbe0207f2709f96fa595a259404c8b1780a8552d67697</code></p>
+<p><code>dmsetup resume docker-253:0-25952953-e44d175cbcf2a014478cbe0207f2709f96fa595a259404c8b1780a8552d67697</code></p>
+<ul>
+<li>使用下面的命令激活新表:</li>
+</ul>
+<p><code>resize2fs /dev/mapper/docker-253:0-25952953-e44d175cbcf2a014478cbe0207f2709f96fa595a259404c8b1780a8552d67697</code></p>
+<p><strong>Centos7</strong></p>
+<p><code>xfs_growfs /dev/mapper/docker-253:0-25952953-e44d175cbcf2a014478cbe0207f2709f96fa595a259404c8b1780a8552d67697</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">meta-data=/dev/mapper/docker-253:0-25952953-e44d175cbcf2a014478cbe0207f2709f96fa595a259404c8b1780a8552d67697 isize=256    agcount=16, agsize=163824 blks</span><br><span class="line">         =                       sectsz=512   attr=2, projid32bit=1</span><br><span class="line">         =                       crc=0        finobt=0</span><br><span class="line">data     =                       bsize=4096   blocks=2621184, imaxpct=25</span><br><span class="line">         =                       sunit=16     swidth=16 blks</span><br><span class="line">naming   =version 2              bsize=4096   ascii-ci=0 ftype=0</span><br><span class="line">log      =internal               bsize=4096   blocks=2560, version=2</span><br><span class="line">         =                       sectsz=512   sunit=16 blks, lazy-count=1</span><br><span class="line">realtime =none                   extsz=4096   blocks=0, rtextents=0</span><br><span class="line">data blocks changed from 2621184 to 2621440</span><br></pre></td></tr></table></figure>
+<ul>
+<li>进入容器重新查看容量大小</li>
+</ul>
+<p><code>df -h</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Filesystem                                                                                          Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/docker-253:0-25952953-68e8e3af52018ad6cb87b2b0f7f477784551e36ba084134b0c23580b2705da73   20G  8.7G   12G  44% /</span><br><span class="line">tmpfs                                                                                                32G     0   32G   0% /dev</span><br><span class="line">tmpfs                                                                                                32G     0   32G   0% /sys/fs/cgroup</span><br><span class="line">/dev/mapper/centos_gpu--48-home                                                                     887G   82G  761G  10% /home</span><br><span class="line">/dev/mapper/centos_gpu--48-root                                                                     1.4T  132G  1.2T  10% /etc/hosts</span><br><span class="line">shm                                                                                                  64M     0   64M   0% /dev/shm</span><br></pre></td></tr></table></figure>
+<p>大小为20G , 使用率44%</p>
+<h3 id="容器瘦身"><a href="#容器瘦身" class="headerlink" title="容器瘦身"></a><strong>容器瘦身</strong></h3><p>通过导出导入给容器瘦身</p>
+<p><code>sudo docker export $(CID) | docker import - base</code></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/11/16/文本分类实践/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          文本分类实践
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/11/09/民主与自由/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">民主与自由</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

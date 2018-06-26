@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Object Tracking | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="实习以来开始接触目标跟踪相关的算法，在目标跟踪的任务中，越来越多的方法开始利用深度学习来进行性能的提升，但是基于MOSSE算法思想的传统方法依然占据一席之地，首先我们介绍这一系列算法的相关基础知识，其次我们分析后续基于MOSSE算法的一系列优化算法。">
+<meta name="keywords" content="Staple">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Object Tracking">
+<meta property="og:url" content="http://simtalk.cn/2017/07/03/Object-Tracking/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="实习以来开始接触目标跟踪相关的算法，在目标跟踪的任务中，越来越多的方法开始利用深度学习来进行性能的提升，但是基于MOSSE算法思想的传统方法依然占据一席之地，首先我们介绍这一系列算法的相关基础知识，其次我们分析后续基于MOSSE算法的一系列优化算法。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/mosse1.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/mosse2.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/csk1.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/csk2.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/csk3.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/csk5.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/csk4.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/csk6.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/csk7.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/kcf1.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/cn2.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/cn1.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/dat1.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/dat2.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/dat3.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/dat4.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/dsst2.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/dsst1.png">
+<meta property="og:image" content="http://simtalk.cn/img/Object-Tracking/staple1.png">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.951Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Object Tracking">
+<meta name="twitter:description" content="实习以来开始接触目标跟踪相关的算法，在目标跟踪的任务中，越来越多的方法开始利用深度学习来进行性能的提升，但是基于MOSSE算法思想的传统方法依然占据一席之地，首先我们介绍这一系列算法的相关基础知识，其次我们分析后续基于MOSSE算法的一系列优化算法。">
+<meta name="twitter:image" content="http://simtalk.cn/img/Object-Tracking/mosse1.png">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Object-Tracking" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/07/03/Object-Tracking/" class="article-date">
+  	<time datetime="2017-07-03T12:19:46.000Z" itemprop="datePublished">2017-07-03</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Object Tracking
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Staple/">Staple</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/机器学习/">机器学习</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MOSSE-2010"><span class="toc-text">MOSSE(2010)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CSK-2012"><span class="toc-text">CSK(2012)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#KCF-DCF-2014"><span class="toc-text">KCF/DCF(2014)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CN-2014"><span class="toc-text">CN (2014)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DAT-2015"><span class="toc-text">DAT(2015)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DSST-amp-fDSST-2016"><span class="toc-text">DSST&amp;fDSST(2016)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Staple-2016"><span class="toc-text">Staple(2016)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Summary"><span class="toc-text">Summary</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Expectation"><span class="toc-text">Expectation</span></a></li></ol>
+        </div>
+        
+        <p>实习以来开始接触目标跟踪相关的算法，在目标跟踪的任务中，越来越多的方法开始利用深度学习来进行性能的提升，但是基于MOSSE算法思想的传统方法依然占据一席之地，首先我们介绍这一系列算法的相关基础知识，其次我们分析后续基于MOSSE算法的一系列优化算法。</p>
+<a id="more"></a>
+<h3 id="MOSSE-2010"><a href="#MOSSE-2010" class="headerlink" title="MOSSE(2010)"></a><strong>MOSSE</strong>(2010)</h3><p><a href="http://www.cs.colostate.edu/~vision/publications/bolme_cvpr10.pdf" target="_blank" rel="noopener"><strong>Visual Object Tracking using Adaptive Correlation Filters</strong> (PDF)</a></p>
+<p>Minimum Output Sum of Squared Error(MOSSE)是第一篇将correlation filter（CF）引入object tracking的论文，是CSK和KCF/DCF等算法的基础。首先我们来看一下CF的概念，</p>
+<blockquote>
+<p><strong>CF</strong>(相关滤波)</p>
+</blockquote>
+<p>相关一般分为自相关和互相关，这里我们一般指的是<code>互相关</code>，假设我们有两个信号$f$和$g$</p>
+<p>$$ (f \otimes g)(\tau )\mathop  = \limits^{def} \int_{ - \infty }^\infty  {f^*(t)g(t + \tau )dt} $$</p>
+<p>$$ (f \otimes g)(n)\mathop  = \limits^{def} \sum\limits_{ - \infty }^\infty  {f^*[m]g(m + n)} $$</p>
+<ul>
+<li>$f^*$表示$f$的共轭，互相关的直接解释就是衡量两个信号在某个时刻$\tau$时的相似程度。</li>
+</ul>
+<p>假设$f$和$g$的形状一样，那么一定是$f$和$g$对齐的时候二者的相似程度最大，此时达到最大的输出响应，如下图所示：</p>
+<p><img src="/img/Object-Tracking/mosse1.png" alt=""></p>
+<p>由上图可知，卷积计算和相关计算的关系</p>
+<ul>
+<li>Two-dimensional correlation is equivalent to two-dimensional convolution with the filter matrix rotated 180 degrees. </li>
+</ul>
+<blockquote>
+<p>将CF应用在tracking方面最基本的思想就是，设计一个滤波模板，使得该模板与跟踪目标的ROI做卷积运算，得到最大的输出响应。</p>
+</blockquote>
+<p><img src="/img/Object-Tracking/mosse2.png" alt=""></p>
+<p>如上图所示, 将该思想用数学语言描述为：</p>
+<p>$$ g=f\otimes h $$</p>
+<p>其中，</p>
+<ul>
+<li>$g$表示输出响应</li>
+<li>$f$表示输入原始图片的灰度图像</li>
+<li>$h$表示滤波模板</li>
+</ul>
+<p>在该tracking模型中，我们只需要通过不断的修正滤波模板$h$，得到最大的输出响应即可。</p>
+<p>在该算法中用卷积运算进行输出响应的计算，可以用快速傅立叶变换（FFT）进行加速计算，将空域里的卷积变为了频域里的点乘。具体计算公式如下：</p>
+<p>$$ F(g)=F(f\otimes g)=F(f)\cdot F(h)^* $$</p>
+<p>简写为 $G=F\cdot H^*$, 从而得到滤波模板的频域表示：</p>
+<p>$$ H^*={G\over F} $$</p>
+<p>在跟踪的光照等其他因素的影响下，为了提高滤波模板的鲁棒性，在文章中作者对GroundTruth进行随机仿射变换得到一系列的训练样本$f_i$，$g_i$是由高斯函数产生的并且其峰值位置是在$f_i$的中心,我们同时考虑$m$帧作为参考，这就是MOSSE模型的思想，最终该模型的目标函数表示为：</p>
+<p>$$<br> min_{H^*} =\sum_{i=1}^{m}|H^* F_i-G_i|^2)<br>$$</p>
+<p>我们需要将目标函数最小化，对上式在频域进行求导（复数域不同于实数域），得到：</p>
+<p>$$<br>H = \frac{\sum\limits_{i=1}^{m}{F_i}\odot G_{i}^{*}<br>}{\sum\limits_{i=1}^{m}{F_i}\odot F_{i}^{*}<br>}<br>$$</p>
+<p>在跟踪过程中，我们只需要将以上模板与当前帧与滤波模板做相关操作，在输出响应中找到最大值的位置，该位置就是目标在当前帧中的位置。本文的参数更新的策略为：</p>
+<p>$$<br>H_t={A_t\over B_t}<br>$$<br>$$<br>A_t=\eta F_t \cdot G^*_t +(1-\eta)A_{t-1}<br>$$<br>$$<br>B_t=\eta F_t \cdot F^*_t +(1-\eta)B_{t-1}<br>$$</p>
+<p>其中，$\eta$是一个超参数，为经验值。</p>
+<blockquote>
+<p>缺点：</p>
+</blockquote>
+<ul>
+<li><p>输入的特征为单通道灰度图像，特征表达能力有限</p>
+</li>
+<li><p>没有尺度更新，对于尺度变化的跟踪目标不敏感</p>
+</li>
+</ul>
+<h3 id="CSK-2012"><a href="#CSK-2012" class="headerlink" title="CSK(2012)"></a><strong>CSK</strong>(2012)</h3><p><a href="http://home.isr.uc.pt/~pedromartins/Publications/henriques_eccv2012.pdf" target="_blank" rel="noopener"><strong>Exploiting the Circulant Structure of Tracking-by-detection with Kernels</strong>(PDF)</a></p>
+<p>在跟踪算法当中最主要的部分是分类器和特征，CSK最大亮点就是提出了利用循环移位的方法进行稠密采样并结合FFT快速的进行分类器的训练。</p>
+<p>在基于MOSSE的基础上主要有以下几点改进：</p>
+<ul>
+<li><p>通过密集采样（Dense Sampling）将整张图片的特征利用起来，并不是只是利用每个候选框的局部特征</p>
+<p><img src="/img/Object-Tracking/csk1.png" alt=""></p>
+</li>
+<li><p>引入循环矩阵实现了密集采样，从而实现了整张图片特征的提取</p>
+</li>
+<li><p>在MOSSE中通过训练滤波模板得到一个线性回归模型，CSK中通过<code>引入核函数的方式</code>将分类器变为非线性回归模型，解决了低维线性不可分或者非线性可分的情况，从而使得分类器在丰富的高维特征空间中起作用。（核函数的本质就是通过映射关系将特征从低维空间映射到高维空间，从而将低维空间中的不可分变为在高维空间中的可分）。</p>
+</li>
+</ul>
+<blockquote>
+<p>引入核方法后的数学模型的数学表达为：</p>
+</blockquote>
+<p>$$ f(z) = w^T\phi(z) = \alpha^T \phi(X) \phi(z) $$</p>
+<p>该模型最终要确定的系数矩阵$w$，就像MOSSE中最终要确定滤波模板$H$, 在求$f(z)$的过程中我们首先对输入用核函数$\phi(x)$进行映射，在核方法中，我们一般不知道非线性映射函数$\phi(x)$的具体形式，一般只是刻画在核空间的核矩阵$Kernel\ Matrix$，将原始输入通过核矩阵映射到核空间, 其定义如下：</p>
+<p>$$ K_{ij}=&lt;\phi(x),\phi’(x)&gt;=\kappa&lt;x,x’&gt;  $$</p>
+<ul>
+<li>$K$表示核空间的核矩阵</li>
+</ul>
+<p>根据Representer Theorem定理，参数矩阵可以表示为：</p>
+<p>$$ \mathbf{w}\ =\sum_i \alpha_i \phi(x_i)$$</p>
+<p>其中，带有核函数的最小二乘法拥有封闭解：</p>
+<p>$$ \mathbf{\alpha} = (K + \lambda I)^{-1} \mathbf{y}$$</p>
+<p>这样我们就得到了模型参数$w$的解。</p>
+<p>下面的公式是一个典型的加入正则项的最小二乘法（RLS：Regularized Least Squares）的目标函数：</p>
+<p>  <img src="/img/Object-Tracking/csk2.png" alt=""></p>
+<ul>
+<li>$L(y_i,f(x_i))$为Loss Function ，$\lambda$为正则化系数</li>
+</ul>
+<blockquote>
+<p><strong>Circulant matrices</strong>(循环矩阵)与<strong>Kernel Matrix</strong>(核函数矩阵)的循环性</p>
+</blockquote>
+<p>  <img src="/img/Object-Tracking/csk3.png" alt=""></p>
+<p>由上图可知，一维向量的循环移位的到一个循环矩阵，具体效果如下图所示：</p>
+<p>  <img src="/img/Object-Tracking/csk5.png" alt=""></p>
+<p>对于二维图像而言，对于目标区域的循环移位相当于采样窗口的位移，如下图所示，对于目标图像进行不同次数的循环后得到的位移图，</p>
+<p>  <img src="/img/Object-Tracking/csk4.png" alt=""></p>
+<p>如下图所示，在CSK中训练样本是由循环移位得到的，训练标签是由高斯函数产生的连续值，本质上关滤波是回归模型而不是分类模型，</p>
+<p>  <img src="/img/Object-Tracking/csk6.png" alt=""></p>
+<ul>
+<li>原始样本是跟踪框加1~1.5倍padding得到的图像块，再乘一个余弦窗(为了减轻由于边界移位导致图像不光滑)，训练样本集是原始样本通过循环移位产生，原始图像中心(红点)移位后对应高斯图位置的值就是这个移位样本的标签(蓝点)</li>
+</ul>
+<blockquote>
+<p>具体的跟踪过程：</p>
+</blockquote>
+<p>  <img src="/img/Object-Tracking/csk7.png" alt=""></p>
+<ul>
+<li><p>首先使用红色虚线框确定了跟踪目标，，然后红色实线框就是使用了padding的图像块，其他的框就是将padding之后的图像块循环移位之后得到的训练样本</p>
+</li>
+<li><p>由这些训练样本训练出一个分类器，这是左图完成的工作</p>
+</li>
+<li><p>如右图所示，当下一帧图像读入之后，首先在预测区域内（红色实线框内）进行区域内采样，然后对该采样进行循环移位得到周围的候选区域框，使用分类器对这些候选框计算响应，显然这时候白色框响应最大，因为和前一帧中的红色实线框一样，最后通过白色框的相对移位就能推测目标的位移了</p>
+</li>
+</ul>
+<blockquote>
+<p>为什么CSK会如此的快速？   <strong>利用循环矩阵的性质进行加速</strong></p>
+</blockquote>
+<p>首先我们来看一下线性回归部分训练提速（RLS），线性回归的最小二乘法的解为：</p>
+<p>$$ \mathbf{w} \ = (X^HX+\lambda I)^{-1}X^Hy $$</p>
+<p>根据循环矩阵的性质，所有的循环矩阵都可以通过离散傅里叶变换实现对角化，并且可以由其生成向量表示，将循环矩阵的相乘转变为向量的相乘：</p>
+<p>$$ X^HX = F\cdot diag(\hat{x} \odot \hat{x}^*)\cdot F^H = C(F^{-1}(\hat{x} \odot \hat{x}^*)) $$</p>
+<p>这样就可以使用向量的点积运算取代矩阵运算，特别是求逆运算，大大提高了计算速度，两个方阵相乘的原始的计算量为：$O(K^3)$, 转化后的计算量为：反向傅里叶变换和向量的点乘  $Klog(K) + K$。</p>
+<p>在核方法方面的提速，前面我们提到，在RLS的基础上，我们引入了核函数方法，最后将求解$w$的问题转化为求解$\alpha$的问题，同时在某些特定的条件（K is a unitarily invariant kernel，Particular examples are the polynomial and Gaussian kernels.）下，Kernel Matrix也是循环矩阵，这样我们依然可以像在线性回归部分一样将核矩阵用向量表示，通过向量的计算减少运算量进而提高性能。</p>
+<blockquote>
+<p>缺点：</p>
+</blockquote>
+<ul>
+<li><p>采用单通道的灰度特征，特征表达能力有限</p>
+</li>
+<li><p>引入循环卷积导致产生边际效应</p>
+</li>
+<li><p>没有尺度更新，对尺度变化不敏感</p>
+</li>
+</ul>
+<h3 id="KCF-DCF-2014"><a href="#KCF-DCF-2014" class="headerlink" title="KCF/DCF(2014)"></a><strong>KCF/DCF</strong>(2014)</h3><p><a href="https://arxiv.org/abs/1404.7584" target="_blank" rel="noopener"><strong>High-Speed Tracking with Kernelized Correlation Filters</strong>(PDF)</a></p>
+<p>CSK遗留了尺度变化、输入为灰度图片和循环矩阵产生的边际效应等问题，KCF、DCF算法在多通道特征以及核方法上做了优化。</p>
+<ul>
+<li><p>CSK的输入的是单通道的灰度图像，本篇论文中输入的为多通道特征图像，特征图像可以为彩色特征也可以是Hog特征，由于卷积在频域是点乘求和，所以将不同通道的特征向量连接在一起成为一个特征向量即可</p>
+<p><img src="/img/Object-Tracking/kcf1.png" alt=""> </p>
+</li>
+<li><p>输入特征为Hog特征，当核函数为高斯核时候，称为<code>KCF</code>；当核函数为线性核时候，称为<code>DCF</code>，linear-kernel的DCF更简单速度更快,以DCF为基准，再来看加了kernel-trick的KCF，mean precision仅提高了0.4%，而FPS下降了41%，</p>
+</li>
+</ul>
+<p>采用高斯核时的解为：</p>
+<p>$$ k^{xx^{‘}} =  exp(-\frac{1}{\sigma^2} (||x||^2+||x’||^2-2F^{-1} (\sum_c \hat{x_c}^* \odot \hat{x_c}’) ))$$</p>
+<p>采用线性核时的解为：</p>
+<p>$$ k^{xx^{‘}} = F^{-1} (\sum_c \hat{x_c}^* \odot \hat{x_c}’) $$</p>
+<blockquote>
+<p>缺点：</p>
+</blockquote>
+<ul>
+<li><p>KCF引入高斯核方法之后，速度下降了46.46%，性能仅提高了0.21%</p>
+</li>
+<li><p>对尺度变化不敏感</p>
+</li>
+</ul>
+<h3 id="CN-2014"><a href="#CN-2014" class="headerlink" title="CN (2014)"></a><strong>CN</strong> (2014)</h3><p><a href="http://liu.diva-portal.org/smash/get/diva2:711538/FULLTEXT01.pdf" target="_blank" rel="noopener"><strong>Adaptive Color Attributes for Real-time Visual Tracking</strong>(PDF)</a></p>
+<ul>
+<li><a href="https://arxiv.org/abs/1504.06055" target="_blank" rel="noopener">Understanding and Diagnosing Visual Tracking Systems</a> 这篇文章论证了特征的重要性</li>
+</ul>
+<p>CSK, KCF/DCF和CN，区别主要在于有没有Kernel trick和用什么特征（灰度像素，fHOG，Color Names），在KCF/DCF从算法层面进行了改进之后，CN则是在特征方面进行了优化，主要改进点如下：</p>
+<ul>
+<li><p>将RGB的3通道图像投影到11个颜色通道，Color Attributes把颜色分为11类，就是将RGB三种颜色细化为11种基本颜色（black，blue，brown，grey，green，orange，pink，purple，red，white，yellow）</p>
+</li>
+<li><p>特征降维：自适应指的是实时的选择比较显著的颜色，这个选择的过程是一种类似PCA（主成分分析）中降维的思想，将11维特征降为2维从而去除了Color Name中的冗余信息，使得对目标的外观描述更加精确和鲁棒</p>
+</li>
+<li><p>在分类器的训练中，在CSK算法的代价函数的基础，在每一帧求Loss值时引入一个固定的权值$\beta_j$，使得分类器的训练和更新更加准确和鲁棒</p>
+</li>
+</ul>
+<p>通过充分的利用颜色特征和梯度特征，KCF、DCF和CN在对光照变化，遮挡，非刚性形变，运动模糊，背景杂乱和旋转等视频均能跟踪良好</p>
+<p>  <img src="/img/Object-Tracking/cn2.png" alt=""></p>
+<p>下面是HOG特征和8个CN特征通道可视化的图像:</p>
+<p>  <img src="/img/Object-Tracking/cn1.png" alt=""></p>
+<ul>
+<li>HOG是梯度特征，而CN是颜色特征，两者可以互补，HOG+CN在近两年的跟踪算法中成为了人工特征提取的标配</li>
+</ul>
+<blockquote>
+<p>缺点：</p>
+</blockquote>
+<ul>
+<li><p>对尺度变化不敏感</p>
+</li>
+<li><p>对于快速颜色变化不敏感</p>
+</li>
+</ul>
+<h3 id="DAT-2015"><a href="#DAT-2015" class="headerlink" title="DAT(2015)"></a><strong>DAT</strong>(2015)</h3><p><a href="http://www.cv-foundation.org/openaccess/content_cvpr_2015/papers/Possegger_In_Defense_of_2015_CVPR_paper.pdf" target="_blank" rel="noopener"><strong>In Defense of Color-Based Model-Free Tracking</strong>（PDF）</a></p>
+<p>将原始 RGB 图像映射到 CN 空间，可以有效提高颜色表示的鲁棒性，却无法解决背景相似区域的干扰，当我们所跟踪的目标周围具有非常相似的目标干扰时，很容易产生目标漂移的问题，本篇论文最主要的创新点在于基于颜色直方图的统计特征利用贝叶斯分类器分别建立了Object Surrounding 模型和Object distractor 模型，并且最终通过将两个模型的输出结果线性加权达到抑制目标漂移的目的。</p>
+<p>  <img src="/img/Object-Tracking/dat1.png" alt=""></p>
+<p>算法的主要思想是统计前景目标和背景区域的颜色直方图并归一化，分别建立前景和背景的概率模型，以后每帧线性插值更新颜色直方图。在检测时对检测区域每个像素，根据其颜色值贝叶斯模型判别这个像素属于前景的概率，得到像素级颜色概率图，在加上高斯权值函数抑制边缘相似颜色的物体，就能得到跟踪目标的区域。</p>
+<blockquote>
+<p>Object Surrounding 模型：</p>
+</blockquote>
+<p>  <img src="/img/Object-Tracking/dat2.png" alt=""></p>
+<ul>
+<li><p>$O$为目标所在的矩形区域</p>
+</li>
+<li><p>$\Omega \in I $，其中$I$为整个图像</p>
+</li>
+<li><p>$S$为目标区域的Surrounding Region</p>
+</li>
+<li><p>$b_x$为在$I$中$x$处的颜色值</p>
+</li>
+</ul>
+<p>我们用$H_{\Omega}^I(b)$表示非归一化颜色直方图第b个bin，通过颜色直方图的特征统计来估计概率，</p>
+<p>$$P(b_x|x \in O) \approx \frac{H_O^I(b_x)}{|O|}$$</p>
+<p>$$P(b_x|x \in S) \approx \frac{H_S^I(b_x)}{|S|}$$</p>
+<p>$$P(b \in O) \approx \frac{|O|}{|O|+|S|}$$</p>
+<p>将原公式化简为：</p>
+<p>  <img src="/img/Object-Tracking/dat3.png" alt=""></p>
+<blockquote>
+<p>Object distractor 模型：</p>
+</blockquote>
+<p>  <img src="/img/Object-Tracking/dat4.png" alt=""></p>
+<p>最后将两个模型的输出结果合并：</p>
+<p>$$ P(x \in O|b_x) = \lambda_p P(x \in O|O,D,b_x) + (1-\lambda_p)P(x \in O|O,S,b_x) $$</p>
+<ul>
+<li>$\lambda_p$是预先定义的超参数</li>
+</ul>
+<blockquote>
+<p>缺点：</p>
+</blockquote>
+<ul>
+<li>对于颜色快速变化不敏感</li>
+</ul>
+<h3 id="DSST-amp-fDSST-2016"><a href="#DSST-amp-fDSST-2016" class="headerlink" title="DSST&amp;fDSST(2016)"></a><strong>DSST&amp;fDSST</strong>(2016)</h3><p><a href="https://arxiv.org/pdf/1609.06141.pdf" target="_blank" rel="noopener"><strong>Discriminative Scale Space Tracker</strong>（PDF）</a>-<a href="http://www.cvl.isy.liu.se/research/objrec/visualtracking/scalvistrack/index.html" target="_blank" rel="noopener"><strong>Project Page</strong></a></p>
+<p><a href="http://www.bmva.org/bmvc/2014/files/paper038.pdf" target="_blank" rel="noopener"><strong>Accurate Scale Estimation for Robust Visual Tracking</strong>（PDF）</a></p>
+<p>为了解决前面算法的尺度变化的问题，在DSST中用了位置滤波器（Translation Filter）和尺度滤波器（Scale Filter），分别用于跟踪目标的定位和评估尺度变化，两个滤波器的基本原理相同，由于这两个滤波器是相对独立的，从而可以用不同的特征进行训练和测试。</p>
+<p>  <img src="/img/Object-Tracking/dsst2.png" alt=""></p>
+<ul>
+<li>如图（a）所示，在训练位置滤波器的时候，通过跟踪目标周围区域提取d维的多通道颜色特征（d-1维的 hog特征+1维的灰度特征）得到d个 Patch</li>
+<li>如图（b）所示，在训练尺度滤波器的时候，通过对目标区域进行不同尺度的缩放采样，构成了一个层数为S的金字塔，对应在每层金字塔上，将 Patch 图像缩放成统一尺寸提取d维Hog特征，以该特征向量作为训练样本得到相关滤波器$H$用来预测输出尺度</li>
+</ul>
+<p><strong>两种滤波器的求解过程：</strong> </p>
+<p>  <img src="/img/Object-Tracking/dsst1.png" alt=""></p>
+<p>其中位置滤波器的求解是和前面算法一样的，下面主要讲一下1维尺度空间滤波器的跟踪过程：</p>
+<ol>
+<li><p>在新的一帧中，首先利用2维位置滤波器确定跟踪目标的最新位置，注意此时的目标尺度依然是前一帧中的目标尺度</p>
+</li>
+<li><p>再利用1维的尺度滤波器进行目标样本的尺度选择，用于目标尺度的选择样本为：</p>
+<p>$$ a^nP \times a^nR, \  n \in \lbrace \lfloor -\frac{S-1}{2} \rfloor , \dots , \frac{S-1}{2} \rfloor \rbrace  $$</p>
+<p>其中，$P$和$R$分别表示在前一帧中目标的宽和高，$S=33$为尺度的个数，$a=1.02$表示尺度因子，尺度系数为大于1的指数函数，33种尺度不是线性增长的，实现了对较大的尺度进行粗检测，对较小的尺度进行细检测</p>
+</li>
+<li><p>在提取的33种样本中计算出最大的尺度响应输出从而得到目标准确的尺度</p>
+</li>
+</ol>
+<blockquote>
+<p>fDSST:</p>
+</blockquote>
+<p>在基于DSST的基础上，为了减少计算代价主要改进思路有两点：</p>
+<ul>
+<li><p>相关性插值（sub-grid interpolation of correlation scores），即仅仅选取17个尺度变化（原来33个），然后用相关性插值的方式扩展为33个尺度变化</p>
+</li>
+<li><p>通过PCA降维来减少特征维度，利用奇异值分解得到PCA变换矩阵，源代码中将维度最大化压缩从744维到17维，通过降维得到的模型矩阵只有$17 \times 17$(17个尺度和17特征维度)大小，从而获得了极大加速</p>
+</li>
+</ul>
+<blockquote>
+<p>缺点：</p>
+</blockquote>
+<ul>
+<li><p>对于快速形变和遮挡不敏感</p>
+</li>
+<li><p>循环卷积产生的边际效应</p>
+</li>
+</ul>
+<h3 id="Staple-2016"><a href="#Staple-2016" class="headerlink" title="Staple(2016)"></a><strong>Staple</strong>(2016)</h3><p><a href="https://arxiv.org/abs/1512.01355" target="_blank" rel="noopener"><strong>Staple: Complementary Learners for Real-Time Tracking</strong>（PDF）</a>-<a href="http://www.robots.ox.ac.uk/~luca/staple.html" target="_blank" rel="noopener"><strong>Project Page</strong></a></p>
+<p>这篇论文主要从特征结合的角度去优化算法，对于目标检测区域而言，HOG特征是基于cell_size的梯度统计特征，局部鲁棒性较好，但是对全局的形变效果不太好，而颜色直方图特征是不考虑像素的位置的全局特征，这在一定程度上可以减少形变带来的影响，但是又不足以将目标和背景区分开，于是就有了本文特征融合的思路：</p>
+<ul>
+<li><p>将HOG特征和颜色直方图特征进行结合，充分地利用了不同特征的特点去优化算法性能</p>
+</li>
+<li><p>在利用特征的时候，并不是将两种特征融合去训练一个模型，而是分别独立地使用不同的模型进行训练，最后通过两种模型的得分进行最后结果的融合</p>
+<p><img src="/img/Object-Tracking/staple1.png" alt=""></p>
+</li>
+</ul>
+<p>如上图所示：</p>
+<ol>
+<li><p>利用HOG特征进行基于相关滤波算法的训练，然后得到基于HOG特征的输出响应</p>
+</li>
+<li><p>利用颜色直方图的统计特征进行基于贝叶斯分类模型的训练，然后得到基于颜色直方图的输出响应</p>
+</li>
+<li><p>按照特定的规则将两个模型的输出响应进行线性组合，公式如下：</p>
+</li>
+</ol>
+<p>$$f(x)=c_{tmpl}f_{tmpl}(x)+c_{hist}f_{hist}(x)$$</p>
+<ul>
+<li><code>tmpl</code>表示template(梯度特征)</li>
+<li><code>hist</code>表示histogram(颜色直方图特征)</li>
+</ul>
+<p>其中，</p>
+<p>$$f_{tmpl}(x;h)=\sum_{u \in \mathcal{T}}h[u]^T \phi _x[u]$$</p>
+<ul>
+<li>$h$为滤波模型的参数</li>
+<li>$\phi _x$为图像梯度特征</li>
+<li>$\mathcal{T} \in \mathbb{Z}^2$为二维多通道特征图</li>
+</ul>
+<p>$$ f_{hist}(x;\beta)=\beta ^T(\frac 1 {\lvert \mathcal{H} \rvert}\sum _{u\in \mathcal{H}} \psi _x[u]) $$</p>
+<ul>
+<li>$\beta$为贝叶斯分类模型的参数</li>
+<li>$\psi _x$为图像的颜色直方图特征</li>
+<li>$\mathcal{H}$为二维多通道彩色图像</li>
+</ul>
+<p>令整个模型的参数为$\theta =(h,\beta)$，则整个Staple算法的数学模型表示为为：</p>
+<p>$$p_t=argmax_{p\in S_t}f(T(x_t,p);\theta _{t-1})$$</p>
+<ul>
+<li>$t$表示帧索引</li>
+<li>$x_t$表示第$t$帧图像，$x$指代任意一帧图像</li>
+<li>$p_t$第$t$帧图像中目标区域的最优矩形，$p$指代任意一帧图像</li>
+<li>$S_t$第$t$帧图像中目标对应的所有矩形</li>
+<li>$T(x_t,p)$可以理解为第$t$帧的HOG特征和颜色直方图特征，实际上这两种特征是利用不同的模型分别进行模型优化的</li>
+</ul>
+<p>那么整个模型的损失函数为：</p>
+<p>$$ \theta _t=argmin_{\theta \in \Omega} {L(\theta;X_t)+\lambda R(\theta)} $$</p>
+<ul>
+<li>$L(\theta;X_t)=\sum _{t=1} ^T w_t l(x_t,p_t,\theta)$为损失函数，$l(x,p,\theta)=cost(p,argmax_{q\in S}f(T(x,q);\theta))$代表了每帧的损失函数，$p$表示每帧的GroundTruth</li>
+<li>$X_t={(x_i,p_i)}_{i=1}^t={(x_1,p_1),(x_2,p_2),…,(x_t,p_t)}$, 每个样本都包含之前每一帧中目标的位置</li>
+<li>$\lambda R(\theta)$正则项</li>
+</ul>
+<p>这样我们通过最小化损失函数就得到模型的参数$\theta=(h,\beta)$, 其中分别优化两个模型:</p>
+<p>$$ h_t=argmin_h {L_{tmpl}(h;X_t)+\frac 1 2 \lambda _{tmpl} \lVert h \rVert ^2 } $$</p>
+<p>$$ \beta _t=argmin_{\beta} {L_{hist}(\beta;X_t)+\frac 1 2 \lambda _{hist} \lVert \beta \rVert ^2 } $$</p>
+<blockquote>
+<p>缺点：</p>
+</blockquote>
+<ul>
+<li>分别计算两个模型的结果然后进行融合，计算比较复杂</li>
+</ul>
+<h3 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a><strong>Summary</strong></h3><p>在整个系列的方法当中无非是从两方面进行优化，一方面是模型的优化，另一方面是特征的优化：</p>
+<ul>
+<li><p>MOSSE是单通道灰度特征的相关滤波，</p>
+</li>
+<li><p>CSK在MOSSE的基础上扩展了密集采样(加padding)和kernel-trick</p>
+</li>
+<li><p>KCF在CSK的基础上扩展了多通道梯度的HOG特征</p>
+</li>
+<li><p>CN在CSK的基础上扩展了多通道颜色的Color Names</p>
+</li>
+<li><p>DSST在MOSSE的基础上扩展了尺度滤波器（Scale Filter）,fDSST通过降维的方式进行加速计算</p>
+</li>
+<li><p>Staple本质上就是DAT和DSST的模型输出结果进行融合</p>
+</li>
+</ul>
+<blockquote>
+<p>各个算法对比表：</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">算法</th>
+<th style="text-align:center">性能(FPS)</th>
+<th style="text-align:center">特征表达</th>
+<th style="text-align:center">尺度变化</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">MOSSE</td>
+<td style="text-align:center">615</td>
+<td style="text-align:center">单通道灰度</td>
+<td style="text-align:center">No</td>
+</tr>
+<tr>
+<td style="text-align:center">CSK</td>
+<td style="text-align:center">362</td>
+<td style="text-align:center">单通道灰度</td>
+<td style="text-align:center">No</td>
+</tr>
+<tr>
+<td style="text-align:center">KCF</td>
+<td style="text-align:center">172</td>
+<td style="text-align:center">多通道HOG</td>
+<td style="text-align:center">No</td>
+</tr>
+<tr>
+<td style="text-align:center">DCF</td>
+<td style="text-align:center">292</td>
+<td style="text-align:center">多通道HOG</td>
+<td style="text-align:center">No</td>
+</tr>
+<tr>
+<td style="text-align:center">CN</td>
+<td style="text-align:center">152</td>
+<td style="text-align:center">ColorName特征</td>
+<td style="text-align:center">No</td>
+</tr>
+<tr>
+<td style="text-align:center">DAT(非CF)</td>
+<td style="text-align:center">89.56</td>
+<td style="text-align:center">颜色直方图</td>
+<td style="text-align:center">No</td>
+</tr>
+<tr>
+<td style="text-align:center">DSST</td>
+<td style="text-align:center">65.2</td>
+<td style="text-align:center">fHOG特征+单通道灰度</td>
+<td style="text-align:center">Yes</td>
+</tr>
+<tr>
+<td style="text-align:center">fDSST</td>
+<td style="text-align:center">86.1</td>
+<td style="text-align:center">fHOG特征+多通道灰单</td>
+<td style="text-align:center">Yes</td>
+</tr>
+<tr>
+<td style="text-align:center">Staple</td>
+<td style="text-align:center">121.2</td>
+<td style="text-align:center">颜色直方图+fHOG</td>
+<td style="text-align:center">Yes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Expectation"><a href="#Expectation" class="headerlink" title="Expectation"></a><strong>Expectation</strong></h3><p>在特征的优化上，可以尝试用深度特征代替传统特征（深度特征不同于深度学习方法），比如DeepSRDCF在SRDCF基础上用CNN来提取特征CNN第一层输出作为输入的特征，</p>
+<p><a href="http://html.rhhz.net/ZDHXBZWB/html/2016-6-834.htm#outline_anchor_11" target="_blank" rel="noopener">深度学习在视频目标跟踪中的应用进展与展望</a></p>
+<ul>
+<li>特定目标的跟踪可以利用先验知识 对目标外观进行建模, 典型代表有手的跟踪、人眼跟 踪、头或脸部跟踪等, 其中手的跟踪在人机交互方面有重要应用, 是未来非接触式交互工具的基础</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/07/28/Bag-of-Words/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Bag of Words
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/06/09/Hello-Tencent/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Hello Tencent!</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Caffe in Docker | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="搭建基于docker的caffe运行环境, 之前在自己的Ubuntu上搭建caffe环境4次失败, 每次由于驱动问题将GUI搞垮, 将GUI搞回来驱动又不兼容, 很是折腾, 当然做镜像也很折腾呀, 当时可以共享给其他人, 拿走不谢!">
+<meta name="keywords" content="Caffe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Caffe in Docker">
+<meta property="og:url" content="http://simtalk.cn/2016/08/21/Caffe-in-docker/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="搭建基于docker的caffe运行环境, 之前在自己的Ubuntu上搭建caffe环境4次失败, 每次由于驱动问题将GUI搞垮, 将GUI搞回来驱动又不兼容, 很是折腾, 当然做镜像也很折腾呀, 当时可以共享给其他人, 拿走不谢!">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.944Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Caffe in Docker">
+<meta name="twitter:description" content="搭建基于docker的caffe运行环境, 之前在自己的Ubuntu上搭建caffe环境4次失败, 每次由于驱动问题将GUI搞垮, 将GUI搞回来驱动又不兼容, 很是折腾, 当然做镜像也很折腾呀, 当时可以共享给其他人, 拿走不谢!">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Caffe-in-docker" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/21/Caffe-in-docker/" class="article-date">
+  	<time datetime="2016-08-21T08:35:56.000Z" itemprop="datePublished">2016-08-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Caffe in Docker
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Caffe/">Caffe</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Docker/">Docker</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本环境"><span class="toc-text">基本环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看Dockerfile"><span class="toc-text">查看Dockerfile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Caffe-image"><span class="toc-text">Caffe image</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dockerfile"><span class="toc-text">dockerfile</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建容器"><span class="toc-text">创建容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见错误"><span class="toc-text">常见错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GPU设置"><span class="toc-text">GPU设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多卡训练"><span class="toc-text">多卡训练</span></a></li></ol>
+        </div>
+        
+        <p>搭建基于docker的caffe运行环境, 之前在自己的Ubuntu上搭建caffe环境4次失败, 每次由于驱动问题将GUI搞垮, 将GUI搞回来驱动又不兼容, 很是折腾, 当然做镜像也很折腾呀, 当时可以共享给其他人, 拿走不谢! </p>
+<a id="more"></a>
+<ul>
+<li><a href="https://dev.aliyun.com/detail.html?spm=5176.1972343.2.22.WhwQCG&amp;repoId=17725" target="_blank" rel="noopener">我的caffe镜像</a></li>
+</ul>
+<h3 id="基本环境"><a href="#基本环境" class="headerlink" title="基本环境"></a><strong>基本环境</strong></h3><ol>
+<li><code>nvidia-smi</code> 查看GPU以及驱动的版本</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| NVIDIA-SMI 367.48                 Driver Version: 367.48                    |</span><br><span class="line">|-------------------------------+----------------------+----------------------+</span><br><span class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</span><br><span class="line">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |</span><br><span class="line">|===============================+======================+======================|</span><br><span class="line">|   0  Tesla K40m          Off  | 0000:02:00.0     Off |                    0 |</span><br><span class="line">| N/A   31C    P0    62W / 235W |      0MiB / 11439MiB |      0%      Default |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line">|   1  Tesla K40m          Off  | 0000:03:00.0     Off |                    0 |</span><br><span class="line">| N/A   34C    P0    67W / 235W |      0MiB / 11439MiB |     97%      Default |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line">                                                                            </span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| Processes:                                                       GPU Memory |</span><br><span class="line">|  GPU       PID  Type  Process name                               Usage      |</span><br><span class="line">|=============================================================================|</span><br><span class="line">|  No running processes found                                                 |</span><br><span class="line">+-----------------------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+<ul>
+<li>驱动版本是<code>367.48</code></li>
+<li>2片GPU<code>Tesla K40m</code></li>
+<li>操作系统<code>cenos7.0</code></li>
+</ul>
+<p>看到这两块GPU简直不能开心更多</p>
+<h3 id="查看Dockerfile"><a href="#查看Dockerfile" class="headerlink" title="查看Dockerfile"></a><strong>查看Dockerfile</strong></h3><p>怎样制作自己的镜像, 我在之前的博客里都写过了, 用<code>标签</code>筛选一下查看</p>
+<ol>
+<li><p>点击查看基于Cuda7.5的Caffe <a href="https://github.com/Kaixhin/dockerfiles/tree/master/cuda-caffe/cuda_v7.5" target="_blank" rel="noopener">Dockerfile</a></p>
+</li>
+<li><p>要求安装<code>NVIDIA Docker</code> <a href="https://github.com/NVIDIA/nvidia-docker" target="_blank" rel="noopener">nvidia-docker</a></p>
+<ul>
+<li>因为GPU属于特定的厂商产品，需要特定的driver，Docker本身并不支持GPU。以前如果要在Docker中使用GPU，就需要在container中安装主机上使用GPU的driver，然后把主机上的GPU设备（例如：/dev/nvidia0）映射到container中。所以这样的Docker image并不具备可移植性。Nvidia-docker项目就是为了解决这个问题，它让Docker image不需要知道底层GPU的相关信息，而是通过启动container时mount设备和驱动文件来实现的。<a href="http://nanxiao.me/docker-note-13-nvidia-docker-intro/" target="_blank" rel="noopener">安装参考</a></li>
+</ul>
+</li>
+</ol>
+<p>遇到的问题:</p>
+<ol>
+<li>要求<code>docker-engine</code>和<code>docker-io</code>冲突, 用<code>sudo yum remove docker-io</code> ,然后<code>sudo yum remove docker-engine</code>就可以了</li>
+<li><code>Are you trying to connect to a TLS-enabled daemon without TLS?</code><br> 查看docker进程<code>ps -ef|grep docker</code>, 启动docker<code>sudo service docker start</code>或者<code></code></li>
+</ol>
+<h3 id="Caffe-image"><a href="#Caffe-image" class="headerlink" title="Caffe image"></a><strong>Caffe image</strong></h3><ol>
+<li><p><code>sudo docker login</code></p>
+</li>
+<li><p><code>sudo docker search caffe</code></p>
+</li>
+<li><p><code>sudo docker pull kaixhin/caffe</code> </p>
+</li>
+</ol>
+<h3 id="dockerfile"><a href="#dockerfile" class="headerlink" title="dockerfile"></a><strong>dockerfile</strong></h3><blockquote>
+<p>创建过程见 <a href="http://simtalk.cn/2016/08/21/Dockerfile%E5%88%9B%E5%BB%BA%E9%95%9C%E5%83%8F/">Dockerfile创建镜像</a></p>
+</blockquote>
+<ul>
+<li><a href="https://github.com/BVLC/caffe/tree/master/docker" target="_blank" rel="noopener">dockerfile下载地址</a></li>
+</ul>
+<p>进入dockerfile所在的目录:</p>
+<p><code>sudo docker build -t caffe:cpu ./</code></p>
+<ul>
+<li>创建cpu镜像镜像, 注意这里下载的dockerfile是cpu版本的, 如果是gpu版本的dockerfile则</li>
+</ul>
+<p><code>sudo docker build -t caffe:gpu ./</code></p>
+<p><strong>阿里云镜像</strong></p>
+<p>在<code>21天实战Caffe</code>提供的GPU版本的Caffe镜像</p>
+<p><code>sudo docker pull registry.cn-hangzhou.aliyuncs.com/alicloudhpc/toolkit</code></p>
+<ul>
+<li>Pull镜像</li>
+</ul>
+<p><code>sudo docker tag 2593ae802092 caffe:shangyan</code></p>
+<ul>
+<li>重命名镜像</li>
+</ul>
+<p><code>sudo docker rmi registry.cn-hangzhou.aliyuncs.com/alicloudhpc/toolkit:latest</code></p>
+<ul>
+<li>取消原来的Tag</li>
+</ul>
+<h3 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a><strong>创建容器</strong></h3><p><code>sudo docker run -i -t -d -P --name caffe_shangyan -v /home/shang:/home/ caffe21:shangyan</code></p>
+<ul>
+<li>创建caffe容器, 将主机的<code>/home/shang</code>挂载到容器的<code>/home/</code>下面</li>
+</ul>
+<p><code>sudo docker run --privileged=true  -i -t -d -P --name caffe_gpu_shangyan -v /home/shang:/home/ caffe_gpu:shangyan</code></p>
+<ul>
+<li>创建GPU版本的Caffe容器, 将主机的<code>/home/shang</code>挂载到容器的<code>/home/</code>下面</li>
+</ul>
+<p><code>sudo docker run --privileged=true --net=host -i -t -d -P --name caffe_gpu_shangyan -v /home/shang:/home/ caffe_gpu:shangyan</code></p>
+<ul>
+<li>网络host模式，使用<code>--net=host</code>指定, 但是，容器的其他方面，如文件系统、进程列表等还是和宿主机隔离的。</li>
+</ul>
+<p><code>cd /root/caffe</code></p>
+<ul>
+<li>进入caffe目录</li>
+</ul>
+<h3 id="常见错误"><a href="#常见错误" class="headerlink" title="常见错误"></a><strong>常见错误</strong></h3><blockquote>
+<p>libcudart.so.7.0: cannot open shared object file: No such file or directory</p>
+</blockquote>
+<ul>
+<li><code>cd ~</code>更改<code>.profile</code>文件, 添加<code>export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH</code>, 最后<code>source ./.profile</code>文件</li>
+</ul>
+<blockquote>
+<p>驱动冲突 : Failed to initialize NVML: GPU access blocked by the operating system<br>驱动版本不匹配 : Failed to initialize NVML: Driver/library version mismatch</p>
+</blockquote>
+<ul>
+<li>Host上的驱动和容器内的驱动不一致</li>
+</ul>
+<blockquote>
+<p>这里详细讲一下, 关于驱动问题:</p>
+</blockquote>
+<p>之前为了方便在启用docker的时候使用<code>--privileged=true</code>将所有的host权限打开, 同时要保证容器中有可用的kernel, 这样我们只将GPU硬件穿透进容器就可以了</p>
+<ol>
+<li><p>检查<code>/usr/src/kernels</code>下面有没有安装可用的kernel</p>
+</li>
+<li><p>下载<code>NVIDIA驱动</code>, <code>chmod u+x NVIDIA-Linux-x86_64-367.57.run</code>赋予运行权限, <code>./NVIDIA-Linux-x86_64-367.57.run</code>安装驱动, <code>nvidia-smi</code>检查是否安装成功</p>
+</li>
+<li><p>这样在启动docker的时候只要将GPU挂载到容器上就可以了, 参考如下命名:</p>
+</li>
+</ol>
+<p><code>sudo docker run -i -t -d -P --device=/dev/nvidia0 --device=/dev/nvidia1 --device=/dev/nvidia2 --name pascal_shangyan -v /home/shang:/home/ registry.cn-hangzhou.aliyuncs.com/shang/caffe:pascal</code></p>
+<h3 id="GPU设置"><a href="#GPU设置" class="headerlink" title="GPU设置"></a><strong>GPU设置</strong></h3><ol>
+<li><p>需要使用GPU的用户，最好先检查物理机上的GPU状态是否正常，运行：</p>
+<p><code>nvidia-smi</code>或者<code>/usr/local/cuda/samples/1_Utilities/deviceQuery/deviceQuery</code></p>
+<ul>
+<li>在<code>dev</code>文件夹中查看硬件是否存在</li>
+</ul>
+</li>
+<li><p>将下面内容存为<code>caffedocker</code>的文件里, <code>chmod +x caffedocker</code>变为可执行文件, <code>sudo ./caffedocker caffe:shangyan /bin/bash</code></p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">DOCKER_BIN=&quot;/usr/bin/docker&quot;</span><br><span class="line">INTERACT=&quot;-ti&quot;</span><br><span class="line">#INTERACT=&quot;-d&quot;</span><br><span class="line">DATA_VOLUME=&quot;/disk1&quot;</span><br><span class="line">DATA_MOUNT_POINT=&quot;/disk1&quot;</span><br><span class="line">MEM_LIMIT=96g</span><br><span class="line">set -e</span><br><span class="line">if [ $# -lt 2 ]; then</span><br><span class="line">    echo &quot;Usage: $0 image command&quot;</span><br><span class="line">    exit -1</span><br><span class="line">else</span><br><span class="line">    IMAGE=$1</span><br><span class="line">    shift 1</span><br><span class="line">    CMD=$@</span><br><span class="line">fi</span><br><span class="line">devices=$(ls -1 /dev | grep nvidia)</span><br><span class="line">dev_param=&quot;&quot;</span><br><span class="line">for d in $devices; do</span><br><span class="line">    dev_param=&quot;$dev_param --device=/dev/$d&quot;</span><br><span class="line">done</span><br><span class="line">time_param=&apos;-v /etc/localtime:/etc/localtime:ro&apos;</span><br><span class="line">if [ ! -z &quot;$CUDA_VISIBLE_DEVICES&quot; ]; then</span><br><span class="line">    dev_env=&quot;-e CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES&quot;</span><br><span class="line">else</span><br><span class="line">    dev_env=&quot;&quot;</span><br><span class="line">fi</span><br><span class="line">exec $DOCKER_BIN run \</span><br><span class="line">        &quot;$INTERACT&quot; \</span><br><span class="line">        -P \</span><br><span class="line">        $dev_env \</span><br><span class="line">        $dev_param \</span><br><span class="line">        $time_param \</span><br><span class="line">        -m $MEM_LIMIT \</span><br><span class="line">        -v $DATA_VOLUME:$DATA_MOUNT_POINT \</span><br><span class="line">        &quot;$IMAGE&quot; \</span><br><span class="line">        $CMD</span><br></pre></td></tr></table></figure>
+<ul>
+<li>成功运行之后，已经进入交互式的docker容器（理解为一个与host隔离的运行环境）中，物理机上的 /disk1 磁盘映射到容器内的 /disk1 文件夹，建议数据只存储到 /disk1 下（如果容器销毁，其他数据不会保留）。</li>
+</ul>
+<p>检查GPU工作正常：</p>
+<p> <code>nvidia-smi</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| NVIDIA-SMI 367.57                 Driver Version: 367.57                    |</span><br><span class="line">|-------------------------------+----------------------+----------------------+</span><br><span class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</span><br><span class="line">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |</span><br><span class="line">|===============================+======================+======================|</span><br><span class="line">|   0  Tesla K40m          Off  | 0000:02:00.0     Off |                    0 |</span><br><span class="line">| N/A   26C    P0    61W / 235W |      0MiB / 11439MiB |      0%      Default |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line">|   1  Tesla K40m          Off  | 0000:03:00.0     Off |                    0 |</span><br><span class="line">| N/A   28C    P0    62W / 235W |      0MiB / 11439MiB |      0%      Default |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line">|   2  Tesla K40m          Off  | 0000:82:00.0     Off |                    0 |</span><br><span class="line">| N/A   43C    P0    63W / 235W |      0MiB / 11439MiB |     82%      Default |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br></pre></td></tr></table></figure>
+<p>检查通过以后，您可以像普通终端一样，运行软件</p>
+<h3 id="多卡训练"><a href="#多卡训练" class="headerlink" title="多卡训练"></a>多卡训练</h3><p>在命令后面加参数<code>-gpu 0,1,2</code> (三卡并行)</p>
+<blockquote>
+<p><a href="https://help.aliyun.com/document_detail/25848.html" target="_blank" rel="noopener">深度学习和HPC工具集用户手册</a></p>
+</blockquote>
+<ul>
+<li><strong>解决在docker中安装驱动缺少对应版本的kernel</strong></li>
+</ul>
+<ol>
+<li><p>在host中分别将<code>/usr/src/</code>和<code>/lib/modules/</code>下的对应的kernel拷贝到docker容器中的文件夹中，重新安装驱动就可以</p>
+</li>
+<li><p><code>sudo apt-get install linux*</code>安装对应的kernel</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/22/kNN/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          kNN
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/18/CppPrimer/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">C++ Primer</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>PaddlePaddle | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在2016百度世界大会上开源的分布式深度学习框架Paddle, 这篇文章是PaddlePaddle的官方文档里关于图像处理方面的学习记录。">
+<meta name="keywords" content="Paddle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PaddlePaddle">
+<meta property="og:url" content="http://simtalk.cn/2016/12/20/PaddlePaddle/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="在2016百度世界大会上开源的分布式深度学习框架Paddle, 这篇文章是PaddlePaddle的官方文档里关于图像处理方面的学习记录。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/PaddlePaddle/cifar.png">
+<meta property="og:image" content="http://simtalk.cn/img/PaddlePaddle/image_classification.png">
+<meta property="og:image" content="http://simtalk.cn/img/PaddlePaddle/ResNet_50.png">
+<meta property="og:image" content="http://simtalk.cn/img/PaddlePaddle/ad.png">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.952Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PaddlePaddle">
+<meta name="twitter:description" content="在2016百度世界大会上开源的分布式深度学习框架Paddle, 这篇文章是PaddlePaddle的官方文档里关于图像处理方面的学习记录。">
+<meta name="twitter:image" content="http://simtalk.cn/img/PaddlePaddle/cifar.png">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-PaddlePaddle" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/20/PaddlePaddle/" class="article-date">
+  	<time datetime="2016-12-20T11:26:51.000Z" itemprop="datePublished">2016-12-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PaddlePaddle
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Paddle/">Paddle</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/深度学习/">深度学习</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker-install"><span class="toc-text">Docker install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#图像分类"><span class="toc-text">图像分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ResNet"><span class="toc-text">ResNet</span></a></li></ol>
+        </div>
+        
+        <p>在2016百度世界大会上开源的分布式深度学习框架<a href="https://github.com/baidu/Paddle" target="_blank" rel="noopener">Paddle</a>, 这篇文章是PaddlePaddle的官方文档里关于图像处理方面的学习记录。<br><a id="more"></a></p>
+<p><a href="http://www.paddlepaddle.org/doc_cn/demo/quick_start/index.html" target="_blank" rel="noopener">Paddle开发文档</a></p>
+<p>看了极客头条的 <a href="http://geek.csdn.net/news/detail/58867" target="_blank" rel="noopener">基于Spark的异构分布式深度学习平台</a>文章特别期待Spark on Paddle,  <a href="https://spark-summit.org/2016/events/scalable-deep-learning-platform-on-spark-in-baidu/" target="_blank" rel="noopener">相关视频</a></p>
+<blockquote>
+<p><a href="http://162.243.141.242/paddle_html/codebrowser/codebrowser/paddle/" target="_blank" rel="noopener">Paddle源码浏览</a></p>
+</blockquote>
+<h3 id="Docker-install"><a href="#Docker-install" class="headerlink" title="Docker install"></a><strong>Docker install</strong></h3><p>毫无疑问用docker安装最为方便, 由于我的云主机支持<code>AVX</code>, 所以就安装<code>cpu-demo-latest</code>版的Paddle</p>
+<ol>
+<li><p>首先从 <a href="https://hub.docker.com/r/paddledev/paddle/" target="_blank" rel="noopener">hub.docker</a>上将镜像pull到本地</p>
+<p><code>sudo docker pull paddledev/paddle:cpu-demo-latest</code></p>
+</li>
+<li><p>创建Paddle容器</p>
+<p><code>docker run -i -t -d -P --name paddle -v /home/shang:/home/ paddle:shangyan</code></p>
+</li>
+<li><p>在容器中安装anaconda, 然后更新镜像</p>
+<p><code>docker commit -m&quot;add anaconda&quot; 8fec2af6ccf8</code></p>
+<ul>
+<li><code>8fec2af6ccf8</code>是容器id</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>如果是GPU版本的docker, 使用下面的把bash脚本启动容器:</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> CUDA_SO=<span class="string">"<span class="variable">$(\ls /usr/lib64/libcuda* | xargs -I&#123;&#125; echo '-v &#123;&#125;:&#123;&#125;')</span> <span class="variable">$(\ls /usr/lib64/libnvidia* | xargs -I&#123;&#125; echo '-v &#123;&#125;:&#123;&#125;')</span>"</span></span><br><span class="line"><span class="built_in">export</span> DEVICES=$(\ls /dev/nvidia* | xargs -I&#123;&#125; <span class="built_in">echo</span> <span class="string">'--device &#123;&#125;:&#123;&#125;'</span>)</span><br><span class="line">sudo docker run <span class="variable">$&#123;CUDA_SO&#125;</span> <span class="variable">$&#123;DEVICES&#125;</span> --privileged=<span class="literal">true</span> -i -t -d -P --name paddle_gpu_shangyan -v /home/shang:/home/ paddle:shangyan</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将我的<code>/home/shang</code>文件夹映射到容器里的<code>/home</code>文件夹, 方便传送数据</li>
+</ul>
+<h3 id="图像分类"><a href="#图像分类" class="headerlink" title="图像分类"></a><strong>图像分类</strong></h3><blockquote>
+<p>该图像分类的任务以<code>CIFAR-10</code>为数据集, <a href="http://www.paddlepaddle.org/doc/demo/image_classification/image_classification.html" target="_blank" rel="noopener">Image Classification Tutorial-Paddle</a></p>
+</blockquote>
+<p><img src="/img/PaddlePaddle/cifar.png" alt=""></p>
+<p><strong>分类任务:</strong></p>
+<p><img src="/img/PaddlePaddle/image_classification.png" alt=""></p>
+<ol>
+<li><p>进入<code>paddle/demo/image_classification/data</code>, 运行<code>./download_cifar.sh</code>下载数据, 然后运行<code>./preprocess.sh</code>对数据进行预处理, 成功后:</p>
+<p><code>root@7b0f9a66f43c:~/paddle/demo/image_classification/data/cifar-out/test# ls</code><br><code>airplane  automobile  bird  cat  deer  dog  frog  horse  ship  truck</code></p>
+<ul>
+<li><code>preprocess.sh</code> 调用了<code>./demo/image_classification/preprocess.py</code> 去处理下载的原始图片</li>
+</ul>
+</li>
+<li><p><code>vgg_16_cifar.py</code>是模型配置文件, 在训练模型之前要定义, 然后运行<code>./train.sh</code>训练模型, 输出一些信息:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">I1221 09:20:47.534273  1044 Trainer.cpp:170] trainer mode: Normal</span><br><span class="line">I1221 09:20:47.839715  1044 PyDataProvider2.cpp:257] loading dataprovider image_provider::processData</span><br><span class="line">[INFO 2016-12-21 09:20:47,855 image_provider.py:51] Image size: 32</span><br><span class="line">[INFO 2016-12-21 09:20:47,855 image_provider.py:52] Meta path: data/cifar-out/batches/batches.meta</span><br><span class="line">[INFO 2016-12-21 09:20:47,855 image_provider.py:58] DataProvider Initialization finished</span><br><span class="line">I1221 09:20:47.855934  1044 PyDataProvider2.cpp:257] loading dataprovider image_provider::processData</span><br><span class="line">[INFO 2016-12-21 09:20:47,856 image_provider.py:51] Image size: 32</span><br><span class="line">[INFO 2016-12-21 09:20:47,856 image_provider.py:52] Meta path: data/cifar-out/batches/batches.meta</span><br><span class="line">[INFO 2016-12-21 09:20:47,856 image_provider.py:58] DataProvider Initialization finished</span><br><span class="line">I1221 09:20:47.856549  1044 GradientMachine.cpp:134] Initing parameters..</span><br><span class="line">I1221 09:20:48.485172  1044 GradientMachine.cpp:141] Init parameters done.</span><br><span class="line">.........</span><br><span class="line">I1221 09:23:26.772271  1044 TrainerInternal.cpp:165]  Batch=100 samples=12800 AvgCost=2.38281 CurrentCost=2.38281 Eval: classification_error_evaluator=0.8325  CurrentEval: classification_error_evaluator=0.8325</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果没有GPU, 将shell中的<code>use_gpu=0</code></li>
+</ul>
+</li>
+<li><p><code>./predict.sh</code>预测: 训练好的参数保存在<code>./cifar_vgg_model/</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">model=cifar_vgg_model/pass-00175/</span><br><span class="line">image=data/cifar-out/<span class="built_in">test</span>/airplane/seaplane_s_000978.png</span><br><span class="line">use_gpu=1</span><br><span class="line">python prediction.py <span class="variable">$model</span> <span class="variable">$image</span> <span class="variable">$use_gpu</span></span><br></pre></td></tr></table></figure>
+<p>输出结果为:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">I1222 00:49:44.455191   464 GradientMachine.cpp:123] Loading parameters from cifar_vgg_model/pass-00175/</span><br><span class="line">[INFO 2016-12-22 00:49:44,553 prediction.py:137] Label of data/cifar-out/test/airplane/seaplane_s_000978.png is: 2</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="ResNet"><a href="#ResNet" class="headerlink" title="ResNet"></a><strong>ResNet</strong></h3><p>ResNet就不多介绍了, 请看<a href="http://www.paddlepaddle.org/doc/demo/imagenet_model/resnet_model.html" target="_blank" rel="noopener">ResNet介绍-Paddle</a></p>
+<ol>
+<li><p>运行<code>get_model.sh</code>获得ResNet的paddle模型文件, 如果下载不了移步 <a href="http://pan.baidu.com/s/1o78C9su" target="_blank" rel="noopener">百度云</a>, 然后根据shell文件中的命令解压, 完成后的文件目录如下:</p>
+<p><code>root@7b0f9a66f43c:~/paddle/demo/model_zoo/resnet/model# ls</code><br><code>mean_meta_224</code>  <code>resnet_101</code>  <code>resnet_152</code>  <code>resnet_50</code></p>
+<ul>
+<li><code>resnet_50:</code> model of 50 layers.</li>
+<li><code>resnet_101:</code> model of 101 layers.</li>
+<li><code>resnet_152:</code> model of 152 layers.</li>
+<li><code>mean_meta_224:</code> mean file with 3 x 224 x 224 size in BGR order. You also can use three mean values: 103.939, 116.779, 123.68.</li>
+</ul>
+</li>
+<li><p>可视化<code>ResNet_50</code>网络结构, 运行<code>./net_diagram.sh</code>, 生成<code>ResNet_50.dot</code>文件</p>
+<ul>
+<li>使用<code>dot -T&lt;type&gt; -o&lt;outfile&gt; &lt;infile.dot&gt;</code>命令将dot文件转为png, 如下:</li>
+</ul>
+<p><code>dot -T png -o ResNet_50.png ResNet_50.dot</code></p>
+<p>生成50层的ResNet网络结构如下:</p>
+<p><img src="/img/PaddlePaddle/ResNet_50.png" alt=""></p>
+</li>
+<li><p>用ResNet抽取特征, 运行<code>./extract_fea_py.sh</code>, 最终输出:<code>[INFO 2016-12-21 08:29:45,764 classify.py:219] Done: make image feature batch</code>, 生成<code>features</code>文件夹:</p>
+<p><code>root@7b0f9a66f43c:~/paddle/demo/model_zoo/resnet/features# ls</code><br><code>batch_0</code><br><code>python load_feature.py ./features</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&apos;cat.jpg&apos;: &#123;&apos;res5_3_branch2c_conv&apos;: array([-0.11962075, -0.10988633, -0.12072118, ..., -0.01200525,</span><br><span class="line">      0.02182791, -0.00304621], dtype=float32), &apos;res5_3_branch2c_bn&apos;: array([-1.33475351, -1.20347679, -1.34959376, ..., -1.50335991,</span><br><span class="line">     -1.01844168, -1.37495327], dtype=float32)&#125;,</span><br><span class="line">&apos;dog.jpg&apos;: &#123;&apos;res5_3_branch2c_conv&apos;: array([-0.11691939, -0.11028718, -0.08920972, ...,  0.00291708,</span><br><span class="line">      0.0172889 , -0.08754676], dtype=float32), &apos;res5_3_branch2c_bn&apos;: array([-1.29832339, -1.20888269, -0.92463595, ..., -1.28948379,</span><br><span class="line">     -1.08349776, -2.58606839], dtype=float32)&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>对测试图片进行预测分类, <code>./predict.sh</code>, 最终输出如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[INFO 2016-12-21 08:37:47,909 layers.py:1985] output size for avgpool is 1*1</span><br><span class="line">I1221 08:37:47.910166   928 Util.cpp:155] commandline:  --use_gpu=1</span><br><span class="line">I1221 08:37:50.655699   928 Util.cpp:130] Calling runInitFunctions</span><br><span class="line">I1221 08:37:50.656028   928 Util.cpp:143] Call runInitFunctions done.</span><br><span class="line">I1221 08:37:52.103798   928 GradientMachine.cpp:123] Loading parameters from model/resnet_50</span><br><span class="line">[INFO 2016-12-21 08:37:55,102 classify.py:179] Label of example/dog.jpg is: 156</span><br><span class="line">[INFO 2016-12-21 08:37:57,137 classify.py:179] Label of example/cat.jpg is: 282</span><br></pre></td></tr></table></figure>
+<ul>
+<li>predict.sh调用了<code>classify.py</code></li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>具体的命令可以vim这些shell文件查看</p>
+</blockquote>
+<p><strong>打个广告,一起来:</strong></p>
+<p>  <img src="/img/PaddlePaddle/ad.png" alt=""></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/12/21/Caffe模型解析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Caffe框架解析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/11/25/FCN-in-Caffe/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">FCN in Caffe</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

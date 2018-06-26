@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Neural Network | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在介绍完梯度下降法之后, 开始正式进入神经网络的介绍, 这篇笔记依然参考cs231n的course notes1, 从神经网络的基本原理到如何训练优化模型, 其中有很多的衍生方法和训练技巧, 也有编程方面的一些注意事项">
+<meta name="keywords" content="神经网络,激活函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neural Network">
+<meta property="og:url" content="http://simtalk.cn/2016/09/08/Neural-Network/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="在介绍完梯度下降法之后, 开始正式进入神经网络的介绍, 这篇笔记依然参考cs231n的course notes1, 从神经网络的基本原理到如何训练优化模型, 其中有很多的衍生方法和训练技巧, 也有编程方面的一些注意事项">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network/neuron.png">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network/sigmoid.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network/sigmoidkill.png">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network/z.png">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network/tanh.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network/relu.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network/tanhkill.png">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network/Lre.png">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network/ELU.png">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network/neural_net.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network/neural_net2.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network/DNN.jpg">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.951Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Neural Network">
+<meta name="twitter:description" content="在介绍完梯度下降法之后, 开始正式进入神经网络的介绍, 这篇笔记依然参考cs231n的course notes1, 从神经网络的基本原理到如何训练优化模型, 其中有很多的衍生方法和训练技巧, 也有编程方面的一些注意事项">
+<meta name="twitter:image" content="http://simtalk.cn/img/Neural-Network/neuron.png">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Neural-Network" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/08/Neural-Network/" class="article-date">
+  	<time datetime="2016-09-08T01:32:07.000Z" itemprop="datePublished">2016-09-08</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Neural Network
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/激活函数/">激活函数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/神经网络/">神经网络</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/cs231n/">cs231n</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#神经网络基础"><span class="toc-text">神经网络基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用激活函数"><span class="toc-text">常用激活函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Sigmoid-x-和-tanh-x"><span class="toc-text">$Sigmoid(x)$和$tanh(x)$</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ReLU-激活函数族"><span class="toc-text">$ReLU$激活函数族</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#神经网络的结构"><span class="toc-text">神经网络的结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#计算前馈网络"><span class="toc-text">计算前馈网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拟合能力"><span class="toc-text">拟合能力</span></a></li></ol>
+        </div>
+        
+        <p>在介绍完<code>梯度下降法</code>之后, 开始正式进入<code>神经网络</code>的介绍, 这篇笔记依然参考cs231n的<a href="http://cs231n.github.io/neural-networks-1/" target="_blank" rel="noopener">course notes1</a>, 从神经网络的基本原理到如何训练优化模型, 其中有很多的衍生方法和训练技巧, 也有编程方面的一些注意事项</p>
+<a id="more"></a>
+<h3 id="神经网络基础"><a href="#神经网络基础" class="headerlink" title="神经网络基础"></a><strong>神经网络基础</strong></h3><p>神经网络的基本原理已经在 <a href="http://simtalk.cn/2016/08/23/%E4%BB%8E%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">从线性模型到神经网络</a>里做过基本的介绍</p>
+<p><img src="\img\Neural-Network\neuron.png" alt=""></p>
+<ul>
+<li><p>左图 : 生物神经元（neuron）: 人类的神经系统中大约有860亿个神经元，它们被大约10^14-10^15个突触（synapses）连接起来, 每个神经元都从它的树突获得输入信号，然后沿着它唯一的轴突（axon）产生输出信号, 轴突在末端会逐渐分枝，通过突触和其他神经元的树突相连。</p>
+</li>
+<li><p>右图 : 神经元数学模型 : 轴突传播的信号($x_0$)是基于轴突对信号的敏感程度(w_0)的, 突触的强度(权重向量$w$)是可以学习的并且控制着和其他神经元的连接强度, 这种连接强度可以表现为对信号的兴奋或者抑制, 在细胞体(cell body)中, 将所有的加权信号相加并和一个阈值进行比较, 从而得到输出信号, 在这个模型中假设峰值信号的准确时间点不重要，是通过激活信号的激活频率在交流信息, 将神经元的激活率建模为激活函数$f$（activation function）, 通常采用$Sigmoid$函数, 该函数会将求和之后的信号映射到(0,1)之间</p>
+</li>
+</ul>
+<p>神经元前向传播的代码实现:</p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Neuron</span><span class="params">(object)</span>:</span></span><br><span class="line">  <span class="comment"># ... </span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(inputs)</span>:</span></span><br><span class="line">    <span class="string">""" assume inputs and weights are 1-D numpy arrays and bias is a number """</span></span><br><span class="line">    cell_body_sum = np.sum(inputs * self.weights) + self.bias</span><br><span class="line">    firing_rate = <span class="number">1.0</span> / (<span class="number">1.0</span> + math.exp(-cell_body_sum)) <span class="comment"># sigmoid activation function</span></span><br><span class="line">    <span class="keyword">return</span> firing_rate</span><br><span class="line">    <span class="comment">#...</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>每个神经元将输入向量与权重向量进行点积运算, 然后加上偏置项进行$Sigmoid$函数映射, 得到一个(0,1)之间的信号强度</p>
+</li>
+<li><p><strong>单个神经元就是一个线性分类器</strong></p>
+</li>
+</ul>
+<p><code>PS</code> : $\sigma(\sum_iw_ix_i + b)= Sigmoid(\sum_iw_ix_i + b)$</p>
+<ol>
+<li><p>Softmax二分类器(逻辑回归)</p>
+<p> 我们可以将神经元的输出看作是样本是正类的概率$P(y_i = 1 \mid x_i; w)$, 那么样本为负类的概率就是$P(y_i = 0 \mid x_i; w) = 1 - P(y_i = 1 \mid x_i; w)$, 本质上就是一个逻辑回归</p>
+</li>
+<li><p>SVM二分类器</p>
+<p> 如果我们将神经元的输出通过最大边界折叶损失函数（max-margin hinge loss）进行映射, 那么我们就可得到一个二分类的支持向量机</p>
+</li>
+</ol>
+<blockquote>
+<p><code>理解正则化</code> : 引入正则化会惩罚参数, 也就是说正则化会使得连接权重变小(同时更加分散), 使得输入信号越来越多弱, 在生物学上有种遗忘的效应</p>
+</blockquote>
+<h3 id="常用激活函数"><a href="#常用激活函数" class="headerlink" title="常用激活函数"></a><strong>常用激活函数</strong></h3><p>每个激活函数（或非线性函数）的输入都是一个数字，然后对其进行某种固定的数学运算(函数映射)</p>
+<h4 id="Sigmoid-x-和-tanh-x"><a href="#Sigmoid-x-和-tanh-x" class="headerlink" title="$Sigmoid(x)$和$tanh(x)$"></a>$Sigmoid(x)$和$tanh(x)$</h4><p>   <img src="\img\Neural-Network\sigmoid.jpeg" alt=""></p>
+<ul>
+<li><p>$Sigmoid(x)=\sigma(x) = 1 / (1 + e^{-x})$将输入映射到[0,1]之间</p>
+<p>$Sigmoid(x)$函数的缺点:</p>
+<p><img src="\img\Neural-Network\sigmoidkill.png" alt=""></p>
+<p>如图所示, $Sigmoid(x)$的饱和指的是输出几乎为0或者1的时候, 这时在该区域的梯度几乎为0, 使得局部梯度消失, 在反向传播一节中我们知道, 局部梯度$\frac{\partial \sigma}{\partial x}$将会与整个损失函数关于该运算单元输出的梯度相乘, 局部梯度几乎为零导致相乘的结果也几乎为零, 从而使得反向传播中断</p>
+</li>
+<li><p>为了防止饱和，必须对于权重矩阵初始化特别留意, 如果初始化权重过大，那么大多数神经元将会饱和，导致网络就几乎不学习了</p>
+</li>
+<li><p>$Sigmoid$函数的输出不是零中心的。这一情况将影响梯度下降的运作，因为如果输入神经元的数据总是正数，那么关于w的梯度在反向传播的过程中，将会要么全部是正数，要么全部是负数（具体依整个表达式$f$而定）, 这将会导致梯度下降权重更新时出现z字型的下降, 下图展示有两个参数的z字下降:</p>
+<p><img src="\img\Neural-Network\z.png" alt=""></p>
+</li>
+<li><p>$exp(x)$的计算代价很大</p>
+</li>
+</ul>
+<p>   <img src="\img\Neural-Network\tanh.jpeg" alt=""></p>
+<ul>
+<li><p>$\tanh(x) = 2 \sigma(2x) -1$是一个简单放大的sigmoid函数, 将输入映射到[-1,1]之间</p>
+<p><strong>$tanh(x)$函数的特点</strong> : 依然具有梯度消失的问题, 但是没有零中心问题, 这导致$tanh(x)$比$Sigmoid(x)$更受欢迎</p>
+</li>
+</ul>
+<h4 id="ReLU-激活函数族"><a href="#ReLU-激活函数族" class="headerlink" title="$ReLU$激活函数族"></a>$ReLU$激活函数族</h4><ol>
+<li><p><strong>ReLU</strong></p>
+<p><img src="\img\Neural-Network\relu.jpeg" alt=""></p>
+<ul>
+<li>校正线性单元(Rectified Linear Unit)的表达式为: $f(x) = \max(0, x)$</li>
+</ul>
+<p>相比$Sigmoid(x)$和$tanh(x)$,</p>
+<ul>
+<li><p>在正数的区间是非饱和的</p>
+</li>
+<li><p>$ReLU(x)$计算更加高效, 因为它是线性公式</p>
+</li>
+<li><p>节省计算资源, 计算梯度不需要数学运算, 直接通过阈值比较得到梯度</p>
+</li>
+</ul>
+<p>$ReLU$函数的缺点:</p>
+<ul>
+<li><p>非零中心的输出</p>
+</li>
+<li><p>当$x&lt;0$时候依然存在梯度消失问题</p>
+</li>
+</ul>
+<p><img src="\img\Neural-Network\tanhkill.png" alt=""></p>
+<ul>
+<li>在训练的时候，ReLU单元比较脆弱并且可能“死掉”, 举例来说, 当一个很大的梯度流过ReLU的神经元的时候，可能会导致梯度更新到一种特别的状态，在这种状态下神经元将无法被其他任何数据点再次激活。如果这种情况发生，那么从此所以流过这个神经元的梯度将都变成0。也就是说，这个ReLU单元在训练中将不可逆转的死亡，因为这导致了数据多样化的丢失。例如，如果学习率设置得太高，可能会发现网络中40%的神经元都会死掉（在整个训练集中这些神经元都不会被激活）, 通过合理设置学习率，这种情况的发生概率会降低。</li>
+</ul>
+</li>
+<li><p><strong>PReLU</strong>  </p>
+<p><img src="\img\Neural-Network\Lre.png" alt=""></p>
+<p>为了解决$ReLU$中的神经元死亡问题, ReLU中当x&lt;0时，函数值为0。而<code>PReLU</code>则是给出一个很小的负数梯度值，比如0.01, 这样我们的局部梯度就变为$\alpha$而不是0, 克服了ReLU中的梯度消失问题<br> Parametric Rectifier(参数整流器)<a href="http://arxiv.org/abs/1502.01852" target="_blank" rel="noopener">PReLU</a>是另一种变形, 数学定义为</p>
+<p>$$f(x) = \mathbb{1}(x &lt; 0) (\alpha x) + \mathbb{1}(x&gt;=0) (x) =\max(\alpha x,x)$$</p>
+</li>
+<li><p><strong>Maxout</strong></p>
+<p><a href="http://www-etud.iro.umontreal.ca/~goodfeli/maxout.html" target="_blank" rel="noopener">$Maxout$激活函数</a>数学表达为</p>
+<p>$$f(x)=\max(w_1^Tx+b_1, w_2^Tx + b_2)$$</p>
+<ul>
+<li>$Maxout$函数是$ReLU$和$PReLU$的一般化, 比如$w_1, b_1 = 0$的时候, 就变成了$ReLU$函数</li>
+</ul>
+<p><strong>Maxout</strong>的优缺点: </p>
+<ul>
+<li>拥有ReLU单元的线性操作和不饱和的优点，而没有死亡的ReLU单元</li>
+<li>和ReLU对比，它每个神经元的参数数量增加了一倍，这就导致整体参数的数量激增</li>
+</ul>
+</li>
+<li><p><strong>Exponential Linear Units (ELU)</strong></p>
+<p><img src="\img\Neural-Network\ELU.png" alt=""></p>
+<p>指数线性单元(ELU)的数学表达式为 :</p>
+</li>
+</ol>
+<p>$$<br>f(n) =<br>   \begin{cases}<br>   x,  &amp; \text{if $x&gt;0$ } \\[2ex]<br>   \alpha (exp(x)-1), &amp; \text{if $x \leq 0$ }<br>   \end{cases}<br>$$</p>
+<ul>
+<li>注意, ELU具有所有的优点: 非饱和, 输出零中心分布, 无梯度消失问题, 唯一的缺点就是指数运算, 我觉这点也不是什么缺点, 就是个tradeoff</li>
+</ul>
+<blockquote>
+<p><strong>注意</strong> : </p>
+<ul>
+<li>在同一个网络中混合使用不同类型的神经元是非常少见的, 那么我们应该选择什么样的激活函数呢? 答案是用<code>ReLU</code>, 其次是<code>PReLU/Maxout/ELU</code>, 可以试试<code>tanh</code>, 不要用<code>Sigmoid</code></li>
+<li>设置好学习率，或许可以监控你的网络中死亡的神经元占的比例, 死亡单元过多就试试$Leaky ReLU$激活函数和$Maxout$激活函数</li>
+</ul>
+</blockquote>
+<h3 id="神经网络的结构"><a href="#神经网络的结构" class="headerlink" title="神经网络的结构"></a><strong>神经网络的结构</strong></h3><p>将神经网络以神经元的形式图形化, 神经元之间以有向无环图的方式连接起来, 也就是说当下神经元的输出是下一个神经元的输入, 在神经网络结构中不允许存在循环结构, 因为这样会导致前向传播的无限循环, 神经元以层级结构组成整个网络, 最常见的层是<code>全连接层（fully-connected layer）</code>, 即该层的神经元输出会作为下一层每个神经元的输入, 但是在同一个全连接层内的神经元之间没有连接。</p>
+<p><img src="\img\Neural-Network\neural_net.jpeg" alt=""></p>
+<p>上图是一个有3个输入的2层神经网络，隐层由4个神经元组成，输出层由2个神经元组成，输入层是3个神经元。</p>
+<ul>
+<li><strong>网络尺寸</strong> : <code>神经元个数</code>=4+2=6 <code>参数个数</code>= [3 x 4] + [4 x 2] = 20 <code>偏置个数</code>=4+2=6</li>
+</ul>
+<p><img src="\img\Neural-Network\neural_net2.jpeg" alt=""></p>
+<p>上图是一个有3个输入的3层神经网络，两个含4个神经元的隐含层, 输出层只有一个神经元</p>
+<ul>
+<li><strong>网络尺寸</strong> : <code>神经元个数</code>=4+4+1=9 <code>参数个数</code>=[3x4]+[4x4]+[4x1]=32 <code>偏置个数</code>=4+4+1=9</li>
+</ul>
+<p><strong>注意</strong>：</p>
+<ul>
+<li><p>层与层之间的神经元是全连接的，但是层内的神经元不连接</p>
+</li>
+<li><p>在我们说一个n层神经网络的时候, 并没有把输入层算在内</p>
+</li>
+<li><p><strong>输出层</strong>一般是不会有激活函数的, 或者也可以认为有一个线性相等的激活函数</p>
+</li>
+<li><p>我们也会使用人工神经网络（Artificial Neural Networks 缩写ANN）或者多层感知器（Multi-Layer Perceptrons 缩写MLP）来指代神经网络</p>
+</li>
+</ul>
+<p><strong>深度神经网络</strong></p>
+<p><img src="\img\Neural-Network\DNN.jpg" alt=""></p>
+<ul>
+<li>深层神经网络由一个输入层，数个隐层，以及一个输出层构成。每层有若干个神经元，神经元之间有连接权重。每个神经元模拟人类的神经细胞，而结点之间的连接模拟神经细胞之间的连接。</li>
+<li>深度神经网络是非线性模型，其代价函数是非凸函数，容易收敛到局部最优解</li>
+<li>深度神经网络的模型结构、输入数据处理方式、权重初始化方案、参数配置、激活函数选择、权重优化方法等均可能对最终效果有较大影响</li>
+</ul>
+<h3 id="计算前馈网络"><a href="#计算前馈网络" class="headerlink" title="计算前馈网络"></a><strong>计算前馈网络</strong></h3><p>将神经网络组织成层状的一个主要原因，就是这个结构让神经网络算法使用矩阵向量操作变得简单和高效, 我们拿上面的那个3层神经网络举例</p>
+<ol>
+<li><p>输入是[3x1]的向量, 由于第一个隐藏层是一个全连接层并且有4个神经元, 我们可以想象每一个神经元是一个线性方程, 每一个输入都有一个权重, 那么用线性代数表示这个线性方程组, 那么第一个隐层的权重矩阵$W1$的大小为[4x3], $W_1x$就是第一个隐藏层的输出, 是一个[4x1]的向量</p>
+</li>
+<li><p>同样的道理, 第二个隐藏层的权重矩阵$W_2$的大小为[4x4], 输出层的权重矩阵$W_3$的大小为[1x4],</p>
+</li>
+<li><p>那么整个网络的运算为</p>
+</li>
+</ol>
+<p>$$s = W_3 f(0, W_2 f(0, W_1 x+b_1)+b_2)+b_3$$</p>
+<ul>
+<li>这是一个嵌套计算的结构, $W_1,W_2,W_3,b_1,b_2,b_3$是网络要学习的参数</li>
+<li>$x$并不是一个单独的列向量, 比如$x$大小为[3xm], m代表m个样本数据, 所有的样本将会被并行化的高效计算出来</li>
+<li><strong>注意</strong>, 神经网络最后一层通常是没有激活函数的</li>
+</ul>
+<blockquote>
+<p>全连接层的前向传播一般就是先进行一个矩阵乘法，然后加上偏置并运用激活函数。</p>
+</blockquote>
+<p>用程序实现如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># forward-pass of a 3-layer neural network:</span></span><br><span class="line">f = <span class="keyword">lambda</span> x: <span class="number">1.0</span>/(<span class="number">1.0</span> + np.exp(-x)) <span class="comment"># activation function (use sigmoid)</span></span><br><span class="line">x = np.random.randn(<span class="number">3</span>, <span class="number">1</span>) <span class="comment"># random input vector of three numbers (3x1)</span></span><br><span class="line">h1 = f(np.dot(W1, x) + b1) <span class="comment"># calculate first hidden layer activations (4x1)</span></span><br><span class="line">h2 = f(np.dot(W2, h1) + b2) <span class="comment"># calculate second hidden layer activations (4x1)</span></span><br><span class="line">out = np.dot(W3, h2) + b3 <span class="comment"># output neuron (1x1)</span></span><br><span class="line"><span class="comment"># end</span></span><br></pre></td></tr></table></figure>
+<h3 id="拟合能力"><a href="#拟合能力" class="headerlink" title="拟合能力"></a><strong>拟合能力</strong></h3><ul>
+<li>全连接层的神经网络定义了一个由一系列函数相互嵌套而成的函数族, 网络的权重就是每个函数的参数, 那么这个函数族的拟合能力如何, 是否所有函数都能被这个函数族拟合出来?</li>
+</ul>
+<blockquote>
+<p>1989年的论文 <a href="https://link.zhihu.com/?target=http%3A//www.dartmouth.edu/%257Egvc/Cybenko_MCSS.pdf" target="_blank" rel="noopener">Approximation by Superpositions of Sigmoidal Function</a>中已经证明，给出任意连续函数$f(x)$和任意$\epsilon &gt; 0$，均存在一个至少含1个隐层的神经网络$g(x)$, 并且在网络中合理选择非线性激活函数, 对于$\forall x$, 使得$ \mid f(x) - g(x) \mid &lt; \epsilon$, 换句话说，神经网络可以近似拟合任何连续函数。</p>
+</blockquote>
+<ul>
+<li>既然一个隐层就能近似任何函数, 那为什么还要构建更多层来将网络做得更深?</li>
+</ul>
+<blockquote>
+<p>虽然一个2层网络在数学理论上能完美地近似所有连续函数，但在实际操作中效果相对较差, 神经网络在实践中非常好用是因为它们表达出的函数不仅平滑，而且对于数据的统计特性有很好的拟合, 同时, 网络通过最优化算法（例如梯度下降）能比较容易地学习到这个函数, 虽然在理论上深层网络（使用了多个隐层）和单层网络的表达能力是一样的，但是就实践经验而言，深度网络效果比单层网络好。  </p>
+</blockquote>
+<ul>
+<li>神经网络与卷积网络</li>
+</ul>
+<blockquote>
+<p>在实践中3层的神经网络会比2层的表现好，然而继续加深（做到4，5，6层）很少有太大帮助。卷积神经网络的情况却不同，在卷积神经网络中，对于一个良好的识别系统来说，深度是一个极端重要的因素, 对于该现象的一种解释观点是：因为图像拥有层次化结构（比如脸是由眼睛等组成，眼睛又是由边缘组成），所以多层处理对于这种数据就有直观意义。</p>
+</blockquote>
+<p><strong>了解更多</strong> : </p>
+<ul>
+<li><p><a href="http://www.deeplearningbook.org/" target="_blank" rel="noopener">Deep Learning</a>的 <a href="http://www.deeplearningbook.org/contents/mlp.html" target="_blank" rel="noopener">chapter6.4</a></p>
+</li>
+<li><p><a href="http://arxiv.org/abs/1312.6184" target="_blank" rel="noopener">Do Deep Nets Really Need to be Deep?</a></p>
+</li>
+<li><p><a href="http://arxiv.org/abs/1412.6550" target="_blank" rel="noopener">FitNets: Hints for Thin Deep Nets</a></p>
+</li>
+<li><p><a href="http://cs.stanford.edu/people/karpathy/convnetjs/demo/classify2d.html" target="_blank" rel="noopener">ConvNetsJS demo</a></p>
+</li>
+<li><p><a href="http://www.deeplearning.net/tutorial/mlp.html" target="_blank" rel="noopener">deeplearning.net tutorial with Theano</a></p>
+</li>
+<li><p><a href="http://neuralnetworksanddeeplearning.com/chap1.html" target="_blank" rel="noopener">Michael Nielsen’s tutorials</a></p>
+</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/09/Neural-Network-in-Practice/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Neural Network in Practice
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/07/Backpropagation/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Back Propagation</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>VGGNet | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="VGG和GoogLenet这两个模型结构有一个共同特点是Go deeper。跟GoogLenet不同的是，VGG继承了LeNet以及AlexNet的一些框架，尤其是跟AlexNet框架非常像，VGG也是5个group的卷积、2层fc图像特征、一层fc分类特征。根据前5个卷积group，每个group中的不同配置，VGG论文中给出了A~E这五种配置，卷积层数从8到16递增。">
+<meta name="keywords" content="VGG">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VGGNet">
+<meta property="og:url" content="http://simtalk.cn/2016/09/25/VGGNet/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="VGG和GoogLenet这两个模型结构有一个共同特点是Go deeper。跟GoogLenet不同的是，VGG继承了LeNet以及AlexNet的一些框架，尤其是跟AlexNet框架非常像，VGG也是5个group的卷积、2层fc图像特征、一层fc分类特征。根据前5个卷积group，每个group中的不同配置，VGG论文中给出了A~E这五种配置，卷积层数从8到16递增。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/VGGNet/vgg16.png">
+<meta property="og:image" content="http://simtalk.cn/img/VGGNet/VGG.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/VGGNet/VGGp.jpg">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.954Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VGGNet">
+<meta name="twitter:description" content="VGG和GoogLenet这两个模型结构有一个共同特点是Go deeper。跟GoogLenet不同的是，VGG继承了LeNet以及AlexNet的一些框架，尤其是跟AlexNet框架非常像，VGG也是5个group的卷积、2层fc图像特征、一层fc分类特征。根据前5个卷积group，每个group中的不同配置，VGG论文中给出了A~E这五种配置，卷积层数从8到16递增。">
+<meta name="twitter:image" content="http://simtalk.cn/img/VGGNet/vgg16.png">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-VGGNet" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/25/VGGNet/" class="article-date">
+  	<time datetime="2016-09-25T03:37:59.000Z" itemprop="datePublished">2016-09-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      VGGNet
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/VGG/">VGG</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/深度学习/">深度学习</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#网络结构"><span class="toc-text">网络结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#训练策略"><span class="toc-text">训练策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Localization"><span class="toc-text">Localization</span></a></li></ol>
+        </div>
+        
+        <p>VGG和GoogLenet这两个模型结构有一个共同特点是<code>Go deeper</code>。跟GoogLenet不同的是，VGG继承了LeNet以及AlexNet的一些框架，尤其是跟AlexNet框架非常像，VGG也是5个group的卷积、2层fc图像特征、一层fc分类特征。根据前5个卷积group，每个group中的不同配置，VGG论文中给出了A~E这五种配置，卷积层数从8到16递增。</p>
+<a id="more"></a>
+<p>从AlexNet发展而来的网络主要修改一下两个方面：</p>
+<ol>
+<li><p>在第一个卷基层层使用更小的filter尺寸和间隔(kernel size=3, stride=1), AlexNet(kernel size=11, stride=4)</p>
+</li>
+<li><p>在整个图片和multi-scale上训练和测试图片</p>
+</li>
+</ol>
+<h3 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a><strong>网络结构</strong></h3><p><a href="https://arxiv.org/pdf/1409.1556.pdf" target="_blank" rel="noopener">VERY DEEP CONVOLUTIONAL NETWORKS FOR LARGE-SCALE IMAGE RECOGNITION</a></p>
+<p><img src="\img\VGGNet\vgg16.png" alt=""></p>
+<p><img src="\img\VGGNet\VGG.jpg" alt=""></p>
+<p><strong>对D网络结构的参数分析:</strong></p>
+<p><img src="\img\VGGNet\VGGp.jpg" alt=""></p>
+<p><strong>结构特点:</strong></p>
+<ol>
+<li><p>小的Filter尺寸为$3*3$</p>
+<ul>
+<li><p>$3*3$是最小的能够捕获上下左右和中心的感受野, 多个$3*3$的卷基层比一个大尺寸filter卷基层有更多的非线性，使得判决函数更加具有判决性</p>
+</li>
+<li><p>在步长为$1$的情况下, 两个$3*3$的滤波器的最大感受野区域是$5*5$, 三个$3*3$的滤波器的最大感受野区域是$7*7$, 可以替代更大的滤波器尺寸</p>
+</li>
+<li><p>多个$3*3$的卷积层比一个大尺寸的filter有更少的参数，假设卷积层的输入和输出的特征图大小相同为10，那么含有3个$3*3$的滤波器的卷积层参数个数$3*(3*3*10*10)=2700$, 因为三个$3*3$的filter可以看成是一个$7*7$的filter分解而来的（中间层有非线性的分解）, 但是1个$7*7$的卷积层参数为$7*7*10*10=4900$ </p>
+</li>
+</ul>
+</li>
+<li><p>$1*1$filter</p>
+<ul>
+<li>作用是在不影响输入输出维数的情况下，对输入线进行线性形变，然后通过Relu进行非线性处理，增加网络的非线性表达能力。</li>
+</ul>
+</li>
+<li><p>Pooling：$2*2，stride=2$</p>
+</li>
+<li><p>和之前流行的三阶段网络不通的是，本文是有5个max-pooling层，所以是5阶段卷积特征提取。每层的卷积个数从首阶段的64个开始，每个阶段增长一倍，直到达到最高的512个，然后保持。</p>
+</li>
+</ol>
+<p><strong>基本结构:</strong></p>
+<p>基本结构A：</p>
+<p>$$<br>Input（224,224,3）→64F（3,3,3,1）→max-p(2,2)\\→<br>128F（3,3,64,1）→max-p(2,2) \\→<br>256F（3,3,128,1）→256F（3,3,256,1）→max-p(2,2)\\→<br>512F（3,3,256,1）→512F（3,3,512,1）→max-p(2,2)\\→<br>512F（3,3,256,1）→512F（3,3,512,1）→max-p(2,2)\\→<br>4096fc→4096fc→1000softmax<br>$$</p>
+<ul>
+<li>8个卷基层，3个全连接层，共计11层</li>
+</ul>
+<ul>
+<li><p>B：在A的stage2 和stage3分别增加一个3*3的卷基层，10个卷积层，总计13层</p>
+</li>
+<li><p>C：在B的基础上，stage3，stage4，stage5分别增加1*1的卷积层，13个卷基层，总计16层</p>
+</li>
+<li><p>D：在C的基础上，stage3，stage4，stage5分别增加3*3的卷积层，13个卷基层，总计16层</p>
+</li>
+<li><p>E：在D的基础上，stage3，stage4，stage5分别增加3*3的卷积层，16个卷基层，总计19层</p>
+</li>
+</ul>
+<h3 id="训练策略"><a href="#训练策略" class="headerlink" title="训练策略"></a><strong>训练策略</strong></h3><p>尽管VGG比Alex-net有更多的参数，更深的层次；但是VGG需要很少的迭代次数就开始收敛。这是因为</p>
+<ol>
+<li><p>深度和小的filter尺寸起到了隐式的规则化的作用</p>
+</li>
+<li><p>一些层的pre-initialisation</p>
+</li>
+</ol>
+<p><strong>Pre-initialisation：</strong></p>
+<ol>
+<li><p>网络A的权值$W~（0,0.01）$的高斯分布，$bias$为0</p>
+<ul>
+<li>由于存在大量的ReLU函数，不好的权值初始值对于网络训练影响较大。为了解决这个问题，先通过随机的方式训练最浅的网络A；然后在训练其他网络时，把A的前4个卷基层和最后全连接层的权值当做其他网络的初始值，未赋值的中间层通过随机初始化。</li>
+</ul>
+</li>
+<li><p><code>Multi-scale</code>训练: 把原始 image缩放到最小边S&gt;224；然后在full image上提取224*224片段，进行训练。</p>
+<ul>
+<li>方法1：在S=256，和S=384上训练两个模型，然后求平均</li>
+<li>方法2：类似OverFeat测试时使用的方法，在[Smin,Smax]scale上，随机选取一个scale，然后提取224*224的图片，训练一个网络。这种方法类似图片尺寸上的数据增益</li>
+</ul>
+</li>
+</ol>
+<p>因为卷积网络对于缩放有一定的不变性，通过multi-scale训练可以增加这种不变性的能力。</p>
+<blockquote>
+<p><a href="https://arxiv.org/abs/1312.6229" target="_blank" rel="noopener">OverFeat: Integrated Recognition, Localization and Detection using Convolutional Networks</a></p>
+</blockquote>
+<p><strong>测试方法:</strong></p>
+<p>测试阶段的方法和OverFeat测试方法相同，首先选定一个scale：Q，然后在这个图片上应用卷积网络，在最后一个卷积阶段产生unpooled FM，然后利用sliding window方法，每个pooling window产生一个分类输出，然后融合各个pooling window的结果，得到最终分类。</p>
+<blockquote>
+<p>参考博客: <a href="http://www.voidcn.com/blog/u014114990/article/p-5033528.html" target="_blank" rel="noopener">Very Deep Convolutional Networks for Large-Scale Image Recognition(VGG模型)</a></p>
+</blockquote>
+<h3 id="Localization"><a href="#Localization" class="headerlink" title="Localization"></a><strong>Localization</strong></h3><ol>
+<li><p>和OverFeat的方法类似，使用模型D（参数最少，表现最好）通过回归函数来替换分类器，两种分类方法：SCR(single-classregression)，用一个回归函数来学习预测所有类别的bounding box；PCR（per-class regression）每个类别有自己单独的一个回归函数。</p>
+<ul>
+<li><p>发现fine-tuning整个网络的定位性能，比值调整全连接层权值的定位结果要好。</p>
+</li>
+<li><p>PCR比SCR结果好，这个和OverFeat的结果相反。<br>所以最好的定位方法是采用PCR，fine-tuning整个网络。</p>
+</li>
+</ul>
+</li>
+<li><p>利用OverFeat的贪婪融合过程（不使用offset pooling），在整个图像上密集应用定位网络；首先根据softmax分类结果给定bounding box的置信得分，然后融合空间相似的bounding box，最后选取最大置信得分的bounding box。</p>
+<ul>
+<li><p>multi-scale比single-scale好</p>
+</li>
+<li><p>multi-model fusion会更好</p>
+</li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/10/05/Network-In-Network/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Network In Network
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/20/AlexNet/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">AlexNet</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

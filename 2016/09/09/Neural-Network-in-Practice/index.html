@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Neural Network in Practice | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="上一篇介绍了神经网络的基本知识, 这篇文章将cs231n课程中关于神经网络的 course notes2和course notes3的有关知识记录下来, 介绍了构建神经网络的整个过程, 包括数据的预处理，参数初始化, 正则化和损失函数, 以及神经网络训练和搜索最优超参数等知识。">
+<meta name="keywords" content="BN,Dropout">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neural Network in Practice">
+<meta property="og:url" content="http://simtalk.cn/2016/09/09/Neural-Network-in-Practice/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="上一篇介绍了神经网络的基本知识, 这篇文章将cs231n课程中关于神经网络的 course notes2和course notes3的有关知识记录下来, 介绍了构建神经网络的整个过程, 包括数据的预处理，参数初始化, 正则化和损失函数, 以及神经网络训练和搜索最优超参数等知识。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/prepro1.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/prepro2.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/cifar10pca.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/bn.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/bn1.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/dropout.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/drop1.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/drop.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/learningrates.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/loss.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/accuracies.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/weights.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/cnnweights.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/nesterov.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/opt2.gif">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/opt1.gif">
+<meta property="og:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/gridsearchbad.jpeg">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.951Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Neural Network in Practice">
+<meta name="twitter:description" content="上一篇介绍了神经网络的基本知识, 这篇文章将cs231n课程中关于神经网络的 course notes2和course notes3的有关知识记录下来, 介绍了构建神经网络的整个过程, 包括数据的预处理，参数初始化, 正则化和损失函数, 以及神经网络训练和搜索最优超参数等知识。">
+<meta name="twitter:image" content="http://simtalk.cn/img/Neural-Network-in-Practice/prepro1.jpeg">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Neural-Network-in-Practice" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/09/Neural-Network-in-Practice/" class="article-date">
+  	<time datetime="2016-09-09T01:22:54.000Z" itemprop="datePublished">2016-09-09</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Neural Network in Practice
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/BN/">BN</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dropout/">Dropout</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/cs231n/">cs231n</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据预处理"><span class="toc-text">数据预处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参数初始化"><span class="toc-text">参数初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#批量标准化BN"><span class="toc-text">批量标准化BN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正则化"><span class="toc-text">正则化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#随机失活Dropout"><span class="toc-text">随机失活Dropout</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#损失函数"><span class="toc-text">损失函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分类问题"><span class="toc-text">分类问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#回归问题"><span class="toc-text">回归问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#梯度检查"><span class="toc-text">梯度检查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模型检查"><span class="toc-text">模型检查</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#训练前"><span class="toc-text">训练前</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#训练中"><span class="toc-text">训练中</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参数更新"><span class="toc-text">参数更新</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Nesterov动量更新"><span class="toc-text">Nesterov动量更新</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#学习率退火"><span class="toc-text">学习率退火</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#逐参数适应学习率"><span class="toc-text">逐参数适应学习率</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#超参数调优"><span class="toc-text">超参数调优</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模型集成"><span class="toc-text">模型集成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拓展阅读"><span class="toc-text">拓展阅读</span></a></li></ol>
+        </div>
+        
+        <p>上一篇介绍了神经网络的基本知识, 这篇文章将<code>cs231n</code>课程中关于神经网络的 <a href="http://cs231n.github.io/neural-networks-2/" target="_blank" rel="noopener">course notes2</a>和<a href="http://cs231n.github.io/neural-networks-3/" target="_blank" rel="noopener">course notes3</a>的有关知识记录下来, 介绍了构建神经网络的整个过程, 包括数据的预处理，参数初始化, 正则化和损失函数, 以及神经网络训练和搜索最优超参数等知识。 </p>
+<a id="more"></a>
+<p>在神经元模型中, 计算模型将输入向量$x$和权重向量$w$进行內积运算然后通过非线性激活函数映射输出, 这些神经元通过层级嵌套的方式共同组成了神经网络模型, 神经网络本质上就是进行了一系列的线性映射与非线性激活函数交织的运算。</p>
+<h3 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a><strong>数据预处理</strong></h3><ol>
+<li><p><strong>数据零中心化</strong></p>
+<p><code>数据零中心化</code>可以理解为让数据在每个特征维度上均值为$0$, 在实际操作中减去每一维的均值就可以了, 但是在图像处理中通常有两种方式, <code>一种</code>是将所有像素都减去同一个均值(比如AlexNet), <code>另一种</code>是在每一个通道(RGB)上进行零中心化操作, 即每个通道的数据减去该通道的均值(比如VGGNet)</p>
+</li>
+<li><p><strong>数据归一化</strong></p>
+<p><code>数据归一化</code>可以理解为让数据在每一维上的数值范围近似相等, 通常有两种处理方式, <code>一种</code>是在数据零中心化之后, 除以每个维度的标准差, 也就是对每个维度上的数据做标准化, <code>另一种</code>是采用极值归一化使得每一维的数据的最大值和最小值是1和-1</p>
+<p>这个预处理操作只有在确信不同的输入特征有不同的数值范围（或计量单位）时才有意义, 因为数据预处理的目的就是消除量纲的影响, 但是在图像处理中像素的数值范围几乎是一致的（都在0-255之间），所以进行这个额外的预处理步骤并不是很必要。</p>
+<ul>
+<li>了解更多 : <a href="http://www.zhaokv.com/2016/01/normalization-and-standardization.html" target="_blank" rel="noopener">归一化与标准化</a></li>
+</ul>
+<p><img src="/img/Neural-Network-in-Practice/prepro1.jpeg" alt=""></p>
+<ul>
+<li>上图就是一个二维数据标准化的过程, 首先将数据云移动到了原点(数据零中心化), 然后将数据进行缩放到近似相同的范围(除以标准差), 图中红色的线指出了数据各维度的数值范围</li>
+</ul>
+</li>
+<li><p><strong>PCA(Principal Component Analysis)</strong> </p>
+<p>我们知道在图像领域数据一般维数是非常高的, 而数据之间的相关性又比较大, 这就可以让一部分的特征数据来近似地代表全部的特征数据, 主成分分析法(PCA)通过线性变换将原始数据变换为一组各维度线性无关的表示，可用于提取数据的主要特征分量，常用于高维数据的降维, 通常使用PCA降维过的数据训练线性分类器和神经网络会达到非常好的性能效果，同时还能节省时间和存储器空间。</p>
+<ul>
+<li>假设输入的数据矩阵$X$大小为[N x D], 我们来看一下PCA的过程:</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Assume input data matrix X of size [N x D]</span></span><br><span class="line">X -= np.mean(X, axis = <span class="number">0</span>) <span class="comment"># zero-center the data (important)</span></span><br><span class="line">cov = np.dot(X.T, X) / X.shape[<span class="number">0</span>] <span class="comment"># get the data covariance matrix</span></span><br><span class="line">U,S,V = np.linalg.svd(cov) <span class="comment">#compute the SVD </span></span><br><span class="line">Xrot = np.dot(X, U) <span class="comment"># decorrelate the data</span></span><br><span class="line">Xrot_reduced = np.dot(X, U[:,:<span class="number">100</span>]) <span class="comment"># Xrot_reduced becomes [N x 100]</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>协方差矩阵中的元素$cov_{i j}$表示第$i$个维度和第$j$个维度的协方差, 矩阵的对角线上的元素是方差, 由于协方差矩阵是对称和半正定的, 我们可以对协方差矩阵进行奇异值分解(SVD)得到$U,S$ </p>
+</li>
+<li><p>$U$的列是特征向量, U的列是标准正交向量的集合, 即列向量的模为1，列向量之间标准正交，所以可以把它们看做标准正交基向量</p>
+</li>
+<li><p>$S$是装有奇异值的1维数组, S中元素是特征值的平方</p>
+</li>
+<li><p>然后将已经零中心化处理过的原始数据投影到特征基准上去除数据之间的相关性, 相当于对$X$中的数据进行旋转，旋转产生的结果就是新的特征向量。</p>
+</li>
+<li><p><code>np.linalg.svd</code>的一个良好性质是在它的返回值$U$中，特征向量是按照特征值的大小排列的, 我们可以利用这个性质来对数据降维，只使用前面的小部分特征向量</p>
+</li>
+</ul>
+<p>经过上面的操作，将原始的数据集的大小由[N x D]降到了[N x 100]，留下了数据中包含最大特征值的100个维度。</p>
+</li>
+<li><p><strong>白化</strong></p>
+<p>白化操作的输入是特征基准上的数据，然后对每个维度除以其特征值来对数值范围进行归一化。该变换的几何解释是：如果数据服从多变量的高斯分布，那么经过白化后，数据的分布将会是一个均值为零，且协方差相等的矩阵。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># whiten the data:</span><br><span class="line"># divide by the eigenvalues (which are square roots of the singular values)</span><br><span class="line">Xwhite = Xrot / np.sqrt(S + 1e-5)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li><p>在代码中加入<code>1e-5</code>为了防止分母为零, 但是在变换的过程中可能会夸大数据中的噪声，这是因为它将所有维度都拉伸到相同的数值范围，这些维度中也包含了方差小的维度, 而这些维度大多是噪声, 在实际操作中可以用更强的平滑来解决, 例如采用比1e-5更大的值。</p>
+<p><img src="/img/Neural-Network-in-Practice/prepro2.jpeg" alt=""></p>
+<p>上图展示了PCA降维和白化的过程</p>
+</li>
+<li><p>通过PCA将原始数据变换到了原始数据的协方差矩阵的基向量上, 这样就消除了数据间的相关性, 在线性代数的角度来看, 协方差矩阵变成对角阵矩阵</p>
+</li>
+<li><p>通过白化, 每个维度都被特征值调整到一个相同数值范围以内，将数据协方差矩阵变为单位矩阵, 从几何上看，就是对数据在各个方向上拉伸压缩，使之变成服从高斯分布的数据点分布。</p>
+<p><strong>使用CIFAR-10数据将这些变化可视化PCA和白化:</strong></p>
+<p><img src="/img/Neural-Network-in-Practice/cifar10pca.jpeg" alt=""></p>
+</li>
+<li><p>CIFAR-10训练集的大小是50000x3072，其中每张图片都可以拉伸为3072维的行向量, 然后计算[3072 x 3072]的协方差矩阵进行奇异值分解</p>
+</li>
+<li><p>左1图 : 含49张图片的样本集</p>
+</li>
+<li><p>左2图 : 3072个特征值向量中的前144个特征向量</p>
+</li>
+<li><p>左3图 : 49张样本经过了PCA降维处理的图片，展示了144个特征向量, 展示原始图像用了3072维的向量，向量中的元素是图片上某个位置的像素在某个颜色通道中的亮度值, 而现在每张图片只使用了一个144维的向量，其中每个元素表示了特征向量对于组成这张图片的贡献值</p>
+</li>
+<li><p>左4图 : 将“白化”后的数据进行显示, 其中144个维度中的方差都被压缩到了相同的数值范围内</p>
+</li>
+</ul>
+<blockquote>
+<p>任何预处理策略（比如数据均值）都只能在训练集数据上进行计算，算法训练完毕后再应用到验证集或者测试集上。例如，如果先计算整个数据集图像的平均值然后每张图片都减去平均值，最后将整个数据集分成训练/验证/测试集，那么这个做法是错误的。应该怎么做呢？应该先分成训练/验证/测试集，只是从训练集中求图片平均值，然后各个集（训练/验证/测试集）中的图像再减去这个平均值。                                   —– <a href="https://zhuanlan.zhihu.com/p/21560667" target="_blank" rel="noopener">智能单元</a></p>
+</blockquote>
+<h3 id="参数初始化"><a href="#参数初始化" class="headerlink" title="参数初始化"></a><strong>参数初始化</strong></h3><p>在真正开始训练网络之前, 有一个非常tricky的步骤就是参数初始化, 注意一定不能将所有参数设为0, 因为如果网络中的每个神经元都计算出同样的输出，然后它们就会在反向传播中计算出同样的梯度，从而进行同样的参数更新, 从代价函数的角度来说, 参数初始化又不能太大, 所以我们希望权重初始值要非常接近0又不能等于0, 并不是小数值一定会得到好的结果, 例如一个神经网络的层中的权重值很小，那么在反向传播的时候就会计算出非常小的梯度, 就会出现梯度消失问题</p>
+<p><strong>小随机数初始化</strong></p>
+<p>   如果神经元刚开始的时候是随机且不相等的，那么它们将计算出不同的更新，并将自身变成整个网络的不同部分</p>
+<ul>
+<li><p>小随机数权重初始化的实现方法是 ：<code>W = 0.01 * np.random.randn(D,H)</code></p>
+</li>
+<li><p>其中<code>randn函数</code>是基于零均值和标准差的一个高斯分布, 每个神经元的权重向量都被初始化为一个随机向量，而这些随机向量又服从一个多变量高斯分布，这样在输入空间中，所有的神经元的指向是随机的, 也就是说所有神经元是具有差异的不对称的, 那么它们就会在反向传播中计算出不同的梯度</p>
+<p><strong>使用<code>1/sqrt(n)</code>校准方差</strong> : 随着输入数据量的增长, 随机初始化的神经元的输出数据的分布中的方差也在增大, 除以输入数据量的平方根来调整其数值范围, 具体实现方法是 : <code>w = np.random.randn(n) / np.sqrt(n)</code>, 这样就保证了网络中所有神经元起始时有近似同样的输出分布。实践经验证明，这样做可以提高收敛的速度, 理论证明如下 :</p>
+</li>
+<li><p>假设权重向量为$w$和输入向量为$x$, 其线性运算结果为$s = \sum_i^n w_i x_i$, 由于我们是(0,1)正态分布的随机初始化, 所以输入和权重的平均值都是0, 即$E[x_i] = E[w_i] = 0$, 我们假设$w_i, x_i$同分布</p>
+<p>我们可以计算$s$的方差 : </p>
+<p>$$<br>\begin{align}<br>\text{Var}(s) &amp;= \text{Var}(\sum_i^n w_ix_i) \\<br>&amp;= \sum_i^n \text{Var}(w_ix_i) \\<br>&amp;= \sum_i^n [E(w_i)]^2\text{Var}(x_i) + E[(x_i)]^2\text{Var}(w_i) + \text{Var}(x_i)\text{Var}(w_i) \\<br>&amp;= \sum_i^n \text{Var}(x_i)\text{Var}(w_i) \\<br>&amp;= \left( n \text{Var}(w) \right) \text{Var}(x)<br>\end{align}<br>$$</p>
+<p>由结果可以看出, 随着$n$的增大, $s$的方差越来越大, 如果想要$s$有和输入$x$一样的方差，那么在初始化的时候必须保证每个权重$w$的方差是<code>1/n</code>, 那么在初始化的时候, 由于$\text{Var}(aX) = a^2\text{Var}(X)$, 只要在权重前面乘上系数$a = \sqrt{1/n}$就可以了</p>
+</li>
+<li><p>Glorot等在论文<a href="http://jmlr.org/proceedings/papers/v9/glorot10a/glorot10a.pdf" target="_blank" rel="noopener">Understanding the difficulty of training deep feedforward neural networks</a>推荐$Var(w) = 2/(n_{in} + n_{out})$, 其中$n_{in} + n_{out}$是前一层和后一层的神经元个数</p>
+</li>
+<li><a href="http://arxiv-web3.library.cornell.edu/abs/1502.01852" target="_blank" rel="noopener">Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification</a>指出ReLU神经元的特殊初始化，并给出结论：网络中神经元的方差应该是<code>2.0/n</code>, 代码实现为<code>w = np.random.randn(n) * np.sqrt(2.0/n)</code>, 这个形式是神经网络算法使用ReLU神经元时的当前最佳推荐。</li>
+</ul>
+<p><strong>稀疏初始化</strong></p>
+<p>为了处理方差问题, 可以将所有权重矩阵设为0，但是为了打破对称性导致的反向梯度相同问题，每个神经元都同下一层固定数目的神经元随机连接, 其权重数值由一个小的高斯分布生成, 一般连接数目是10个。</p>
+<p><strong>偏置（biases）的初始化</strong></p>
+<p>我们可以将偏置项初始化为0, 因为我们在初始化权重矩阵时候已经打破了对称性, </p>
+<ul>
+<li>对于ReLU非线性激活函数，有研究人员喜欢使用如0.01这样的小数值常量作为所有偏置的初始值，这是因为这样做能让所有的ReLU单元一开始就激活，就能保存并传播一些梯度, 但是这样做是不是总是能提高算法性能并不清楚, 所以通常还是使用0来初始化偏置参数, 推荐是使用<code>ReLU激活函数</code>，并且使用<code>w = np.random.randn(n) * np.sqrt(2.0/n)</code>来进行权重初始化, <a href="https://arxiv.org/abs/1502.01852" target="_blank" rel="noopener">参考文献</a></li>
+</ul>
+<h3 id="批量标准化BN"><a href="#批量标准化BN" class="headerlink" title="批量标准化BN"></a><strong>批量标准化BN</strong></h3><p><a href="http://arxiv.org/abs/1502.03167" target="_blank" rel="noopener">Batch Normalization</a>loffe和Szegedy最近才提出的方法, 批量归一化可以理解为在网络的每一层之前都做预处理, 让激活数据在训练开始前进行标准化处理, 网络处理数据使其服从标准正态分布, 在神经网络的结构上来看, 就是将全连接层或者是卷积层与激活函数之间添加一个BatchNorm层, 使用了批量归一化的网络对于不好的初始值有更强的鲁棒性</p>
+<p><img src="/img/Neural-Network-in-Practice/bn.PNG" alt=""></p>
+<ul>
+<li><p>提高了整个网络的梯度流</p>
+</li>
+<li><p>允许设置更高的学习率</p>
+</li>
+<li><p>减少了对于初始化的依赖</p>
+</li>
+<li><p>在某种程度上有类似正则化的作用, 可能不再需要<code>Dropout</code></p>
+</li>
+</ul>
+<p><strong><code>BN层</code>的理解:</strong></p>
+<p><img src="/img/Neural-Network-in-Practice/bn1.PNG" alt=""></p>
+<ul>
+<li>由于BN操作也就是标准化是一个简单可求导的操作, 所以对于整个网络依然可以利用梯度下降法进行迭代优化</li>
+</ul>
+<p><strong>注意</strong>, </p>
+<ul>
+<li>在训练时候我们使用的均值和方差并不是基于选定的那批数据, 而是调整过的具有经验的单一均值, 比如在训练期间模型估计的均值</li>
+<li>在模型训练完成后, 一般是没有batch的概念, 在测试阶段一般输入的是一个测试样本, 又因为网络一旦训练完毕，参数都是固定的，这个时候即使是每批训练样本进入网络，那么BN层计算的均值、标准差都是固定不变的, 我们可以用训练时的均值、标准差来处理测试数据</li>
+</ul>
+<blockquote>
+<p><a href="https://arxiv.org/pdf/1502.03167.pdf" target="_blank" rel="noopener">Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift</a></p>
+</blockquote>
+<h3 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a><strong>正则化</strong></h3><p><strong>L1正则化</strong></p>
+<p>L1正则化是对于每个$w$都向目标函数增加一个$\lambda|w|$, L1正则化会让权重向量在最优化的过程中变得稀疏, 即非常接近0, 也就是说，使用L1正则化的神经元最后使用的是它们最重要的输入数据的稀疏子集, 同时对于噪音输入则几乎是不变的</p>
+<p><strong>L2正则化</strong></p>
+<p>L2正则化可能是最常用的正则化方法, 可以通过惩罚目标函数中所有参数的平方将其实现, 即对于网络中的每个权重$w_i$, 向目标函数中增加一个$\frac{1}{2}\lambda w_i^2$, 其中$\lambda$是正则化强度, 加上$\frac{1}{2}$后，该式子关于$w_i$梯度就是$\lambda w_i$而不是$2\lambda w_i$, 在线性分类中讲过, L2正则化可以直观理解为它对于大数值的权重向量进行严厉惩罚，倾向于更加分散的权重向量, 这样就可以使得网络更倾向于使用所有输入特征, 而不是严重依赖输入特征中某些小部分特征</p>
+<ul>
+<li><p><strong>注意</strong>, 在在梯度下降和参数更新的时候，使用L2正则化意味着所有的权重都以$W = W -\lambda W$趋向于0</p>
+</li>
+<li><p>相较L1正则化，L2正则化中的权重向量大多是分散的小数字, 如果不是特别关注某些明确的特征选择，一般说来L2正则化都会比L1正则化效果好, L1和L2正则化也可以进行组合：$\lambda_1|w|+\lambda_2w^2$, 叫做 <a href="http://web.stanford.edu/~hastie/Papers/B67.2%20%282005%29%20301-320%20Zou%20&amp;%20Hastie.pdf" target="_blank" rel="noopener">Elastic net regularization</a></p>
+</li>
+</ul>
+<p><strong>最大范式约束（Max norm constraints）</strong></p>
+<p>最大范式约束（Max norm constraints）是给每个神经元中权重向量的量级设定上限，并使用投影梯度下降来确保这一约束。在实践中，与之对应的是参数更新方式不变，然后要求神经元中的权重向量$\overrightarrow{w}$必须满足$||\overrightarrow{w}||_2&lt;c$的条件，一般c值为3或者4, 即使在学习率设置过高的时候，网络中也不会出现数值“爆炸”，这是因为它的参数更新始终是被限制着的</p>
+<p><strong>偏置正则化</strong></p>
+<p>对于偏置参数的正则化并不常见，因为它们在矩阵乘法中和输入数据并不产生反向梯度(常数项求导为0)，使用了合理数据预处理的情况下，对偏置进行正则化也很少会导致算法性能变差, 这可能是因为相较于权重参数，偏置参数实在太少</p>
+<h3 id="随机失活Dropout"><a href="#随机失活Dropout" class="headerlink" title="随机失活Dropout"></a><strong>随机失活Dropout</strong></h3><p>随机失活（Dropout）是一个简单又极其有效的正则化方法, 由Srivastava在论文 <a href="http://www.cs.toronto.edu/~rsalakhu/papers/srivastava14a.pdf" target="_blank" rel="noopener">Dropout: A Simple Way to Prevent Neural Networks from Overfitting</a> 中提出的, 与L1正则化，L2正则化和最大范式约束等方法互为补充。在训练的时候，随机失活的实现方法是让神经元以超参数p的概率被激活或者被设置为$0$</p>
+<p><img src="/img/Neural-Network-in-Practice/dropout.jpeg" alt=""></p>
+<ul>
+<li><p>在训练过程中，随机失活可以被认为是对完整的神经网络抽样出一些子集，每次基于输入数据只更新子网络的参数, 但是数量巨大的子网络们并不是相互独立的，因为它们都共享参数</p>
+</li>
+<li><p>在训练过程中做多次的Dropout训练, 每次采用不同的Dropout mask, 相当于每次产生了一个子网络模型, 在测试过程中不使用随机失活，可以理解为是对数量巨大的子网络们做了模型集成（model ensemble）, 以此来计算出一个平均的预测。</p>
+</li>
+</ul>
+<p>这里有个小问题, 如下图所示:</p>
+<p><img src="/img/Neural-Network-in-Practice/drop1.PNG" alt=""></p>
+<p>假设在$p=0.5$, 那么如上图所示, 训练阶段由于采用了Dropout导致期望$E(a)$比测试阶段的期望减少一半, 为了解决这个问题, 我们需要在测试阶段将权重矩阵$W$减半, 这样使得训练阶段和测试阶段的期望就一致了, 这一点非常重要</p>
+<p>实现代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&quot;&quot;&quot; Vanilla Dropout: Not recommended implementation (see notes below) &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">p = 0.5 # probability of keeping a unit active. higher = less dropout</span><br><span class="line"></span><br><span class="line">def train_step(X):</span><br><span class="line">  &quot;&quot;&quot; X contains the data &quot;&quot;&quot;</span><br><span class="line">  </span><br><span class="line">  # forward pass for example 3-layer neural network</span><br><span class="line">  H1 = np.maximum(0, np.dot(W1, X) + b1)</span><br><span class="line">  U1 = np.random.rand(*H1.shape) &lt; p # first dropout mask</span><br><span class="line">  H1 *= U1 # drop!</span><br><span class="line">  H2 = np.maximum(0, np.dot(W2, H1) + b2)</span><br><span class="line">  U2 = np.random.rand(*H2.shape) &lt; p # second dropout mask</span><br><span class="line">  H2 *= U2 # drop!</span><br><span class="line">  out = np.dot(W3, H2) + b3</span><br><span class="line">  </span><br><span class="line">  # backward pass: compute gradients... (not shown)</span><br><span class="line">  # perform parameter update... (not shown)</span><br><span class="line">  </span><br><span class="line">def predict(X):</span><br><span class="line">  # ensembled forward pass</span><br><span class="line">  H1 = np.maximum(0, np.dot(W1, X) + b1) * p # NOTE: scale the activations</span><br><span class="line">  H2 = np.maximum(0, np.dot(W2, H1) + b2) * p # NOTE: scale the activations</span><br><span class="line">  out = np.dot(W3, H2) + b3</span><br></pre></td></tr></table></figure>
+<p><strong>上述实现不推荐是因为必须在测试时对激活数据要按照$p$进行数值范围调整, 实际更倾向使用反向随机失活（inverted dropout），它是在训练时就进行数值范围调整，从而让前向传播在测试时模型期望保持不变, 无论你决定是否使用随机失活，预测方法的代码都可以保持不变</strong></p>
+<ul>
+<li>相关文献:<a href="http://papers.nips.cc/paper/4882-dropout-training-as-adaptive-regularization.pdf" target="_blank" rel="noopener">Dropout Training as Adaptive Regularization</a></li>
+</ul>
+<p>代码实现如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&quot;&quot;&quot; </span><br><span class="line">Inverted Dropout: Recommended implementation example.</span><br><span class="line">We drop and scale at train time and don&apos;t do anything at test time.</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">p = 0.5 # probability of keeping a unit active. higher = less dropout</span><br><span class="line"></span><br><span class="line">def train_step(X):</span><br><span class="line">  # forward pass for example 3-layer neural network</span><br><span class="line">  H1 = np.maximum(0, np.dot(W1, X) + b1)</span><br><span class="line">  U1 = (np.random.rand(*H1.shape) &lt; p) / p # first dropout mask. Notice /p!</span><br><span class="line">  H1 *= U1 # drop!</span><br><span class="line">  H2 = np.maximum(0, np.dot(W2, H1) + b2)</span><br><span class="line">  U2 = (np.random.rand(*H2.shape) &lt; p) / p # second dropout mask. Notice /p!</span><br><span class="line">  H2 *= U2 # drop!</span><br><span class="line">  out = np.dot(W3, H2) + b3</span><br><span class="line">  </span><br><span class="line">  # backward pass: compute gradients... (not shown)</span><br><span class="line">  # perform parameter update... (not shown)</span><br><span class="line">  </span><br><span class="line">def predict(X):</span><br><span class="line">  # ensembled forward pass</span><br><span class="line">  H1 = np.maximum(0, np.dot(W1, X) + b1) # no scaling necessary</span><br><span class="line">  H2 = np.maximum(0, np.dot(W2, H1) + b2)</span><br><span class="line">  out = np.dot(W3, H2) + b3</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过随机失活我们可以将看作是将一个完整的网络拆分成多个子网络, 随机选择不同子网络进行前向传播, 最后对它们取平均将噪声数据边缘化</li>
+</ul>
+<blockquote>
+<p>另一种方法是<a href="http://cs.nyu.edu/~wanli/dropc/" target="_blank" rel="noopener">DropConnect</a>, 在前向传播的时候，一系列权重被随机设置为0, 卷积神经网络同样会吸取这类方法的优点，比如随机汇合（stochastic pooling），分级汇合（fractional pooling），数据增长（data augmentation）。</p>
+</blockquote>
+<p><strong>Dropout的另一种解释</strong></p>
+<p><img src="/img/Neural-Network-in-Practice/drop.PNG" alt=""></p>
+<ul>
+<li>在我们看来, 图片信息是有冗余的, 就像人类一样, 可能只需要尾巴和爪子的信息就可以判定是猫了, 所以Dropout在信息冗余的角度来说可以看作是<code>一个去冗余的过程</code></li>
+</ul>
+<h3 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a><strong>损失函数</strong></h3><p>损失函数是由数据损失和正则损失组成的, 正则损失在<code>正则化</code>部分已经详细讨论过了, 下面我们看看<code>数据损失</code>部分, 用于衡量分类算法的预测结果和真实标签结果之间的差距。数据损失是对所有样本的数据损失求平均, $L=\frac{1}{N}\sum_iL_i$中，$N$是训练集数据的样本数, 我们把神经网络中输出层的激活函数简写为$f=f(x_i;W)$</p>
+<h4 id="分类问题"><a href="#分类问题" class="headerlink" title="分类问题"></a><strong>分类问题</strong></h4><p>在分类问题当中, 每个样本数据具有唯一的真实标签, 最常见的损失函数就是SVM（是Weston Watkins 公式）：</p>
+<p>$$L_i = \sum_{j\neq y_i} \max(0, f_j - f_{y_i} + 1)$$</p>
+<p>当然, 有些学者的论文中指出平方折叶损失$max(0,f_j-f_{y_i}+1)^2$的结果会更好</p>
+<p>第二个常用的损失函数是Softmax分类器使用交叉熵损失：</p>
+<p>$$L_i = -\log\left(\frac{e^{f_{y_i}}}{ \sum_j e^{f_j} }\right)$$</p>
+<ul>
+<li>当类别的数目非常庞大的时候, 就需要使用 <a href="http://arxiv.org/pdf/1310.4546.pdf" target="_blank" rel="noopener">Hierarchical Softmax</a> , <code>Hierarchical Softmax</code>将标签分解成一个树, 每个标签都表示成这个树上的一个路径，这个树的每个节点处都训练一个Softmax分类器来决策左树还是右树, 树的结构对于算法的最终结果影响很大，而且一般需要具体问题具体分析</li>
+</ul>
+<p><strong>属性分类</strong></p>
+<p>上面两个损失公式的前提，都是假设每个样本只有一个正确的标签$y_i$, 但是如果$y_i$是一个多值向量，每个样本可能有，也可能没有某个属性，比如在Instagram上的图片，就可以看成是被一个巨大的标签集合中的某个子集打上标签，一张图片上可能有多个标签, 在这种情况下一般会为每个属性创建一个独立的二分类的分类器, 针对每个分类的二分类器会采用下面的公式：</p>
+<p>$$L_i = \sum_j \max(0, 1 - y_{ij} f_j)$$</p>
+<p>在上式中,</p>
+<ul>
+<li><p>$y_{ij}$表示第$j$个类别的第$i$个属性的真实值, $y_{ij}$的值为1或者-1</p>
+</li>
+<li><p>当该类别被正确预测并展示的时候，分值向量$f_j$为正，其余情况为负</p>
+</li>
+<li><p>当一个正样本的得分小于+1，或者一个负样本得分大于-1的时候就会累计损失值</p>
+</li>
+</ul>
+<p><strong>另一种方法是对每种属性训练一个独立的逻辑回归分类器</strong></p>
+<p>二分类的逻辑回归分类器只有两个分类（0，1），其中对于分类1的概率计算为：</p>
+<p>$$ P(y = 1 \mid x; w, b) = \frac{1}{1 + e^{-(w^Tx +b)}} = \sigma (w^Tx + b) $$</p>
+<p>那么类别为0的概率为</p>
+<p>$$P(y = 0 \mid x; w, b) = 1 - P(y = 1 \mid x; w,b)$$</p>
+<p>如果$\sigma(w^Tx+b)&gt;0.5$(等价于$w^Tx+b&gt;0$)，那么样本就要被分类成为正样本（y=1）。</p>
+<p>逻辑回归二分类器的损失函数为 :</p>
+<p>$$ L_i = \sum_j y_{ij} \log(\sigma(f_j)) + (1 - y_{ij}) \log(1 - \sigma(f_j)) $$</p>
+<ul>
+<li>上式中标签$y_{ij}$非0即1, $\sigma(x)$是sigmoid函数, 在用梯度下降法优化模型的时候计算梯度非常简单 : $\partial{L_i} / \partial{f_j} = y_{ij} - \sigma(f_j)$</li>
+</ul>
+<h4 id="回归问题"><a href="#回归问题" class="headerlink" title="回归问题"></a><strong>回归问题</strong></h4><p>回归问题是预测实数的值的问题，比如预测房价等, 对于这种问题, 通常是计算预测值和真实值之间的损失, 然后用L2平方范式或L1范式度量差异。</p>
+<p>对于某个样本，L2范式计算如下：</p>
+<p>$$ L_i = \Vert f - y_i \Vert_2^2 $$</p>
+<p>L1范式是要将每个维度上的绝对值加起来：</p>
+<p>$$ L_i = \Vert f - y_i \Vert_1 = \sum_j \mid f_j - (y_i)_j \mid $$</p>
+<p>在上式中是将真实样本的每一维上与预测值的差异求和</p>
+<p><strong>注意</strong>, $L2$损失要比Softmax损失优化起来困难很多, 因为L2要预测一个真实的确切值, 而Softmax是一种概率意义上的预测, 还有一点就是L2对于异常值来说会导致很大的局部梯度, 所以在回归问题中, 我们依然优先考虑可否转化为分类问题去解决, 比如如果对一个产品的星级进行预测，使用5个独立的分类器来对1-5星进行打分的效果一般比使用一个回归损失要好很多。分类还有一个额外优点，就是能给出关于回归的输出的分布，而不是一个简单的毫无把握的输出值。如果确信分类不适用，那么使用L2损失吧，但是一定要谨慎</p>
+<p><strong>拓展 : 结构化预测（structured prediction）</strong></p>
+<p>结构化损失是指标签可以是任意的结构，例如图表、树或者其他复杂物体的情况。通常这种情况还会假设结构空间非常巨大，不容易进行遍历。结构化SVM背后的基本思想就是在正确的结构和得分最高的非正确结构之间画出一个边界。解决这类问题，并不是像解决一个简单无限制的最优化问题那样使用梯度下降就可以了，而是需要设计一些特殊的解决方案，这样可以有效利用对于结构空间的特殊简化假设。</p>
+<h3 id="梯度检查"><a href="#梯度检查" class="headerlink" title="梯度检查"></a><strong>梯度检查</strong></h3><p>理论上将进行梯度检查很简单，就是简单地把解析梯度和数值计算梯度进行比较, 但是在实际过程中十分复杂, 下面是一些注意事项:</p>
+<ol>
+<li><p>使用中心化公式</p>
+<p>微分的定义公式是</p>
+<p>$$\frac{df(x)}{dx} = \frac{f(x + h) - f(x)}{h} \hspace{0.1in} \text{(bad, do not use)}$$</p>
+<p>注意, 上式中$h$是一个很小的值, 使用中心化公式更好, 如下:</p>
+<p>$$\frac{df(x)}{dx} = \frac{f(x + h) - f(x - h)}{2h} \hspace{0.1in} \text{(use instead)}$$</p>
+<ul>
+<li>在检查梯度的每个维度的时候，会计算两次损失函数, 所以计算资源的耗费也是两倍, 但是梯度的近似值会准确很多。这是因为对f(x+h)和f(x-h)使用泰勒展开，第一个公式的误差近似$O(h)$，第二个公式的误差近似$O(h^2)$, 这是个二阶近似, 因为$h&lt;0$平方之后更小</li>
+</ul>
+</li>
+<li><p>使用相对误差来比较数值梯度和解析梯度</p>
+<p>为什么要使用相对误差来比较呢? 假设数值梯度为$f’_n$, 解析梯度为$f’_a$, 那么假如他们之间的误差绝对值$\mid f’_a - f’_n \mid$为1e-4, 如果$f’_n$和$f’_a$本身就是1左右的值, 我们可以认为梯度正确, 但是如果$f’_n$和$f’_a$本身有一个是1e-5左右的值, 那么1e-4就是很大的误差了, 所以我们必须引入$f’_n$或者$f’_a$的大小来作参考, 用相对误差去判断梯度是否正确:</p>
+<p>$$\frac{\mid f’_a - f’_n \mid}{\max(\mid f’_a \mid, \mid f’_n \mid)}$$</p>
+<p>上式考虑了差值占两个梯度绝对值的比例, 注意通常相对误差公式只包含任意一个梯度就可以，但是我更倾向取两个式子的最大值或者取两个式子的和。这样做是为了防止在其中一个式子为0时，公式分母为0的这种情况，在ReLU中是经常发生的,还必须注意两个式子都为零且通过梯度检查的情况。</p>
+<p>代码中的参考值设置:</p>
+<ul>
+<li><p>相对误差&gt;1e-2：通常就意味着梯度可能出错</p>
+</li>
+<li><p>1e-2&gt;相对误差&gt;1e-4 : 具体情况具体分析</p>
+</li>
+<li><p>1e-4&gt;相对误差 : 相对误差对于有不可导点的目标函数是OK的。但如果目标函数中没有使用tanh和softmax，那么相对误差值还是太高</p>
+</li>
+<li><p>1e-7或者更小：梯度计算正确</p>
+</li>
+</ul>
+<p>网络的深度越深，相对误差就越高。所以如果你是在对一个10层网络的输入数据做梯度检查，那么1e-2的相对误差值可能就OK了，因为误差一直在累积。相反，如果一个可微函数的相对误差值是1e-2，那么通常说明梯度实现不正确。</p>
+</li>
+<li><p>使用双精度进行梯度检查</p>
+</li>
+<li><p>保持在浮点数有效的范围</p>
+<p><a href="http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html" target="_blank" rel="noopener">“What Every Computer Scientist Should Know About Floating-Point Arithmetic”</a>, 在神经网络中，在一个批量的数据上对损失函数进行归一化是很常见的。但是，如果每个数据点的梯度很小，然后又用数据点的数量去除，就使得数值更小，这反过来会导致更多的数值问题, 如果实在过小，可以使用一个常数暂时将损失函数的数值范围扩展到一个更大的范围，在这个范围中浮点数变得更加致密, 比较理想的是1.0的数量级上，即当浮点数指数为0时。</p>
+</li>
+<li><p><strong>目标函数的不可导点</strong></p>
+<p>不可导点是指目标函数不可导的部分，由$ReLU$等函数，或SVM损失，Maxout神经元等引入的, 当$x=-1e6$时，对ReLU函数进行梯度检查。因为$x&lt;0$时，解析梯度在该点的梯度为0, 然而在这里数值梯度计算出一个非零的梯度值，因为可能越过了不可导点导致了一个非零的结果</p>
+</li>
+<li><p><strong>使用少量数据点</strong></p>
+<p>含有不可导点的损失函数(使用了ReLU或者边缘损失)的数据点越少，不可导点就越少，所以在计算有限差值近似时越过不可导点的几率就越小, 如果你的梯度检查对2-3个数据点都有效，那么基本上对整个批量数据进行梯度检查也是没问题的</p>
+</li>
+<li><p><strong>谨慎设置步长h</strong></p>
+<p>在实践中h并不是越小越好，因为当h特别小的时候，就可能就会遇到数值精度问题。有时候如果梯度检查无法进行，可以试试将h调到1e-4或者1e-6，然后突然梯度检查可能就恢复正常。</p>
+</li>
+<li><p><strong>在特定的训练阶段进行梯度检查</strong></p>
+<p>梯度检查是在参数空间中的一个随机的特定点进行的, 即使是在该点上梯度检查成功了，也不能马上确保全局上梯度的实现都是正确的, 一个随机的初始化可能不是参数空间最优代表性的点，这可能导致梯度看起来是正确实现了，实际上并不正确, 一个不正确的梯度也许依然能够产生看起来正确的模型，但是模型的泛化能力很差, 所以先让网络训练到某种程度, 等到损失函数开始下降的之后再进行梯度检查</p>
+</li>
+<li><p><strong>不要让正则化损失掩盖数据损失</strong></p>
+<p>正则化损失可能吞没掉数据损失，在这种情况下梯度主要正则化部分决定, 这样就掩盖了数据部分的梯度导致无法判定数据损失部分的梯度的正确性, 所以先关掉正则化对数据损失做单独检查，然后对正则化做单独检查。</p>
+</li>
+<li><p><strong>记得关闭随机失活（dropout）和数据扩张（augmentation）</strong></p>
+<p>在进行梯度检查时，记得关闭网络中随机失活，随机数据扩展等导致模型不确定的操作, 不然它们会在计算数值梯度的时候导致巨大误差。关闭这些操作不好的一点是无法对它们进行梯度检查, 例如随机失活的反向传播实现可能有错误, 更好的解决方案就是在计算$f(x+h)$和$f(x-h)$前强制增加一个特定的随机种子，在计算解析梯度时也同样如此。</p>
+</li>
+<li><p><strong>检查少量的维度</strong></p>
+<p>在实际中，梯度可以有上百万的参数，在这种情况下只能检查其中一些维度然后假设其他维度是正确的, <strong>注意：确认在所有不同的参数中都抽取一部分来梯度检查, 有时候可能偏置项只占整个参数的一小部分, 就不能进行随机抽取, 在我看来可以采用分层抽样</strong></p>
+</li>
+</ol>
+<h3 id="模型检查"><a href="#模型检查" class="headerlink" title="模型检查"></a><strong>模型检查</strong></h3><h4 id="训练前"><a href="#训练前" class="headerlink" title="训练前"></a>训练前</h4><p>在进行费时费力的训练之前, 最好进行一些合理性的检查:</p>
+<ol>
+<li><p><strong>确定特定的正确损失值</strong></p>
+<p>在使用小参数进行初始化时，确保得到的损失值与预想的期望一致, 让正则化强度为0, 先单独检查数据损失, 比如基于数据集CIFAR-10的Softmax分类器，一般期望它的初始损失值是2.302，这是因为初始时预计每个类别(共10类)的概率是0.1，然后Softmax损失值正确分类的负对数概率：<code>-ln(0.1)=2.302</code> , 如果没看到这些损失值，那么初始化中就可能有问题</p>
+</li>
+<li><p><strong>提高正则化强度时导致损失值变大</strong></p>
+</li>
+<li><p><strong>对小数据子集过拟合</strong></p>
+<p>最重要的一步，在整个数据集进行训练之前，尝试在一个很小的数据集上进行训练，然后确保能到达0的损失值, 最好让正则化强度为0，不然不会得到0损失, 除非能通过这一个正常性检查，不然进行整个数据集训练是没有意义的。</p>
+</li>
+</ol>
+<h4 id="训练中"><a href="#训练中" class="headerlink" title="训练中"></a>训练中</h4><p>在训练神经网络的时候，应该跟踪多个重要数值。这些数值输出的图表是观察训练进程的一扇窗口，是直观理解不同的超参数设置效果的工具，从而知道如何修改超参数以获得更高效的学习过程。</p>
+<ol>
+<li><p><strong>可视化损失函数</strong></p>
+<p><img src="/img/Neural-Network-in-Practice/learningrates.jpeg" alt=""></p>
+<p>在上图中可知, </p>
+<ul>
+<li><p>x轴通常都是表示周期（epochs）单位，该单位衡量了在训练中每个样本数据都被观察过次数的期望, 一个周期意味着每个样本数据都被观察过了一次, 也就是这批数据对于模型的一次完整的训练。相较于迭代次数（iterations），一般更倾向跟踪周期，这是因为迭代次数与数据的批尺寸（batchsize）有关，而批尺寸的设置又可以是任意的。</p>
+</li>
+<li><p>随着模型的训练, 过低的学习率会导致模型的改进几乎是线性的, 即模型优化的比较慢</p>
+</li>
+<li><p>过高的学习率会使得损失值下降很快, 但是最终的损失值却相对较高; 更高的学习率就会导致损失值上升, 因为导致了参数随机震荡 </p>
+</li>
+<li><p>合适的学习率会使得损失值以一个比较恰当的速度下降, 最终的损失值也相对较低</p>
+</li>
+</ul>
+<p><img src="/img/Neural-Network-in-Practice/loss.jpeg" alt=""></p>
+<ul>
+<li><p>上图是一个经典的随时间变化的损失函数值，在CIFAR-10数据集上面训练了一个小的网络，这个损失函数值曲线看起来比较合理, 由于损失值的噪音很大, 推断出批数据的数量设置可能有点太小。</p>
+</li>
+<li><p>损失值的震荡程度和批尺寸（batch size）有关，当批尺寸为1，震荡会相对较大, 当批尺寸就是整个数据集时震荡就会最小，因为每个梯度更新都是单调地优化损失函数, 也就是说在一个周期单位内, 损失函数是单调的</p>
+</li>
+<li><p>用对数域对损失函数值作图, 学习过程一般都是采用指数型的形状, 图表就会看起来更像是能够直观理解的直线，而不是呈曲线状</p>
+</li>
+</ul>
+</li>
+<li><p><strong>训练集和验证集准确率</strong></p>
+<p>在训练分类器的时候，需要跟踪的第二重要的数值是验证集和训练集的准确率, 如下图所示:</p>
+<p><img src="/img/Neural-Network-in-Practice/accuracies.jpeg" alt=""></p>
+<p>在其他文章中我们分析过 <a href="http://simtalk.cn/2016/08/23/%E4%BB%8E%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/#过拟合问题">过拟合问题</a> , 由上图所示, 在训练集准确率和验证集准确率中间的空隙指明了模型过拟合的程度, 红色和蓝色曲线说明了模型过拟合(训练准确率很高,测试准确率很低), 应该增大正则化强度, 更多的随机失活等方法或者收集更多的数据, 另一种情况是验证集曲线和训练集曲线重合度很高, 说明模型欠拟合, 应该增大参数数量使得模型更加复杂一些</p>
+</li>
+<li><p><strong>每层的激活数据及梯度分布</strong></p>
+<p>一个不正确的初始化可能让学习过程变慢，甚至彻底停止, 这个问题可以比较简单地诊断出来, 一个方法是输出网络中所有层的激活数据和梯度分布的柱状图。直观地说，就是如果看到任何奇怪的分布情况，那都不是好兆头。比如，对于使用tanh的神经元，我们应该看到激活数据的值在整个[-1,1]区间中都有分布, 如果看到神经元的输出全部是0,或者全都饱和了都是-1和1，那肯定就是有问题</p>
+</li>
+<li><p><strong>在图像问题中第一层可视化</strong></p>
+<p><img src="/img/Neural-Network-in-Practice/weights.jpeg" alt=""></p>
+<ul>
+<li>图中的特征充满了噪音，这暗示了网络可能出现了问题：网络没有收敛，学习率设置不恰当，正则化惩罚的权重过低</li>
+</ul>
+<p><img src="/img/Neural-Network-in-Practice/cnnweights.jpg" alt=""></p>
+<ul>
+<li>图中的特征不错，平滑，干净而且种类繁多，说明训练过程进行良好</li>
+</ul>
+</li>
+<li><p><strong>权重更新比例</strong></p>
+<p>权重中更新值的数量和全部权重的数量之间的比例, 需要对每个参数集的更新比例进行单独的计算和跟踪, 一个经验性的结论是这个比例应该在1e-3左右, 如果更低，说明学习率可能太小，如果更高，说明学习率可能太高。代码实现如下:</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># assume parameter vector W and its gradient vector dW</span><br><span class="line">param_scale = np.linalg.norm(W.ravel())</span><br><span class="line">update = -learning_rate*dW # simple SGD update</span><br><span class="line">update_scale = np.linalg.norm(update.ravel())</span><br><span class="line">W += update # the actual update</span><br><span class="line">print update_scale / param_scale # want ~1e-3</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="参数更新"><a href="#参数更新" class="headerlink" title="参数更新"></a><strong>参数更新</strong></h3><ol>
+<li><p><strong>基本更新方式</strong></p>
+<p>前面讲过最基本的参数更新方式为<code>x += - learning_rate * dx</code> , <code>learning_rate</code>是一个超参数, 只要学习率足够低那么总能够使得模型的损失值降低, 使得模型优化</p>
+</li>
+<li><p><strong>动量更新</strong></p>
+<p>动量更新(Momentum update)可以看成是从物理角度上对于最优化问题得到的启发, <code>损失值</code>可以理解为是<code>山的高度</code>$h$, 物理质点在此高度上的势能为$U = mgh$, $mg$是一个固定常量, 所以势能和高度是正相关的$U \propto h$, 降低势能也就是降低高度, 等价于降低损失函数, 用<code>随机数字初始化参数</code>等同于在某个位置给质点设定<code>初始速度为0</code>, 这样最优化过程可以看做是模拟参数向量（即质点）在地形上滚动的过程, 也就是说, 我们要根据<code>速度的更新</code>使得<code>山的高度下降</code></p>
+<p>动量更新代码实现如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Momentum update</span><br><span class="line">v = mu * v - learning_rate * dx # integrate velocity</span><br><span class="line">x += v # integrate position</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li><p>梯度不再直接影响原参数值, 而是通过速度v(初始化为0)来影响原参数</p>
+</li>
+<li><p><code>mu</code>是一个超参数, 可以理解为速度的一个衰减系数, 这个变量有效地抑制了速度，降低了系统的动能，不然质点在山底永远不会停下来, 取值在(0.5,0.99)之间, 典型的做法是刚开始将动量mu设为0.5而在后面的多个周期（epoch）中慢慢提升到0.99。 通过交叉验证，这个参数通常设为[0.5,0.9,0.95,0.99]中的一个。</p>
+</li>
+</ul>
+<h4 id="Nesterov动量更新"><a href="#Nesterov动量更新" class="headerlink" title="Nesterov动量更新"></a><strong>Nesterov动量更新</strong></h4><p>   Nesterov动量的核心思路是，当参数向量位于某个位置x时，由动量更新公式可以发现，动量部分$mu*v$会通过$mu$超参数稍微改变参数向量, 如果要计算梯度, 那么可以将未来的近似位置$x + mu * v$看做是“向前看”了一些位置, 因此计算$x + mu * v$的梯度而不是“旧”位置$x$的梯度</p>
+<p>   <img src="/img/Neural-Network-in-Practice/nesterov.jpeg" alt=""></p>
+<ul>
+<li><p>Nesterov动量将会把我们带到绿色箭头指向的点，我们就不在原点（红色点）那里计算梯度, 而是在这个“向前看”的地方计算梯度</p>
+<p>实现代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x_ahead = x + mu * v</span><br><span class="line"># evaluate dx_ahead (the gradient at x_ahead instead of at x)</span><br><span class="line">v = mu * v - learning_rate * dx_ahead</span><br><span class="line">x += v</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>   相关参考文献:</p>
+<ul>
+<li><p><a href="http://arxiv.org/pdf/1212.0901v2.pdf" target="_blank" rel="noopener">Advances in optimizing Recurrent Networks </a></p>
+</li>
+<li><p><a href="http://www.cs.utoronto.ca/~ilya/pubs/ilya_sutskever_phd_thesis.pdf" target="_blank" rel="noopener">Ilya Sutskever’s thesis</a></p>
+</li>
+</ul>
+<h4 id="学习率退火"><a href="#学习率退火" class="headerlink" title="学习率退火"></a><strong>学习率退火</strong></h4><p>   如果学习率很高，系统的动能就过大，参数向量就会无规律地跳动，不能够稳定到损失函数更深更窄的部分去, 比如我们的参数优化接近于最优点的时候, 我们希望学习率越来越小, 因为这样就能更加接近最优点而不是在最优点附近跳来跳去, 参考 <a href="http://simtalk.cn/2016/08/23/%E4%BB%8E%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/#梯度下降法">梯度下降法</a> 部分, 知道什么时候开始衰减学习率是有技巧的：慢慢减小它，可能在很长时间内只能是浪费计算资源地看着它混沌地跳动，实际进展很少。但如果快速地减少它，系统可能过快地失去能量，不能到达原本可以到达的最好位置。</p>
+<p>   实现学习率退火有3种方式：</p>
+<ol>
+<li><p><strong>随步数衰减</strong></p>
+<p>每训练几个周期就根据一些模型表现来降低学习率, 典型的值是每过5个周期就将学习率减少一半, 或者每20个周期减少到之前的0.1, 但是这些数值的设定是严重依赖具体问题和模型的选择的。在实践中有一种经验做法：<code>使用一个固定的学习率来进行训练的同时观察验证集错误率，每当验证集错误率停止下降，就乘以一个常数（比如0.5）来降低学习率</code>。</p>
+</li>
+<li><p><strong>指数衰减</strong></p>
+<p>学习率的退火公式为$\alpha = \alpha_0 e^{-k t}$, 其中$\alpha_0, k$都是超参数, $t$是迭代次数或者以周期为单位</p>
+</li>
+<li><p><strong>1/t衰减</strong></p>
+<p>学习率的退火公式为$\alpha = \alpha_0 / (1 + k t )$, 其中$\alpha_0, k$都是超参数, $t$是迭代次数或者以周期为单位</p>
+<p>在实践中，随步数衰减的随机失活（dropout）更受欢迎，因为它使用的超参数（衰减系数和以周期为时间单位的步数）比k更有解释性。</p>
+</li>
+</ol>
+<h4 id="逐参数适应学习率"><a href="#逐参数适应学习率" class="headerlink" title="逐参数适应学习率"></a><strong>逐参数适应学习率</strong></h4><p>   前面讨论的所有方法都是对学习率进行全局地操作，并且对所有的参数都是一样的操作, 下面我们介绍一些自适应调整学习率的方法, 这些方法依然会引入一些超参数的设置, 但是这些方法确实有更好的表现 </p>
+<p>   <strong>Adagrad</strong></p>
+   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># Assume the gradient dx and parameter vector x</span><br><span class="line">cache += dx**2</span><br><span class="line">x += - learning_rate * dx / (np.sqrt(cache) + eps)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>变量$cache$的尺寸和梯度矩阵的尺寸是一样的，还跟踪了每个参数的梯度的平方和</p>
+</li>
+<li><p>通过$cache$进行逐元素的归一化, 而且接收到高梯度值的权重更新的效果被减弱，而接收到低梯度值的权重的更新效果将会增强</p>
+</li>
+<li><p>$eps$一般设为1e-4到1e-8之间, 是防止出现除以0的情况出现</p>
+</li>
+<li><p><a href="http://jmlr.org/papers/v12/duchi11a.html" target="_blank" rel="noopener">Adagrad</a> 的一个缺点是在深度学习中单调的学习率通常过于激进且过早停止学习</p>
+<p><strong>RMSprop</strong></p>
+<p><code>RMSprop</code>仍然是基于梯度的大小来对每个权重的学习率进行修改, 但该方法没有公开发表成论文, 每个使用这个方法的人在他们的论文中都引用自Geoff Hinton的Coursera课程的 <a href="http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf" target="_blank" rel="noopener">第六课的第29页PPT</a>, 这个方法克服了Adagrad方法的缺点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cache = decay_rate * cache + (1 - decay_rate) * dx**2</span><br><span class="line">x += - learning_rate * dx / (np.sqrt(cache) + eps)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><code>decay_rate</code>是一个超参数，常用的值是[0.9,0.99,0.999]</p>
+<p><strong>Adam</strong></p>
+<p><a href="http://arxiv.org/abs/1412.6980" target="_blank" rel="noopener">Adam</a> 像是RMSProp的动量版, 除了使用的是平滑版的梯度$m$，而不是用的原始梯度向量$dx$, 论文中推荐的参数值$eps=1e-8, beta1=0.9, beta2=0.999$, 在实际操作中推荐Adam作为默认的算法，一般而言跑起来比RMSProp要好一点, 但是也可以试试<code>SGD+Nesterov动量</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">m = beta1*m + (1-beta1)*dx</span><br><span class="line">v = beta2*v + (1-beta2)*(dx**2)</span><br><span class="line">x += - learning_rate * m / (np.sqrt(v) + eps)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>完整的Adam更新算法包含了一个偏置（bias）矫正机制，因为m,v两个矩阵初始为0，在没有完全训练之前存在偏差, 需要采取一些补偿措施</p>
+<blockquote>
+<p>了解更多: <strong> <a href="http://arxiv.org/abs/1312.6055" target="_blank" rel="noopener">Unit Tests for Stochastic Optimization</a> </strong> 介绍了随机最优化的测试</p>
+</blockquote>
+<p><img src="/img/Neural-Network-in-Practice/opt2.gif" alt=""></p>
+</li>
+<li><p>上图是一个是一个损失函数的等高线图, 展示了不同的优化算法的优化路径</p>
+<p><img src="/img/Neural-Network-in-Practice/opt1.gif" alt=""></p>
+</li>
+<li><p>上图展示了一个马鞍状的最优化地形，其中对于不同维度它的曲率不同</p>
+</li>
+<li><p>SGD很难突破对称性，一直卡在顶部, 而类似RMSProp的方法能够发现马鞍方向上的低梯度, 因为在RMSProp更新方法中的分母项提高了在该方向的有效学习率</p>
+</li>
+</ul>
+<h3 id="超参数调优"><a href="#超参数调优" class="headerlink" title="超参数调优"></a><strong>超参数调优</strong></h3><p>   神经网络常见的超参数有:</p>
+<ul>
+<li><p>初始学习率</p>
+</li>
+<li><p>学习率衰减方式</p>
+</li>
+<li><p>正则化强度</p>
+<p>介绍一些额外的调参要点和技巧：</p>
+</li>
+</ul>
+<ol>
+<li><p>在程序实现过程中, 要在代码中设计<code>从程序</code>去记录点中有各种各样的训练统计数据, 在文件名中最好包含验证集的算法表现，这样就能方便地查找和排序</p>
+</li>
+<li><p>比起交叉验证最好使用一个验证集</p>
+</li>
+<li><p>超参数范围, 在对数尺度上进行超参数搜索, 因为学习率和正则化强度都对于训练的动态进程有乘的效果, 但是有一些参数（比如随机失活）还是在原始尺度上进行搜索</p>
+</li>
+<li><p>随机选择比网格化的选择更加有效, <a href="http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf" target="_blank" rel="noopener">参考文献</a></p>
+<p><img src="/img/Neural-Network-in-Practice/gridsearchbad.jpeg" alt=""></p>
+</li>
+<li><p>对于边界上的最优值要小心, 这种情况一般发生在你在一个不好的范围内搜索超参数, 一旦我们得到一个比较好的值，一定要确认你的值不是出于这个范围的边界上，不然你可能错过更好的其他搜索范围。 </p>
+</li>
+<li><p>从粗到细地分阶段搜索, 在实践中，先进行初略范围搜索，然后根据好的结果出现的地方，缩小范围进行搜索。进行粗搜索的时候，让模型训练一个周期就可以了, 第二个阶段就是对一个更小的范围进行搜索，这时可以让模型运行5个周期，而最后一个阶段就在最终的范围内进行仔细搜索，运行很多次周期。</p>
+</li>
+<li><p><a href="http://nlpers.blogspot.com/2014/10/hyperparameter-search-bayesian.html" target="_blank" rel="noopener">贝叶斯超参数最优化</a> 是一整个研究领域，主要是研究在超参数空间中更高效的导航算法。其核心的思路是在不同超参数设置下查看算法性能时，要在探索和使用中进行合理的权衡。参考 <a href="https://github.com/JasperSnoek/spearmint" target="_blank" rel="noopener">Spearmint</a> , <a href="http://www.cs.ubc.ca/labs/beta/Projects/SMAC/" target="_blank" rel="noopener">SMAC</a> , <a href="http://jaberg.github.io/hyperopt/" target="_blank" rel="noopener">Hyperopt</a>   </p>
+</li>
+</ol>
+<h3 id="模型集成"><a href="#模型集成" class="headerlink" title="模型集成"></a><strong>模型集成</strong></h3><p>在训练的时候训练几个独立的模型，然后在测试的时候平均它们预测结果。集成的模型数量增加，算法的结果也单调提升（但提升效果越来越少）。还有模型之间的差异度越大，提升效果可能越好。进行集成有以下几种方法：</p>
+<ol>
+<li><p>同一个模型，不同的初始化。使用交叉验证来得到最好的超参数，然后用最好的参数来训练不同初始化条件的模型, 这种方法的风险在于模型的多样性只来自于不同的初始化条件。</p>
+</li>
+<li><p>在交叉验证中发现最好的模型。使用交叉验证来得到最好的超参数，然后取其中最好的几个模型来进行集成。这样就提高了集成的多样性，但风险在于可能会包含不够理想的模型。</p>
+</li>
+<li><p>一个模型设置多个记录点。如果训练非常耗时，那就在不同的训练时间对网络留下记录点（比如每个周期结束），然后用它们来进行模型集成</p>
+</li>
+<li><p>在训练的时候跑参数的平均值, 在训练过程中，如果损失值相较于前一次权重出现指数下降时，就在内存中对网络的权重进行一个备份。这样你就对前几次循环中的网络状态进行了平均。你会发现这个“平滑”过的版本的权重总是能得到更少的误差。直观的理解就是目标函数是一个碗状的，你的网络在这个周围跳跃，所以对它们平均一下，就更可能跳到中心去。</p>
+</li>
+</ol>
+<blockquote>
+<p>Geoff Hinton on <a href="https://www.youtube.com/watch?v=EK61htlw8hY" target="_blank" rel="noopener">“Dark Knowledge”</a> inspiring, where the idea is to “distill” a good ensemble back to a single model by incorporating the ensemble log likelihoods into a modified objective.</p>
+</blockquote>
+<h3 id="拓展阅读"><a href="#拓展阅读" class="headerlink" title="拓展阅读"></a><strong>拓展阅读</strong></h3><ul>
+<li><p><a href="http://research.microsoft.com/pubs/192769/tricks-2012.pdf" target="_blank" rel="noopener">SGD</a> tips and tricks from Leon Bottou</p>
+</li>
+<li><p><a href="http://yann.lecun.com/exdb/publis/pdf/lecun-98b.pdf" target="_blank" rel="noopener">Efficient BackProp (pdf)</a> from Yann LeCun</p>
+</li>
+<li><p><a href="http://arxiv.org/pdf/1206.5533v2.pdf" target="_blank" rel="noopener">Practical Recommendations for Gradient-Based Training of Deep Architectures</a> from Yoshua Bengio</p>
+</li>
+</ul>
+<blockquote>
+<p>文中部分内容引自<a href="https://zhuanlan.zhihu.com/p/21798784" target="_blank" rel="noopener">智能单元</a></p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/12/CNNs/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          CNN
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/08/Neural-Network/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Neural Network</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

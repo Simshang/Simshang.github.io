@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Caffe.proto | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="讲解caffe的网络定义文件, 开启caffe的源码阅读系列">
+<meta name="keywords" content=".proto">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Caffe.proto">
+<meta property="og:url" content="http://simtalk.cn/2016/10/11/Caffeproto/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="讲解caffe的网络定义文件, 开启caffe的源码阅读系列">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/caffeproto/im2col.png">
+<meta property="og:image" content="http://simtalk.cn/img/caffeproto/conv.jpg">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.945Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Caffe.proto">
+<meta name="twitter:description" content="讲解caffe的网络定义文件, 开启caffe的源码阅读系列">
+<meta name="twitter:image" content="http://simtalk.cn/img/caffeproto/im2col.png">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Caffeproto" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/11/Caffeproto/" class="article-date">
+  	<time datetime="2016-10-11T03:34:34.000Z" itemprop="datePublished">2016-10-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Caffe.proto
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/proto/">.proto</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Caffe/">Caffe</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Protocol-Buffers"><span class="toc-text">Protocol Buffers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proto"><span class="toc-text">.proto</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据层"><span class="toc-text">数据层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#视觉层"><span class="toc-text">视觉层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#激活层"><span class="toc-text">激活层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用层"><span class="toc-text">常用层</span></a></li></ol>
+        </div>
+        
+        <p>讲解caffe的网络定义文件, 开启caffe的源码阅读系列</p>
+<a id="more"></a>
+<h3 id="Protocol-Buffers"><a href="#Protocol-Buffers" class="headerlink" title="Protocol Buffers"></a><strong>Protocol Buffers</strong></h3><p><a href="http://www.ibm.com/developerworks/cn/linux/l-cn-gpb/" target="_blank" rel="noopener">Google Protocol Buffer 的使用和原理</a></p>
+<p><code>Protocol Buffers</code>是一种轻便高效的结构化数据存储格式，可以用于结构化数据串行化，或者说序列化。它很适合做数据存储或 RPC 数据交换格式。可用于通讯协议、数据存储等领域的语言无关、平台无关、可扩展的序列化结构数据格式。目前提供了<code>C++、Java、Python</code>三种语言的 API。</p>
+<p><strong>Protobuf的优点</strong></p>
+<ul>
+<li><p>Protobuf 有如 XML，不过它更小、更快、也更简单。你可以定义自己的数据结构，然后使用代码生成器生成的代码来读写这个数据结构。你甚至可以在无需重新部署程序的情况下更新数据结构。只需使用 Protobuf 对数据结构进行一次描述，即可利用各种不同语言或从各种不同数据流中对你的结构化数据轻松读写。它有一个非常棒的特性，即“向后”兼容性好，人们不必破坏已部署的、依靠“老”数据格式的程序就可以对数据结构进行升级。这样您的程序就可以不必担心因为消息结构的改变而造成的大规模的代码重构或者迁移的问题。因为添加新的消息中的 field 并不会引起已经发布的程序的任何改变。</p>
+</li>
+<li><p>Protobuf 语义更清晰，无需类似 XML 解析器的东西（因为 Protobuf 编译器会将 .proto 文件编译生成对应的数据访问类以对 Protobuf 数据进行序列化、反序列化操作）。</p>
+</li>
+<li><p>使用 Protobuf 无需学习复杂的文档对象模型，Protobuf 的编程模式比较友好，简单易学，同时它拥有良好的文档和示例，对于喜欢简单事物的人们而言，Protobuf 比其他的技术更加有吸引力。</p>
+</li>
+</ul>
+<p><strong>Protobuf的不足</strong></p>
+<ul>
+<li><p>Protbuf 与 XML 相比也有不足之处。它功能简单，无法用来表示复杂的概念。</p>
+</li>
+<li><p>XML 已经成为多种行业标准的编写工具，Protobuf 只是 Google 公司内部使用的工具，在通用性上还差很多。</p>
+</li>
+<li><p>由于文本并不适合用来描述数据结构，所以 Protobuf 也不适合用来对基于文本的标记文档（如 HTML）建模。另外，由于 XML 具有某种程度上的自解释性，它可以被人直接读取编辑，在这一点上 Protobuf 不行，它以二进制的方式存储，除非你有 .proto 定义，否则你没法直接读出 Protobuf 的任何内容</p>
+</li>
+</ul>
+<h3 id="proto"><a href="#proto" class="headerlink" title=".proto"></a><strong>.proto</strong></h3><p><code>caffe.proto</code>位于…\src\caffe\proto目录下，在这个文件夹下还有一个.pb.cc和一个.pb.h文件，这两个文件都是由caffe.proto编译而来的。 </p>
+<blockquote>
+<p><a href="https://github.com/BVLC/caffe/blob/master/src/caffe/proto/caffe.proto" target="_blank" rel="noopener">caffe.proto</a>的内容</p>
+</blockquote>
+<p>在caffe.proto中定义了很多结构化数据，包括：</p>
+<ul>
+<li>BlobProto</li>
+<li>Datum</li>
+<li>FillerParameter</li>
+<li>NetParameter</li>
+<li>SolverParameter</li>
+<li>SolverState</li>
+<li>LayerParameter</li>
+<li>ConcatParameter</li>
+<li>ConvolutionParameter</li>
+<li>DataParameter</li>
+<li>DropoutParameter</li>
+<li>HDF5DataParameter</li>
+<li>HDF5OutputParameter</li>
+<li>ImageDataParameter</li>
+<li>InfogainLossParameter</li>
+<li>InnerProductParameter</li>
+<li>LRNParameter</li>
+<li>MemoryDataParameter</li>
+<li>PoolingParameter</li>
+<li>PowerParameter</li>
+<li>WindowDataParameter</li>
+<li>V0LayerParameter</li>
+</ul>
+<ol>
+<li><p><code>.proto</code>文件定义我们程序中需要处理的结构化数据，在<code>protobuf</code>的术语中，结构化数据被称为<code>Message</code></p>
+</li>
+<li><p><code>.proto</code>文件的文件名命名规则为<code>packageName.MessageName.proto</code>, 比如caffe.proto</p>
+</li>
+<li><p><code>repeated</code>表示必选的数据, <code>optional</code>表示可选的数据, 后面紧跟数据类型</p>
+</li>
+<li><p><code>protoc -I=$SRC_DIR --cpp_out=$DST_DIR $SRC_DIR/caffe.proto</code>编译.proto文件, 命令将生成两个文件：<code>caffe.pb.h</code>定义了 C++ 类的头文件和<code>caffe.pb.cc</code>C++ 类的实现文件, 在生成的头文件中，定义了一个C++类caffe，后面的 Writer 和 Reader 将使用这个类来对消息进行操作。诸如对消息的成员进行赋值，将消息序列化等等都有相应的方法。</p>
+<blockquote>
+<p>查看 <a href="https://github.com/Simshang/caffefile/blob/master/caffe.pb.h" target="_blank" rel="noopener">caffe.pb.h</a>内容<br>查看 <a href="https://github.com/Simshang/caffefile/blob/master/caffe.pb.cc" target="_blank" rel="noopener">caffe.pb.cc</a></p>
+</blockquote>
+</li>
+<li><p>编写Writer将把一个结构化数据写入磁盘，以便其他人来读取, Writer 需要处理的结构化数据由 .proto 文件描述，经过上一节中的编译过程后，该数据化结构对应了一个C++的类，并定义在 caffe.pb.h 中, Writer 需要 include 该头文件，然后便可以使用这个类, 在 Writer 代码中，将要存入磁盘的结构化数据由一个 caffe 类的对象表示，它提供了一系列的<code>get/set</code>函数用来修改和读取结构化数据中的数据成员，或者叫<code>field</code>, 当我们需要将该结构化数据保存到磁盘上时，<code>caffe类</code>已经提供相应的方法来把一个复杂的数据变成一个字节序列，我们可以将这个字节序列写入磁盘。</p>
+</li>
+</ol>
+<p><strong>caffe.pb.cc</strong></p>
+<p>其实caffe.pb.cc里面的东西都是从caffe.proto编译而来的，无非就是一些关于这些数据结构（类）的标准化操作，比如</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CopyFrom</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MergeFrom</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CopyFrom</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MergeFrom</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Clear</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsInitialized</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">ByteSize</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">MergePartialFromCodedStream</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SerializeWithCachedSizes</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SerializeWithCachedSizesToArray</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">GetCachedSize</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SharedCtor</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SharedDtor</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SetCachedSize</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br></pre></td></tr></table></figure>
+<p>我们用caffe.prototxt定义了网络的各个层, 层与层之间的数据流动是以Blobs的数据结构传递的, 下面我们从作为入口的数据层开始介绍</p>
+<h3 id="数据层"><a href="#数据层" class="headerlink" title="数据层"></a><strong>数据层</strong></h3><p>数据层是每个模型的最底层，是模型的入口，不仅提供数据的输入，也提供数据从Blobs转换成别的格式进行保存输出。通常数据的预处理（如减去均值, 放大缩小, 裁剪和镜像等），也在这一层设置参数实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;cifar&quot;    //自定义层名称</span><br><span class="line">  type: &quot;Data&quot;     //数据层: Data表示数据来源于LevelDB或LMDB</span><br><span class="line">  top: &quot;data&quot;      //bottom表示输入数据</span><br><span class="line">  top: &quot;label&quot;     //top表示输出数据, 如果有多个 top或多个bottom，表示有多个blobs数据的输入和输出</span><br><span class="line">  include &#123;</span><br><span class="line">    phase: TRAIN   //训练和测试的时候模型使用的层是不一样的,需要用include来指定</span><br><span class="line">  &#125;</span><br><span class="line">  #数据的预处理</span><br><span class="line">  transform_param &#123;</span><br><span class="line">      scale: 0.00390625   //scale为0.00390625(1/255), 即将输入数据由0-255归一化到0-1之间</span><br><span class="line">      mean_file_size: &quot;examples/cifar10/mean.binaryproto&quot;  //用一个配置文件来进行均值操作</span><br><span class="line">      mirror: 1         // 1表示开启镜像，0表示关闭，也可用ture和false来表示</span><br><span class="line">      crop_size: 227   //剪裁一个 227*227的图块，在训练阶段随机剪裁，在测试阶段从中间裁剪</span><br><span class="line">    &#125;</span><br><span class="line">  data_param &#123;</span><br><span class="line">      ......</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>data 与 label:</code>在数据层中，至少有一个命名为data的top。如果有第二个top，一般命名为label。 这种(data,label)配对是分类模型所必需的。 </li>
+</ul>
+<p><strong><code>data_param</code>部分根据数据的来源不同，来进行不同的设置</strong></p>
+<blockquote>
+<p><a href="http://www.cnblogs.com/denny402/p/5070928.html" target="_blank" rel="noopener">Caffe学习系列(2)：数据层及参数</a></p>
+</blockquote>
+<h3 id="视觉层"><a href="#视觉层" class="headerlink" title="视觉层"></a><strong>视觉层</strong></h3><p>视觉层（Vision Layers)包括Convolution, Pooling, Local Response Normalization (LRN), im2col等层。</p>
+<ul>
+<li>卷积层(Convolution) : 卷积神经网络（CNN）的核心层</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;conv1&quot;           //自定义层名称</span><br><span class="line">  type: &quot;Convolution&quot;     //卷积层</span><br><span class="line">  bottom: &quot;data&quot;          //数据层作为输入</span><br><span class="line">  top: &quot;conv1&quot;            //输出层</span><br><span class="line">  param &#123;</span><br><span class="line">    lr_mult: 1      //权值W的学习率的系数, 最终的学习率是`lr_mult`乘以solver.prototxt配置文件中的`base_lr`</span><br><span class="line">  &#125;</span><br><span class="line">  param &#123;</span><br><span class="line">    lr_mult: 2      //偏置项b学习率的系数,一般偏置项的学习率是权值学习率的两倍</span><br><span class="line">  &#125;</span><br><span class="line">  #设置卷积层的特有参数</span><br><span class="line">  convolution_param &#123;</span><br><span class="line">    num_output: 20    //卷积核(filter)的个数</span><br><span class="line">    kernel_size: 5    //卷积核的大小, 如果卷积核的长和宽不等，需要用kernel_h和kernel_w分别设定</span><br><span class="line">    stride: 1         //卷积核的步长，默认为1,也可以用stride_h和stride_w来设置上下和左右采用不同的步长</span><br><span class="line">    pad: 0            //对输入进行边缘扩充，默认为0, 也可以通过pad_h和pad_w来分别设置</span><br><span class="line">    bias_term: false  //是否开启偏置项，默认为true</span><br><span class="line">    group: 1          //默认为1组, 如果根据图像的通道来分组，那么第i个输出分组只能与第i个输入分组进行连接。</span><br><span class="line">    weight_filler &#123;</span><br><span class="line">      type: &quot;xavier&quot;     //权值初始化, 默认为“constant&quot;,值全为0, 常用&quot;xavier&quot;，也可以设置为”gaussian&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    bias_filler &#123;</span><br><span class="line">      type: &quot;constant&quot;  //偏置项的初始化。一般设置为&quot;constant&quot;,值全为0</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>池化层(Pooling) : 为了减少运算量和数据维度而设置的一种层</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;pool1&quot;         //自定义层名称</span><br><span class="line">  type: &quot;Pooling&quot;       //层类型：Pooling</span><br><span class="line">  bottom: &quot;conv1&quot;       //卷积层的输出作为该层的输入</span><br><span class="line">  top: &quot;pool1&quot;          //输出层</span><br><span class="line">  pooling_param &#123;</span><br><span class="line">    pool: MAX           //池化方法，默认为MAX, 还有MAX,AVE,STOCHASTIC等</span><br><span class="line">    kernel_size: 3      //池化的核大小, 也可以用kernel_h和kernel_w分别设定</span><br><span class="line">    stride: 2           //池化的步长，默认为1, 一般设置为2，即不重叠, 也可以用stride_h和stride_w来设置</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>局部区域归一化(LRN) : 对一个输入的局部区域进行归一化，达到“侧抑制”的效果, 参考AlexNet或GoogLenet</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">layers &#123;</span><br><span class="line">  name: &quot;norm1&quot;     </span><br><span class="line">  type: LRN            //层类型：LRN</span><br><span class="line">  bottom: &quot;pool1&quot;</span><br><span class="line">  top: &quot;norm1&quot;</span><br><span class="line">  lrn_param &#123;</span><br><span class="line">    local_size: 5      //如果是跨通道LRN，则表示求和的通道数；如果是在通道内LRN，则表示求和的正方形区域长度</span><br><span class="line">    alpha: 0.0001      //归一化公式中的参数</span><br><span class="line">    beta: 0.75         //归一化公式中的参数</span><br><span class="line">    norm_region: &quot;ACROSS_CHANNELS&quot; // ACROSS_CHANNELS表示在相邻的通道间求和归一化; WITHIN_CHANNEL表示在一个通道内部特定的区域内进行求和归一化, 与前面的local_size参数对应</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>查看<a href="http://simtalk.cn/2016/09/20/Alexnet-in-Caffe/#LRN">LRN归一化公式</a></p>
+</li>
+<li><p>im2col层 </p>
+</li>
+</ul>
+<p>该操作先将一个大矩阵，重叠地划分为多个子矩阵，对每个子矩阵序列化成向量，最后得到另外一个矩阵</p>
+<p><img src="/img/caffeproto/im2col.png" alt=""></p>
+<p>在caffe中，卷积运算就是先对数据进行im2col操作，再进行内积运算（inner product)。这样做，比原始的卷积操作速度更快</p>
+<p><img src="/img/caffeproto/conv.jpg" alt=""></p>
+<h3 id="激活层"><a href="#激活层" class="headerlink" title="激活层"></a><strong>激活层</strong></h3><p>在激活层中，选用不同的激活函数对输入数据逐元素进行激活操作, 本质上是一种函数变换</p>
+<ul>
+<li><strong>Sigmoid</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;encode1neuron&quot;</span><br><span class="line">  bottom: &quot;encode1&quot;</span><br><span class="line">  top: &quot;encode1neuron&quot;</span><br><span class="line">  type: &quot;Sigmoid&quot;       //层类型：Sigmoid</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>TanH</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;layer&quot;</span><br><span class="line">  bottom: &quot;in&quot;</span><br><span class="line">  top: &quot;out&quot;</span><br><span class="line">  type: &quot;TanH&quot;   //层类型：TanH</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>ReLU族</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;relu1&quot;</span><br><span class="line">  type: &quot;ReLU&quot;     //层类型：ReLU</span><br><span class="line">  bottom: &quot;pool1&quot;</span><br><span class="line">  top: &quot;pool1&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>negative_slope</code>：默认为0. 对标准的ReLU函数进行变化，如果设置了这个值，那么数据为负数时，就不再设置为0，而是用原始数据乘以negative_slope</p>
+</li>
+<li><p>Absolute Value : 求每个输入数据的绝对值</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;layer&quot;</span><br><span class="line">  bottom: &quot;in&quot;</span><br><span class="line">  top: &quot;out&quot;</span><br><span class="line">  type: &quot;AbsVal&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>Power</strong> : 对每个输入数据进行幂运算</li>
+</ul>
+<p>定义如下:</p>
+<p>$$f(x) = (shift + {scale} * {x})^{power} $$</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;layer&quot;</span><br><span class="line">  bottom: &quot;in&quot;</span><br><span class="line">  top: &quot;out&quot;</span><br><span class="line">  type: &quot;Power&quot;</span><br><span class="line">  power_param &#123;</span><br><span class="line">    power: 2    </span><br><span class="line">    scale: 1</span><br><span class="line">    shift: 0</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>BNLL</strong></li>
+</ul>
+<p>定义如下:</p>
+<p>$$ f(x) = log(1 + e^x) $$</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;layer&quot;</span><br><span class="line">  bottom: &quot;in&quot;</span><br><span class="line">  top: &quot;out&quot;</span><br><span class="line">  type: “BNLL”</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="常用层"><a href="#常用层" class="headerlink" title="常用层"></a><strong>常用层</strong></h3><ul>
+<li><strong>Softmax</strong> : softmax是计算的是类别的概率（Likelihood），是Logistic Regression 的一种推广</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">layers &#123;</span><br><span class="line">  name: &quot;prob&quot;   </span><br><span class="line">  bottom: &quot;cls3_fc&quot; //输入特征值</span><br><span class="line">  top: &quot;prob&quot;      //输出概率大小</span><br><span class="line">  type: “Softmax&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>Softmax-Loss</strong> : </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;loss&quot;</span><br><span class="line">  type: &quot;SoftmaxWithLoss&quot;</span><br><span class="line">  bottom: &quot;ip1&quot;     //输入模型预测值</span><br><span class="line">  bottom: &quot;label&quot;   //输入真实值</span><br><span class="line">  top: &quot;loss&quot;       //输出损失值</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>不管是softmax layer还是softmax-loss layer,都是没有参数的，只是层类型不同</p>
+</li>
+<li><p><strong>Inner Product</strong> : </p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;ip1&quot;</span><br><span class="line">  type: &quot;InnerProduct&quot;      //层类型：InnerProduct</span><br><span class="line">  bottom: &quot;pool2&quot;</span><br><span class="line">  top: &quot;ip1&quot;</span><br><span class="line">  param &#123;</span><br><span class="line">    lr_mult: 1              //权值W的学习率系数</span><br><span class="line">  &#125;</span><br><span class="line">  param &#123;</span><br><span class="line">    lr_mult: 2              //偏置项b的学习率系数</span><br><span class="line">  &#125;</span><br><span class="line">  inner_product_param &#123;</span><br><span class="line">    num_output: 500        //滤波器（filter)的个数</span><br><span class="line">    weight_filler &#123;</span><br><span class="line">      type: &quot;xavier&quot;       //权值初始化</span><br><span class="line">    &#125;</span><br><span class="line">    bias_filler &#123;</span><br><span class="line">      type: &quot;constant&quot;     //偏置项的初始化</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>全连接层实际上也是一种卷积层，只是它的卷积核大小和原数据大小一致, 因此它的参数基本和卷积层的参数一样。</p>
+</li>
+<li><p><strong>accuracy</strong> : 输出预测精确度，只有test阶段才有，需要加入include参数 </p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;accuracy&quot;</span><br><span class="line">  type: &quot;Accuracy&quot;</span><br><span class="line">  bottom: &quot;ip2&quot;</span><br><span class="line">  bottom: &quot;label&quot;</span><br><span class="line">  top: &quot;accuracy&quot;</span><br><span class="line">  include &#123;</span><br><span class="line">    phase: TEST</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>reshape</strong> : 在不改变数据的情况下，改变输入的维度</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">    name: &quot;reshape&quot;</span><br><span class="line">    type: &quot;Reshape&quot;     //层类型：Reshape</span><br><span class="line">    bottom: &quot;input&quot;</span><br><span class="line">    top: &quot;output&quot;</span><br><span class="line">    # 可选的参数组shape, 用于指定blob数据的各维的值（blob是一个四维的数据：n*c*w*h）</span><br><span class="line">    reshape_param &#123;</span><br><span class="line">      shape &#123;</span><br><span class="line">        dim: 0  //表示维度不变，即输入和输出是相同的维度</span><br><span class="line">        dim: 2  //将原来的维度变成2</span><br><span class="line">        dim: 3  //将原来的维度变成3</span><br><span class="line">        dim: -1 //表示由系统自动计算维度, 数据的总量不变，系统会根据blob数据的其它三维来自动计算当前维的维度值</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>Dropout</strong> : 以某种概率随机地让网络某些隐含层节点的权重失活</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">layer &#123;</span><br><span class="line">  name: &quot;drop7&quot;</span><br><span class="line">  type: &quot;Dropout&quot;</span><br><span class="line">  bottom: &quot;fc7-conv&quot;</span><br><span class="line">  top: &quot;fc7-conv&quot;</span><br><span class="line">  dropout_param &#123;</span><br><span class="line">    dropout_ratio: 0.5   //随机失活概率</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/10/12/瓷器与爱情/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          瓷器与爱情
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/10/09/GoogLeNet/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">GoogLeNet</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

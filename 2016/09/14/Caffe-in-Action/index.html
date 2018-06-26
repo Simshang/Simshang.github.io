@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Caffe in Action | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="这篇博客是 Caffe中国优化社区的 Caffe Tutorial 中文版 使用笔记, 介绍在使用Caffe过程中的问题与心得, 这篇文章不会过多介绍Caffe框架本身, 更多的是使用方法">
+<meta name="keywords" content="Caffe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Caffe in Action">
+<meta property="og:url" content="http://simtalk.cn/2016/09/14/Caffe-in-Action/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="这篇博客是 Caffe中国优化社区的 Caffe Tutorial 中文版 使用笔记, 介绍在使用Caffe过程中的问题与心得, 这篇文章不会过多介绍Caffe框架本身, 更多的是使用方法">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/Caffe-in-Action/layer.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/Caffe-in-Action/logreg.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/Caffe-in-Action/cifar10.jpg">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.944Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Caffe in Action">
+<meta name="twitter:description" content="这篇博客是 Caffe中国优化社区的 Caffe Tutorial 中文版 使用笔记, 介绍在使用Caffe过程中的问题与心得, 这篇文章不会过多介绍Caffe框架本身, 更多的是使用方法">
+<meta name="twitter:image" content="http://simtalk.cn/img/Caffe-in-Action/layer.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Caffe-in-Action" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/14/Caffe-in-Action/" class="article-date">
+  	<time datetime="2016-09-14T11:21:16.000Z" itemprop="datePublished">2016-09-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Caffe in Action
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Caffe/">Caffe</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Caffe/">Caffe</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#简介"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Blob"><span class="toc-text">Blob</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Layer"><span class="toc-text">Layer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Net"><span class="toc-text">Net</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Solver"><span class="toc-text">Solver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mnist"><span class="toc-text">Mnist</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cifar10"><span class="toc-text">Cifar10</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#特征抽取"><span class="toc-text">特征抽取</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pycaffe"><span class="toc-text">pycaffe</span></a></li></ol>
+        </div>
+        
+        <p>这篇博客是 <a href="http://caffecn.cn/" target="_blank" rel="noopener">Caffe中国优化社区</a>的 <a href="http://caffecn.cn/?/page/tutorial" target="_blank" rel="noopener">Caffe Tutorial 中文版</a> 使用笔记, 介绍在使用Caffe过程中的问题与心得, 这篇文章不会过多介绍Caffe框架本身, 更多的是使用方法</p>
+<a id="more"></a>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><p>Caffe是纯粹的C++/CUDA架构，支持命令行、Python和MATLAB接口；可以在CPU和GPU直接无缝切换：<code>Caffe::set_mode(Caffe::GPU);</code></p>
+<p>Caffe 基于自己的模型架构，通过逐层定义（layer-by-layer）的方式定义一个网络（Nets）, 所有网络都是有向无环图的集合, 从数据输入层到损失层自下而上地定义整个模型 :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">name: &quot;net&quot;</span><br><span class="line">layers &#123;name: &quot;data&quot; …&#125;</span><br><span class="line">layers &#123;name: &quot;conv&quot; …&#125;</span><br><span class="line">layers &#123;name: &quot;pool&quot; …&#125;</span><br><span class="line">layers &#123;name: &quot;loss&quot; …&#125;</span><br></pre></td></tr></table></figure>
+<p>Caffe层的定义由2部分组成：<code>层属性</code>与<code>层参数</code>, 例如卷积层的定义为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">name:&quot;conv&quot;</span><br><span class="line">type:CONVOLUTION</span><br><span class="line">bottom:&quot;data&quot;</span><br><span class="line">top:&quot;conv1&quot;</span><br><span class="line">//上面是层属性,下面是层参数</span><br><span class="line">convolution_param&#123;</span><br><span class="line">    num_output:20</span><br><span class="line">    kernel_size:5</span><br><span class="line">    stride:1</span><br><span class="line">    weight_filler&#123;</span><br><span class="line">        type: &quot;xavier&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><a href="http://caffe.berkeleyvision.org/doxygen/index.html" target="_blank" rel="noopener">Caffe Code</a></li>
+<li><a href="http://caffe.berkeleyvision.org/tutorial/" target="_blank" rel="noopener">Caffe Tutorial</a></li>
+<li><a href="http://yanglei.me/gen_proto/" target="_blank" rel="noopener">Caffe Prototxt Generator</a></li>
+<li><a href="http://ethereon.github.io/netscope/quickstart.html" target="_blank" rel="noopener">Netscope</a></li>
+</ul>
+<blockquote>
+<p>Caffe的安装网上有太多的教程, 过程也十分的繁琐, 祝好运</p>
+</blockquote>
+<p>深度神经网络是一种模块化的模型，它由一系列作用在数据块之上的内部连接层(layers)组合而成, Caffe基于自己的模型架构，通过逐层定义（layer-by-layer）的方式定义一个网络（Nets） , 网络从数据输入层到损失层自下而上地定义整个模型。</p>
+<h3 id="Blob"><a href="#Blob" class="headerlink" title="Blob"></a><strong>Blob</strong></h3><ul>
+<li>blob 是 Caffe 的标准数组结构，它提供了一个统一的内存接口,<code>Blob</code>详细描述了信息是如何在 layer 和 net 中存储和交换的</li>
+<li>从数学上来说Blob就是一个N维数组, 它是caffe中的数据操作基本单位，就像matlab中以矩阵为基本操作对象一样, 只是矩阵是二维的，而Blob是N维的</li>
+<li>对于图片数据来说，Blob可以表示为一个$（N*C*H*W）$的4维数组, 其中N表示图片的数量，C表示图片的通道数，H和W分别表示图片的高度和宽度, 那么元素$(n,c,h,w)$物理内存位置为$(((n*C+c)*H+h)*W+w)$</li>
+<li>$N$每个批次处理的数据量。批量处理信息有利于提高设备处理和交换的数据的吞吐率。在 ImageNet 上每个训练批量为 256 张图像，则 N=256</li>
+<li>$C$是特征维度，例如对 RGB 图像来说，C=3</li>
+<li>Blob的维度会根据参数的类型不同而不同。比如：在一个卷积层中，输入一张3通道图片，有96个卷积核，每个核大小为11*11，因此这个Blob是96*3*11*11. 而在一个全连接层中，假设输入1024通道图片，输出1000个数据，则Blob为1000*1024</li>
+</ul>
+<h3 id="Layer"><a href="#Layer" class="headerlink" title="Layer"></a><strong>Layer</strong></h3><p>Layer 是 Caffe 网络模型的组成要素和计算的基本单位，Layer 可以进行很多运算，如：convolve（卷积）、pool（池化）、inner product（内积），rectified-linear 和 sigmoid 等非线性运算，元素级的数据变换，normalize（归一化）、load data（数据加载）、softmax 和 hinge等 losses（损失计算）</p>
+<p><img src="\img\Caffe-in-Action\layer.jpg" alt=""></p>
+<p>如上图所示:</p>
+<ul>
+<li>一个 layer 通过 bottom（底部）连接层接收数据，通过 top（顶部）连接层输出数据</li>
+</ul>
+<p>每一个 layer 都定义了 3 种重要的运算：setup（初始化设置），forward（前向传播），backward（反向传播）</p>
+<ul>
+<li><code>Setup:</code>在模型初始化时重置 layers 及其相互之间的连接 </li>
+<li><code>Forward:</code>从 bottom 层中接收数据，进行计算后将输出送入到 top 层中</li>
+<li><code>Backward:</code>给定相对于 top 层输出的梯度，计算其相对于输入的梯度，并传递到bottom层, 一个有参数的 layer 需要计算相对于各个参数的梯度值并存储在内部</li>
+</ul>
+<p>Layer承担了网络的两个核心操作：</p>
+<ol>
+<li><p><code>forward pass</code>（前向传播）——接收输入并计算输出</p>
+</li>
+<li><p><code>backward pass</code>（反向传播）——接收关于输出的梯度，计算相对于参数和输入的梯度并反向传播给在它前面的层</p>
+</li>
+</ol>
+<blockquote>
+<p><a href="http://caffe.berkeleyvision.org/tutorial/layers.html" target="_blank" rel="noopener">caffe layers</a></p>
+</blockquote>
+<h3 id="Net"><a href="#Net" class="headerlink" title="Net"></a><strong>Net</strong></h3><p>Net 是一系列<code>layers</code>和其连接的集合, <code>Net</code>是由一系列层组成的有向无环<code>（DAG）</code>计算图，Caffe保留了计算图中所有的中间值以确保前向和反向迭代的准确性。一个典型的 Net 开始于<code>data layer</code>从磁盘中加载数据，终止于<code>loss layer</code>, Net 由一系列层和它们之间的相互连接构成，用的是一种文本建模语言, Caffe 模型是端到端的机器学习引擎</p>
+<p>一个简单的逻辑回归分类器的定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">name: &quot;LogReg&quot;</span><br><span class="line">layer &#123;</span><br><span class="line">  name: &quot;mnist&quot;</span><br><span class="line">  type: &quot;Data&quot;</span><br><span class="line">  top: &quot;data&quot;</span><br><span class="line">  top: &quot;label&quot;</span><br><span class="line">  data_param &#123;</span><br><span class="line">    source: &quot;input_leveldb&quot;</span><br><span class="line">    batch_size: 64</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">layer &#123;</span><br><span class="line">  name: &quot;ip&quot;</span><br><span class="line">  type: &quot;InnerProduct&quot;</span><br><span class="line">  bottom: &quot;data&quot;</span><br><span class="line">  top: &quot;ip&quot;</span><br><span class="line">  inner_product_param &#123;</span><br><span class="line">    num_output: 2</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">layer &#123;</span><br><span class="line">  name: &quot;loss&quot;</span><br><span class="line">  type: &quot;SoftmaxWithLoss&quot;</span><br><span class="line">  bottom: &quot;ip&quot;</span><br><span class="line">  bottom: &quot;label&quot;</span><br><span class="line">  top: &quot;loss&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="\img\Caffe-in-Action\logreg.jpg" alt=""></p>
+<ul>
+<li>第一层：name为mnist, type为Data，没有输入（bottom)，只有两个输出（top),一个为data,一个为label</li>
+<li>第二层：name为ip，type为InnerProduct, 输入数据data, 输出数据ip</li>
+<li>第三层：name为loss, type为SoftmaxWithLoss，有两个输入，一个为ip,一个为label，有一个输出loss,没有画出来</li>
+</ul>
+<p>Net的核心操作:</p>
+<ul>
+<li>Net::Init()进行模型的初始化, 创建 blobs 和 layers 以搭建整个网络<code>DAG 图</code>, 以及调用<code>layers</code>的<code>SetUp()</code>函数, 初始化期间Net会打印其初始化日志到<code>INFO</code>信息中</li>
+</ul>
+<p><strong>Caffe 中网络的构建与设备无关</strong>, blobs 和 layers 在模型定义时是隐藏了实现细节的, 网络构建完之后通过设置Caffe::mode()函数中的Caffe::set_mode()实现在<code>CPU 或 GPU</code>上的运行, CPU 与 GPU 无缝切换并且独立于模型定义</p>
+<h3 id="Solver"><a href="#Solver" class="headerlink" title="Solver"></a><strong>Solver</strong></h3><p>solver算是caffe的核心的核心，它协调着整个模型的运作。caffe程序运行必带的一个参数就是solver配置文件。运行代码一般为</p>
+<p><code>caffe train --solver=*_slover.prototxt</code></p>
+<p>Caffe提供了六种优化算法来求解最优参数，在solver配置文件中，通过设置type类型来选择:</p>
+<ol>
+<li><code>Stochastic Gradient Descent</code> (type: “SGD”),</li>
+<li><code>AdaDelta</code> (type: “AdaDelta”),</li>
+<li><code>Adaptive</code> Gradient (type: “AdaGrad”),</li>
+<li><code>Adam</code> (type: “Adam”),</li>
+<li><code>Nesterov’s Accelerated Gradient</code> (type: “Nesterov”) and</li>
+<li><code>RMSprop</code> (type: “RMSProp”)</li>
+</ol>
+<blockquote>
+<p>参考我的另一篇文章中的<a href="http://simtalk.cn/2016/09/09/Neural-Network-in-Practice/#参数更新">参数更新</a></p>
+</blockquote>
+<p><strong>Solver的流程：</strong></p>
+<ol>
+<li>用于优化过程的记录、创建训练网络（用于学习）和测试网络（用于评估）</li>
+<li>通过 forward 和 backward 过程来迭代地优化和更新参数</li>
+<li>周期性地用测试网络评估模型性能</li>
+<li>在优化过程中记录模型和 solver 状态的快照（snapshot）</li>
+</ol>
+<p>在每一次的迭代过程中，solver做了这几步工作：</p>
+<ol>
+<li><p>调用forward算法来计算最终的输出值，以及对应的loss</p>
+</li>
+<li><p>调用backward算法来计算每层的梯度</p>
+</li>
+<li><p>根据选用的slover方法，利用梯度进行参数更新</p>
+</li>
+<li><p>记录并保存每次迭代的学习率、快照，以及对应的状态</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">net: &quot;examples/mnist/lenet_train_test.prototxt&quot; //设置深度网络模型</span><br><span class="line">test_iter: 100       //与test_layer.prototxt中的batch_size有关, mnist数据中测试样本总数为10000, batch_size为100，则需要迭代100次才能将10000个数据全部执行完       </span><br><span class="line">test_interval: 500   //测试间隔。也就是每训练500次，才进行一次测试</span><br><span class="line"></span><br><span class="line">base_lr: 0.01        //学习率的设置</span><br><span class="line">momentum: 0.9</span><br><span class="line">type: SGD            //优化算法选择</span><br><span class="line">weight_decay: 0.0005 //权重衰减项，防止过拟合的一个参数</span><br><span class="line"></span><br><span class="line">lr_policy: &quot;inv&quot;</span><br><span class="line">gamma: 0.0001</span><br><span class="line">power: 0.75</span><br><span class="line">display: 100         //每训练100次，在屏幕上显示一次, 如果设置为0，则不显示。</span><br><span class="line">max_iter: 20000      //最大迭代次数。这个数设置太小，会导致没有收敛，精确度很低。设置太大，会导致震荡，浪费时间。</span><br><span class="line"></span><br><span class="line">snapshot: 5000       //每训练5000次后保存快照</span><br><span class="line">snapshot_prefix: &quot;examples/mnist/lenet&quot;</span><br><span class="line">solver_mode: CPU     //运行模式。默认为GPU</span><br></pre></td></tr></table></figure>
+<p><strong>关于学习策略</strong></p>
+<p>base_lr用于设置基础学习率，在迭代的过程中，可以对基础学习率进行调整。怎么样进行调整，就是调整的策略，由lr_policy来设置。</p>
+<p>lr_policy可以设置为下面这些值，相应的学习率的计算为：</p>
+<ul>
+<li>fixed : 保持base_lr不变.</li>
+<li>step : 如果设置为step,则还需要设置一个stepsize,  返回 $base\_lr * {\gamma} ^ {farc{iter / stepsize}}$ , 其中iter表示当前的迭代次数</li>
+<li>exp : 返回$base\_lr * /gamma ^ {iter}$ ， iter为当前迭代次数</li>
+<li>inv : 如果设置为inv,还需要设置一个power, 返回$base\_lr * (1 + \gamma * iter) ^ {- power}$</li>
+<li>multistep : 如果设置为multistep,则还需要设置一个stepvalue。这个参数和step很相似，step是均匀等间隔变化，而multistep则是根据stepvalue值变化</li>
+<li>poly : 学习率进行多项式误差, 返回 $base\_lr * (1 - iter/max_iter) ^ {power}$</li>
+<li>sigmoid:　学习率进行sigmod衰减，返回 $base\_lr * ( 1/(1 + exp(-\gamma * (iter - stepsize))))$</li>
+</ul>
+<p>对于step策略,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">base_lr: 0.01 </span><br><span class="line">lr_policy: &quot;step&quot;</span><br><span class="line">gamma: 0.1   </span><br><span class="line">stepsize: 1000  </span><br><span class="line">max_iter: 3500 </span><br><span class="line">momentum: 0.9</span><br></pre></td></tr></table></figure>
+<ul>
+<li>即前1000次迭代，学习率为0.01; 第1001-2000次迭代，学习率为0.001; 第2001-3000次迭代，学习率为0.00001，第3001-3500次迭代，学习率为10-5  </li>
+</ul>
+<p><strong>注意的是：</strong> 文件的路径要从caffe的根目录开始，其它的所有配置都是这样</p>
+<h3 id="Mnist"><a href="#Mnist" class="headerlink" title="Mnist"></a><strong>Mnist</strong></h3><p><a href="https://gist.github.com/Simshang/ce2220b61da453ac41c9e0b4dd447340" target="_blank" rel="noopener">LeNet的prototxt</a></p>
+<p><a href="http://ethereon.github.io/netscope/#/gist/ce2220b61da453ac41c9e0b4dd447340" target="_blank" rel="noopener">LeNet的网络结构图</a></p>
+<h3 id="Cifar10"><a href="#Cifar10" class="headerlink" title="Cifar10"></a><strong>Cifar10</strong></h3><ul>
+<li><a href="https://www.cs.toronto.edu/~kriz/cifar.html" target="_blank" rel="noopener">cifar-10数据库</a>, cifar10数据训练样本50000张，测试样本10000张，每张为32*32的彩色三通道图片，共分为10类</li>
+</ul>
+<p><img src="\img\Caffe-in-Action\cifar10.jpg" alt=""></p>
+<ul>
+<li><p><a href="https://github.com/BVLC/caffe/tree/master/examples/cifar10" target="_blank" rel="noopener">Cifar10-Github</a></p>
+</li>
+<li><p><a href="http://ethereon.github.io/netscope/#/gist/374666c3ac5fb3d9d80234b352f9e466" target="_blank" rel="noopener">CIFAR10 quick test</a>的网络结构</p>
+</li>
+</ul>
+<ol>
+<li><p>在<code>caffe</code>目录下, 运行<code>./data/cifar10/get_cifar10.sh</code>下载数据, 运行完毕后再文件夹下生成的文件有</p>
+<p><code>batches.meta.txt</code>,<code>data_batch_2.bin</code>,<code>data_batch_4.bin</code>,<code>test_batch.bin</code><br><code>data_batch_1.bin</code>,<code>data_batch_3.bin</code>,<code>data_batch_5.bin</code>,<code>readme.html</code></p>
+</li>
+<li><p>在caffe目录下<code>./examples/cifar10/create_cifar10.sh</code>将下载的数据转换数据格式为<code>lmdb</code>, 在<code>./examples/cifar10/</code> 生成</p>
+<p><code>cifar10_test_lmdb</code>和<code>cifar10_train_lmdb</code>两个文件</p>
+</li>
+<li><p>在caffe目录下<code>./examples/cifar10/train_quick.sh</code>运行实例, 最后输出结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Iteration 5000, Testing net (#0)</span><br><span class="line">Test net output #0: accuracy = 0.7481</span><br><span class="line">Test net output #1: loss = 0.756731 (* 1 = 0.756731 loss)</span><br><span class="line">Optimization Done.</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li>在<code>XXX_solver.prototxt</code>中更改CPU和GPU的模式</li>
+</ul>
+<h3 id="特征抽取"><a href="#特征抽取" class="headerlink" title="特征抽取"></a><strong>特征抽取</strong></h3><p>在<a href="http://dl.caffe.berkeleyvision.org/" target="_blank" rel="noopener">CaffeModle目录</a>中下载AlexNet的caffemodel</p>
+<p><a href="http://caffe.berkeleyvision.org/gathered/examples/feature_extraction.html" target="_blank" rel="noopener">feature extraction官方教程</a></p>
+<p><a href="http://nbviewer.jupyter.org/github/BVLC/caffe/blob/master/examples/00-classification.ipynb" target="_blank" rel="noopener">可视化特征的python文件</a></p>
+<h3 id="pycaffe"><a href="#pycaffe" class="headerlink" title="pycaffe"></a><strong>pycaffe</strong></h3><blockquote>
+<p>基础环境 : 安装caffe-windows和Anaconda</p>
+</blockquote>
+<ol>
+<li><p>用<code>VS2013</code>打开<code>Mainbuilder.sln</code>文件中选择pycaffe项目，右键选择属性修改<code>配置属性</code>中的<code>C/C++的附加包含目录</code>和<code>链接器附加库目录</code></p>
+</li>
+<li><p>把C/C++的附加包含目录中python默认路径, 我的Anaconda安装在<code>C:\Anaconda2</code>, 所以将附加依赖项中添加的路径改为<code>C:\Anaconda2\include</code>与<code>C:\Anaconda2\Lib</code></p>
+</li>
+<li><p>将链接器中的附加库目录中libs的默认路径改为<code>C:\Anaconda2\libs</code></p>
+</li>
+<li><p>右键选择pycaffe项目，点击build编译, 编译成功会在caffe-windows\python\caffe中生成_caffe.pyd文件。</p>
+</li>
+<li><p>安装google的protobuf，直接在cmd中使用pip install protobuf安装。</p>
+</li>
+<li><p>将这个caffe文件夹复制到<code>C:\Anaconda2\Lib\site-packages</code>中，然后尝试使用import caffe</p>
+<ul>
+<li>import可能会出现<code>typeerror:__init__()got an unexpected keyword argument &#39;syntax&#39;</code>这样的错误，解决的办法是在<code>C:\Anaconda2\Lib\site-packages\caffe\proto</code>中选择<code>caffe_pb2.py</code>文件，将文件中所有含有<code>syntax</code>的语句注释掉即可</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>centos</p>
+</blockquote>
+<ul>
+<li><p>编译：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cd ~/caffe</span><br><span class="line">$ make pycaffe</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置:</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sudo gedit /etc/profile</span><br><span class="line"></span><br><span class="line"># 添加： export PYTHONPATH=/root/caffe/python:$PYTHONPATH </span><br><span class="line"></span><br><span class="line">$ source /etc/profile # 使之生效</span><br></pre></td></tr></table></figure>
+<ul>
+<li>测试:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ python</span><br><span class="line">Python 2.7.6 (default, Jun 22 2015, 17:58:13) </span><br><span class="line">[GCC 4.8.2] on linux2</span><br><span class="line">Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.</span><br><span class="line">&gt;&gt;&gt; import caffe</span><br><span class="line">&gt;&gt;&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>导入caffe的过程中可能报错找不到protobuf, 用<code>pip install protobuf</code>安装即可 </li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/20/AlexNet/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          AlexNet
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/12/CNNs/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">CNN</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

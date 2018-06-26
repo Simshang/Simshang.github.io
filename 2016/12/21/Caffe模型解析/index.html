@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Caffe框架解析 | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在用了一段Caffe之后, 打算从今天开始阅读源码, 一方面巩固一下C++的语言特性，增强代码阅读能力, 另一方面学习一下深度学习框架的设计思想, 那么就从Caffe的最基本数据结构开始吧!">
+<meta name="keywords" content="Blobs,Layers,Nets">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Caffe框架解析">
+<meta property="og:url" content="http://simtalk.cn/2016/12/21/Caffe模型解析/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="在用了一段Caffe之后, 打算从今天开始阅读源码, 一方面巩固一下C++的语言特性，增强代码阅读能力, 另一方面学习一下深度学习框架的设计思想, 那么就从Caffe的最基本数据结构开始吧!">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/Caffe模型解析/Blob.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/Caffe模型解析/layerd.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/Caffe模型解析/layer.png">
+<meta property="og:image" content="http://simtalk.cn/img/Caffe模型解析/net.png">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.945Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Caffe框架解析">
+<meta name="twitter:description" content="在用了一段Caffe之后, 打算从今天开始阅读源码, 一方面巩固一下C++的语言特性，增强代码阅读能力, 另一方面学习一下深度学习框架的设计思想, 那么就从Caffe的最基本数据结构开始吧!">
+<meta name="twitter:image" content="http://simtalk.cn/img/Caffe模型解析/Blob.JPG">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Caffe模型解析" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/12/21/Caffe模型解析/" class="article-date">
+  	<time datetime="2016-12-21T10:05:30.000Z" itemprop="datePublished">2016-12-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Caffe框架解析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Blobs/">Blobs</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Layers/">Layers</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Nets/">Nets</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Caffe源码/">Caffe源码</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Blobs"><span class="toc-text">Blobs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Layers"><span class="toc-text">Layers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nets"><span class="toc-text">Nets</span></a></li></ol>
+        </div>
+        
+        <p>在用了一段Caffe之后, 打算从今天开始阅读源码, 一方面巩固一下C++的语言特性，增强代码阅读能力, 另一方面学习一下深度学习框架的设计思想, 那么就从Caffe的最基本数据结构开始吧!</p>
+<a id="more"></a>
+<h3 id="Blobs"><a href="#Blobs" class="headerlink" title="Blobs"></a><strong>Blobs</strong></h3><p>blob是基本的数据存储单元, 其数据结构是一个标准的四维数组（4D-Array），主要负责caffe中数据的存储(Stores)、关联(Communicates)、以及数据的操作(Manipulates)。数据在网络结构中要经过正向以及反向转播的过程，在这个过程中要对于数据进行存储、数据之间的通讯、以及数据的操作。</p>
+<p><strong>四维数组</strong></p>
+<p>在Blob数据结构中, 四个维度的存储顺序是$(Num, Channels, Height, Width)$, <strong>这里注意</strong>, Num在不同层中的代表的含义是不一样的, 如下如所示</p>
+<p><img src="/img/Caffe模型解析/Blob.JPG" alt=""></p>
+<ol>
+<li>数据存储在多边形的data blob上</li>
+<li>conv1卷积运算对data blob中的数据进行操作</li>
+<li>卷积操作的结果存储到conv1 blob上</li>
+</ol>
+<ul>
+<li>图中的<code>黄色</code>的Blob是作为<code>数据输入层</code>, Num代表mini batch size，也就是一次可以处理的图像的数目</li>
+<li>图中的<code>灰色</code>的Blob则作为<code>卷积层参数</code>, Num代表代表卷积核的数目</li>
+</ul>
+<p>在这里我们也可以看出Blob是caffe中的基本数据单元, 既可以承载数据又可以承载模型参数</p>
+<p><strong>blob中的数据访问方法</strong></p>
+<p>对于 blob 中的数据，我们关心的是<code>values（值）</code>和<code>gradients（梯度）</code>，所以一个 blob单元存储了两块数据<code>data</code>和<code>diff</code>。前者是我们在网络中传送的普通数据，后者是通过网络计算得到的梯度。</p>
+<p>由于数据既可存储在 CPU 上，也可存储在 GPU 上，因而有两种数据访问方式：</p>
+<ul>
+<li>const方式: 静态方式，不改变数值</li>
+<li>mutable方式: 动态方式，改变数值</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">const</span> Dtype* <span class="title">cpu_data</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">const</span> Dtype* <span class="title">gpu_data</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">const</span> Dtype* <span class="title">cpu_diff</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">const</span> Dtype* <span class="title">gpu_diff</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="function">Dtype* <span class="title">mutable_cpu_data</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">Dtype* <span class="title">mutable_gpu_data</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">Dtype* <span class="title">mutable_cpu_diff</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function">Dtype* <span class="title">mutable_gpu_diff</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+<p>在使用GPU运算时, Caffe 中 CPU 代码先从磁盘中加载数据到 blob，同时请求分配一个 GPU 设备核（device kernel）以使用 GPU 进行计算，再将计算好的 blob 数据送入下一层，只要所有 layers 均有 GPU 实现，这种情况下所有的中间数据和梯度都会保留在 GPU 上, 采用静态方式访问Blob数据来提高性能;但是如果其中的某一层并没有GPU实现, 这样的话就需要将GPU的数据复制到CPU进行运算, 此时如果Blob中的数据已经发生了改变, 就需要采用动态的方式访问Blob数据, blob 使用了一个<code>SyncedMem</code> 类来同步 CPU 和 GPU 上的数值，以隐藏同步的细节和最小化传送数据, 当产生动态访问数据的时候, SyncedMem类便知道需要复制数据了</p>
+<h3 id="Layers"><a href="#Layers" class="headerlink" title="Layers"></a><strong>Layers</strong></h3><p>Layer是基本的计算单元, 其定义了每一层基本形式, 是计算单元的抽象, <code>layer.hpp</code>是抽象出来的基类，其他都是在其基础上的继承, 比如具体的卷积层/內积层/Softmax层/池化层等都是Layer的具体实现, layer是由proto定义的, 如下图所示, 卷积层的定义:</p>
+<p><img src="/img/Caffe模型解析/layerd.JPG" alt=""></p>
+<ul>
+<li><p>定义该层的名字/类型/上下连接层类型</p>
+</li>
+<li><p>该层所具有的特殊函数的具体参数</p>
+</li>
+</ul>
+<p>每一个Layer定义了三个核心的计算：</p>
+<ol>
+<li>Setup：该层初始化的方式和上下连接层的类型</li>
+<li>Forward：根据从bottom层的输入通过该层函数计算结果, 然后将输出送到top层</li>
+<li>Backward：根据top output的gradient计算input的gradient，然后输送到bottom。同时对于有<code>参数的 layer</code>还会计算相对于parameters的gradient，并存储在内部用来进行模型优化</li>
+</ol>
+<p>总的来说，Layer 承担了网络的两个核心操作：forward pass（前向传播）——接收输入并计算输出；backward pass（反向传播）——接收关于输出的梯度，计算相对于参数和输入的梯度并反向传播给在它前面的层。由此组成了每个 layer 的前向和反向通道。</p>
+<p><strong>代码结构</strong></p>
+<p><code>layer.hpp</code>是抽象出来的基类，其他都是在其基础上的继承, 在Layer的基础上衍生出来的有5种Layers：:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">common_layers.hpp</span><br><span class="line">data_layers.hpp</span><br><span class="line">loss_layers.hpp</span><br><span class="line">neuron_layers.hpp</span><br><span class="line">vision_layers.hpp</span><br></pre></td></tr></table></figure>
+<p><img src="/img/Caffe模型解析/layer.png" alt=""></p>
+<ul>
+<li><p>data_layers.hpp</p>
+<p>data_layer作为原始数据的输入层，处于整个网络的最底层，它可以从数据库leveldb、lmdb中读取数据，也可以直接从内存中读取，还可以从hdf5，甚至是原始的图像读入数据。</p>
+</li>
+<li><p>neuron_layers.hpp</p>
+<p>输入了data后，就要计算了，比如常见的sigmoid、tanh等等，这些都计算操作被抽象成了neuron_layers.hpp里面的类<code>NeuronLayer</code>，这个层只负责具体的计算，因此明确定义了输入<code>ExactNumBottomBlobs()</code>和<code>ExactNumTopBlobs()</code>都是常量$1$,即输入一个blob，输出一个blob。</p>
+</li>
+<li><p>common_layers.hpp</p>
+<p>NeruonLayer仅仅负责简单的一对一计算，而剩下的那些复杂的计算则通通放在了common_layers.hpp中。像ArgMaxLayer、ConcatLayer、FlattenLayer、SoftmaxLayer、SplitLayer和SliceLayer等各种对blob增减修改的操作。</p>
+</li>
+<li><p>loss_layers.hpp</p>
+<p>前面的data layer和common layer都是中间计算层，虽然会涉及到反向传播，但传播的源头来自于loss_layer，即网络的最终端。这一层因为要计算误差，所以输入都是2个blob，输出1个blob。</p>
+</li>
+<li><p>vision_layers.hpp</p>
+<p>vision_layer主要是图像卷积的操作，像convolusion、pooling、LRN都在里面</p>
+</li>
+</ul>
+<blockquote>
+<p>data负责输入，vision负责卷积相关的计算，neuron和common负责中间部分的数据计算，而loss是最后一部分，负责计算反向传播的误差, 具体的实现都在src/caffe/layers里面</p>
+</blockquote>
+<h3 id="Nets"><a href="#Nets" class="headerlink" title="Nets"></a><strong>Nets</strong></h3><p>Net 是由一系列层组成的有向无环计算图(DAG/directed acyclic graph)构成, 其节点就是一个个的Layer结构, 从<code>data layer</code>开始，以<code>loss layer</code>结束 , <code>Caffe</code>保留了计算图中所有的中间值以确保前向和反向迭代的准确性。Net 由一系列层和它们之间的相互连接构成，用的是一种文本建模语言。一个简单的逻辑回归分类器的定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">name: &quot;LogReg&quot;</span><br><span class="line">layer &#123;</span><br><span class="line">name: &quot;mnist&quot;</span><br><span class="line">type: &quot;Data&quot;</span><br><span class="line">top: &quot;data&quot;</span><br><span class="line">top: &quot;label&quot;</span><br><span class="line">data_param &#123;</span><br><span class="line">source: &quot;input_leveldb&quot;</span><br><span class="line">batch_size: 64</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">layer &#123;</span><br><span class="line">name: &quot;ip&quot;</span><br><span class="line">type: &quot;InnerProduct&quot;</span><br><span class="line">bottom: &quot;data&quot;</span><br><span class="line">top: &quot;ip&quot;</span><br><span class="line">inner_product_param &#123;</span><br><span class="line">num_output: 2</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">layer &#123;</span><br><span class="line">name: &quot;loss&quot;</span><br><span class="line">type: &quot;SoftmaxWithLoss&quot;</span><br><span class="line">bottom: &quot;ip&quot;</span><br><span class="line">bottom: &quot;label&quot;</span><br><span class="line">top: &quot;loss&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可视化后如图所示:</p>
+<p><img src="/img/Caffe模型解析/net.png" alt=""></p>
+<ul>
+<li>上图是一个多路径的前向五环Graph，是典型的最简单训练网络，data blob所在路径为网络主路径（卷积层、FC层、Pooling层等），Label blob所在路径提供label数据用于计算loss或在Test时计算Accuracy</li>
+</ul>
+<p><strong>网络初始化</strong><br>Net::Init()进行模型的初始化。</p>
+<p>初始化主要实现两个操作：</p>
+<ol>
+<li><p>创建 blobs 和 layers 以搭建整个网络 DAG 图，以及调用 layers 的 SetUp()函数。</p>
+</li>
+<li><p>初始化时也会做另一些记录，例如确认整个网络结构的正确与否等。另外，初始化期间，Net 会打印其初始化日志到 INFO 信息中。</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/01/02/Cpp-in-Caffe/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Effective C++ in Caffe
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/12/20/PaddlePaddle/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">PaddlePaddle</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

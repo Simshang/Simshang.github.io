@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>算法珠玑 | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="查了相关资料说这是一本非常好的算法入门书, 于是买来学习一下, 记录学习过程中的一些扩展知识点以及关于课后习题的思考  参考书 : 编程珠玑（第2版•修订版）">
+<meta name="keywords" content="算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="算法珠玑">
+<meta property="og:url" content="http://simtalk.cn/2016/06/24/算法珠玑/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="查了相关资料说这是一本非常好的算法入门书, 于是买来学习一下, 记录学习过程中的一些扩展知识点以及关于课后习题的思考  参考书 : 编程珠玑（第2版•修订版）">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.959Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="算法珠玑">
+<meta name="twitter:description" content="查了相关资料说这是一本非常好的算法入门书, 于是买来学习一下, 记录学习过程中的一些扩展知识点以及关于课后习题的思考  参考书 : 编程珠玑（第2版•修订版）">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-算法珠玑" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/06/24/算法珠玑/" class="article-date">
+  	<time datetime="2016-06-24T02:28:35.000Z" itemprop="datePublished">2016-06-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      算法珠玑
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/算法/">算法</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/编程之美/">编程之美</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#排序"><span class="toc-text">排序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#稳定性"><span class="toc-text">稳定性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#位排序"><span class="toc-text">位排序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#随机数"><span class="toc-text">随机数</span></a></li></ol>
+        </div>
+        
+        <p>查了相关资料说这是一本非常好的算法入门书, 于是买来学习一下, 记录学习过程中的一些扩展知识点以及关于课后习题的思考</p>
+<blockquote>
+<p>参考书 : <a href="https://book.douban.com/subject/26302533/" target="_blank" rel="noopener">编程珠玑（第2版•修订版）</a></p>
+</blockquote>
+<a id="more"></a>
+<blockquote>
+<p>算法可视化工具<a href="https://visualgo-translation.club/zh" target="_blank" rel="noopener">VisuAlgo</a></p>
+</blockquote>
+<p>每一种算法都有自己的使用条件, 根据不同的问题具体分析, 比如对于输入比较小的问题, 是否可以将文件加载进内存排序而不是在磁盘上排序, 任何算法都是对于某一类问题的权衡, 必定要牺牲某种优势换取另一种优势, 同时应用背景还要了解应用背景, 因为不同的应用背景提出的性能需求不一样, 比如运行时间等指标; 同时, 提到算法就不能离开数据结构, <code>程序 = 算法+数据结构</code>, 良好的数据结构节省时间和空间, 提高程序的可移植性和可维护性</p>
+<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a><strong>排序</strong></h2><h3 id="稳定性"><a href="#稳定性" class="headerlink" title="稳定性"></a><strong>稳定性</strong></h3><ul>
+<li>通俗地讲就是能保证排序前2个相等的数其在序列的前后位置顺序和排序后它们两个的前后位置顺序相同</li>
+</ul>
+<p>(1)冒泡排序</p>
+<p>冒泡排序就是把小的元素往前调或者把大的元素往后调。比较是相邻的两个元素比较，交换也发生在这两个元素之间。所以，如果两个元素相等，我想你是不会再无聊地把他们俩交换一下的；如果两个相等的元素没有相邻，那么即使通过前面的两两交换把两个相邻起来，这时候也不会交换，所以相同元素的前后顺序并没有改变，所以冒泡排序是一种稳定排序算法。</p>
+<p>(2)选择排序</p>
+<p>选择排序是给每个位置选择当前元素最小的，比如给第一个位置选择最小的，在剩余元素里面给第二个元素选择第二小的，依次类推，直到第n - 1个元素，第n个元素不用选择了，因为只剩下它一个最大的元素了。那么，在一趟选择，如果当前元素比一个元素小，而该小的元素又出现在一个和当前元素相等的元素后面，那么交换后稳定性就被破坏了。比较拗口，举个例子，序列5 8 5 2 9，我们知道第一遍选择第1个元素5会和2交换，那么原序列中2个5的相对前后顺序就被破坏了，所以选择排序不是一个稳定的排序算法。</p>
+<p>(3)插入排序<br>插入排序是在一个已经有序的小序列的基础上，一次插入一个元素。当然，刚开始这个有序的小序列只有1个元素，就是第一个元素。比较是从有序序列的末尾开始，也就是想要插入的元素和已经有序的最大者开始比起，如果比它大则直接插入在其后面，否则一直往前找直到找到它该插入的位置。如果碰见一个和插入元素相等的，那么插入元素把想插入的元素放在相等元素的后面。所以，相等元素的前后顺序没有改变，从原无序序列出去的顺序就是排好序后的顺序，所以插入排序是稳定的。</p>
+<p>(4)快速排序<br>快速排序有两个方向，左边的i下标一直往右走，当a[i] &lt;= a[center_index]，其中center_index是中枢元素的数组下标，一般取为数组第0个元素。而右边的j下标一直往左走，当a[j] &gt; a[center_index]。如果i和j都走不动了，i &lt;= j，交换a[i]和a[j],重复上面的过程，直到i &gt; j。 交换a[j]和a[center_index]，完成一趟快速排序。在中枢元素和a[j]交换的时候，很有可能把前面的元素的稳定性打乱，比如序列为5 3 3 4 3 8 9 10 11，现在中枢元素5和3（第5个元素，下标从1开始计）交换就会把元素3的稳定性打乱，所以快速排序是一个不稳定的排序算法，不稳定发生在中枢元素和a[j] 交换的时刻。</p>
+<p>(5)归并排序<br>归并排序是把序列递归地分成短序列，递归出口是短序列只有1个元素（认为直接有序）或者2个序列（1次比较和交换），然后把各个有序的段序列合并成一个有序的长序列，不断合并直到原序列全部排好序。可以发现，在1个或2个元素时，1个元素不会交换，2个元素如果大小相等也没有人故意交换，这不会破坏稳定性。那么，在短的有序序列合并的过程中，稳定是是否受到破坏？没有，合并过程中我们可以保证如果两个当前元素相等时，我们把处在前面的序列的元素保存在结果序列的前面，这样就保证了稳定性。所以，归并排序也是稳定的排序算法。</p>
+<p>(6)基数排序<br>基数排序是按照低位先排序，然后收集；再按照高位排序，然后再收集；依次类推，直到最高位。有时候有些属性是有优先级顺序的，先按低优先级排序，再按高优先级排序，最后的次序就是高优先级高的在前，高优先级相同的低优先级高的在前。基数排序基于分别排序，分别收集，所以其是稳定的排序算法。</p>
+<p>(7)希尔排序(shell)<br>希尔排序是按照不同步长对元素进行插入排序，当刚开始元素很无序的时候，步长最大，所以插入排序的元素个数很少，速度很快；当元素基本有序了，步长很小， 插入排序对于有序的序列效率很高。所以，希尔排序的时间复杂度会比O(n^2)好一些。由于多次插入排序，我们知道一次插入排序是稳定的，不会改变相同元素的相对顺序，但在不同的插入排序过程中，相同的元素可能在各自的插入排序中移动，最后其稳定性就会被打乱，所以shell排序是不稳定的。</p>
+<p>(8)堆排序<br>我们知道堆的结构是节点i的孩子为2 <em> i和2 </em> i + 1节点，大顶堆要求父节点大于等于其2个子节点，小顶堆要求父节点小于等于其2个子节点。在一个长为n 的序列，堆排序的过程是从第n / 2开始和其子节点共3个值选择最大（大顶堆）或者最小（小顶堆），这3个元素之间的选择当然不会破坏稳定性。但当为n / 2 - 1， n / 2 - 2， … 1这些个父节点选择元素时，就会破坏稳定性。有可能第n / 2个父节点交换把后面一个元素交换过去了，而第n / 2 - 1个父节点把后面一个相同的元素没 有交换，那么这2个相同的元素之间的稳定性就被破坏了。所以，堆排序不是稳定的排序算法。</p>
+<p>综上，得出结论: 选择排序、快速排序、希尔排序、堆排序不是稳定的排序算法，而冒泡排序、插入排序、归并排序和基数排序是稳定的排序算法</p>
+<h3 id="位排序"><a href="#位排序" class="headerlink" title="位排序"></a><strong>位排序</strong></h3><p><strong>问题描述</strong> : <code>空间&lt;1MB, 时间&lt;10s</code></p>
+<ul>
+<li>输入 : 在输入的$n=10^7$个<code>正整数</code>中, 每个数都<code>小于</code>$n$是并且<code>只出现一次</code>, </li>
+<li>输出 : <code>升序</code>排列的列表</li>
+</ul>
+<p><strong>问题分析</strong> :</p>
+<ul>
+<li>在空间的限制下, 我们一次最多可以排序多少数据呢? 我们知道在基本数据类型的条件下表示数字n, 最好选择4个Byte的int类型(32bit), 因为我们希望用最少的字节数表示n($2^{32}&gt;10^7$), 这样我们一次最多可排序$1MB/4Byte=250000$个数, 这样我们就需要$10^7/250000=40$次的IO操作, 对于加载到内存中的数据可以使用快速排序等排序方式进行排序, 这种方式的缺点很明显, 那么有没有更好的方法呢?</li>
+</ul>
+<p><code>1MB=10^6Byte=8*10^6bit&lt;10^7</code>, 那么问题就是用大约800万个bit来标识1000万个数据(需要空间1.25MB)呢? 我们可以通过寻找稀疏位来实现, 但是假设现在有1.25MB空间了, 我们来看一下<code>位排序算法</code></p>
+<ol>
+<li><p>用位向量表示数据集合, 假如有正整数数据集$\{2,4,5,7,8\}$, 用位向量表示该数据集为:</p>
+<p>$$(01011011)_{bit}$$</p>
+<ul>
+<li>我们用<code>1Byte</code>的空间表示了上面的数据集, 也就是说在数据集中出现的数字在相应的位上标记为1, 否则标记为零, 这样我们用程序处理的时候自然也就排序了, 最后按顺序输出就可以了, 很精妙的算法!</li>
+</ul>
+</li>
+<li><p><strong>注意</strong>:减少程序的空间需求也会减少其运行时间, 因为减少空间需求意味着需要处理的数据量变小了, 那么处理时间也会相应的减少, 还有一个原因是我们可以将数据加载进内存而不是在磁盘上操作</p>
+</li>
+</ol>
+<blockquote>
+<p>代码实现见Github的Programming Pearls中的<a href="https://github.com/Simshang/Programming-Pearls/blob/master/Column%201/bitsort.c" target="_blank" rel="noopener">bitsort.c</a>, 代码分析见<code>注释</code><br>  测试结果:</p>
+<ol>
+<li>位排序(<code>bitsort.c</code>):2260000ms</li>
+<li>C++的Set集合实现(<code>sortints.cpp</code>) : 31030000ms</li>
+</ol>
+</blockquote>
+<p>位排序关键代码解析:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#define BITSPERWORD 32</span><br><span class="line">#define SHIFT 5</span><br><span class="line">#define MASK 0x1F</span><br><span class="line">#define N 10000000</span><br><span class="line">int a[1 + N/BITSPERWORD];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>数组a所占的空间为1250004Byte, 也就是限制在1MB左右的内存, 共包含312501个元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void set(int i) &#123;        a[i&gt;&gt;SHIFT] |=  (1&lt;&lt;(i &amp; MASK)); &#125; //置1操作</span><br><span class="line">void clr(int i) &#123;        a[i&gt;&gt;SHIFT] &amp;= ~(1&lt;&lt;(i &amp; MASK)); &#125; //置0操作</span><br><span class="line">int  test(int i)&#123; return a[i&gt;&gt;SHIFT] &amp;   (1&lt;&lt;(i &amp; MASK)); &#125; //判断是否为1</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>1&lt;&lt;(i &amp; MASK)</code> : 将1左移<code>(i &amp; MASK)</code>位, 将二进制后面添加<code>(i &amp; MASK)个0</code>实现左移操作</li>
+</ul>
+<p><strong>(i &amp; MASK)表示多少呢?</strong> : <a href="http://stackoverflow.com/questions/7218764/bit-mask-usage-in-the-program-below-from-programming-pearls" target="_blank" rel="noopener">Stackoverflow</a>的相关问题</p>
+<ul>
+<li>i是int类型占用4Byte共32位, <code>MASK=0x1F</code>是两个十六进制共8位, 转化为2进制为$(00011111)_{2}$, 那么这个操作就是取i的低五位, 也就是说i的取值在[0,32]之间, 也就是说i最多左移32位, 这和int类型的大小是一致的, 即对于一个位操作是在一个整型元素内操作的, 这和我们定义的数组类型是相关的, 因为对于每一个元素来说实际操作的是32位, 其实这个操作本质上就是<code>i % 32</code>, 但是有一个条件<code>i &amp; MASK and i % 32 are the same thing as long as you&#39;re sure i is not negative</code>, 因为我们最终想知道第i个数在a[]中某个元素的32位中的哪一位上, 所以要对32取余确定是32位的哪一位, <code>1&lt;&lt;(i &amp; MASK)</code>便实现了在32位的二进制中置1的操作</li>
+</ul>
+<p><strong>a[i&gt;&gt;SHIFT]确定了i在a[]中的哪个元素上</strong></p>
+<ul>
+<li>我们知道对于二进制左移就是乘法运算, 右移就是除法运算, 那么<code>i&gt;&gt;SHIFT</code>表示将i右移5位, 也就是<code>i/32</code>便确定了i在a[]中的哪个元素上 </li>
+</ul>
+<p><strong>a[i&gt;&gt;SHIFT] |=  (1&lt;&lt;(i &amp; MASK));</strong> : 数组元素置1操作(set)</p>
+<p><code>a[i&gt;&gt;SHIFT] = a[i&gt;&gt;SHIFT] | (1&lt;&lt;(i &amp; MASK));</code></p>
+<ul>
+<li>我们知道了i在a[]中的具体元素(a[i&gt;&gt;SHIFT]), 也知道在该元素中的置1位置(<code>1&lt;&lt;(i &amp; MASK)</code>), 通过或运算就将i的位置设置为1 </li>
+<li><code>清零</code>和<code>判定</code>功能同理</li>
+</ul>
+<h2 id="随机数"><a href="#随机数" class="headerlink" title="随机数"></a><strong>随机数</strong></h2><p><strong>问题描述</strong> :</p>
+<p>生成$[0,n-1]$之间的$k$个不同的乱序的随机整数? 假如生成一个1-10000000的随机数组，数组中的数字<code>不能重复</code>，但是<code>位置是随机的</code></p>
+<ul>
+<li>输入 : 两个整数$k$和$n$, 其中$k&lt;n$</li>
+<li>输出 : $k$个随机数</li>
+</ul>
+<p><strong>问题分析</strong> :</p>
+<p>为了保证不重复, 最常见的思路是生成的随机数去数组里面判断一下存在与否, 但是这样效率太低了, 对于不能重复这一点, 我们知道数组的索引肯定是不重复的, 那么我们能否利用数组的索引来生成呢, 答案是肯定的</p>
+<blockquote>
+<p>代码实现见 <a href="https://github.com/Simshang/Programming-Pearls/blob/master/Column%201/gendata.cpp" target="_blank" rel="noopener">gendata.cpp</a></p>
+</blockquote>
+<p><strong>关键代码分析</strong></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">randint</span><span class="params">(<span class="keyword">int</span> l, <span class="keyword">int</span> r)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> rand() % (r - l) + l;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; i++)</span><br><span class="line">	a[i] = i;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; K; i++)</span><br><span class="line">	swap(a[i], a[randint(i, N)]);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">"%d\n"</span>, a[i]);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>randint()</code> : 生成了$[l,r]$之间的随机数</p>
+</li>
+<li><p>第一个<code>for</code>循环生成了一个下标序列, 保证不重复</p>
+</li>
+<li><p>第二个<code>for</code>循环交换了第i个元素和[i,N]之间的某一个元素, 也就是说第i个元素和该元素前面的某个元素进行随机交换, 因为都在同一个数组a[]内进行操作, 所以元素不会重复, 这样输出生成的k个不重复的值且在[0,n-1]之间 </p>
+</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/07/05/BigO算法分析/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          BigO算法分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/06/13/Linux运行后台程序/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Linux运行后台程序</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

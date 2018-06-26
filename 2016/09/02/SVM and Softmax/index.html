@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>SVM and Softmax | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="斯坦福大学李飞飞团队的公开课CS231n- Convolutional Neural Networks for Visual Recognition, 这篇文章介绍了课程笔记中的线性模型,SVM和Softmax的基本原理, 对应的assignment1中的代码实现见Github">
+<meta name="keywords" content="线性模型,SVM,正则化,Softmax">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SVM and Softmax">
+<meta property="og:url" content="http://simtalk.cn/2016/09/02/SVM and Softmax/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="斯坦福大学李飞飞团队的公开课CS231n- Convolutional Neural Networks for Visual Recognition, 这篇文章介绍了课程笔记中的线性模型,SVM和Softmax的基本原理, 对应的assignment1中的代码实现见Github">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/SVM-and-Softmax/imagemap.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/SVM-and-Softmax/pixelspace.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/SVM-and-Softmax/templates.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/SVM-and-Softmax/wb.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/SVM-and-Softmax/hsvm.png">
+<meta property="og:image" content="http://simtalk.cn/img/SVM-and-Softmax/LossFunctions.svg">
+<meta property="og:image" content="http://simtalk.cn/img/SVM-and-Softmax/svmloss.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/SVM-and-Softmax/margin.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/SVM-and-Softmax/nolsvm.png">
+<meta property="og:image" content="http://simtalk.cn/img/SVM-and-Softmax/svmvssoftmax.png">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.954Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SVM and Softmax">
+<meta name="twitter:description" content="斯坦福大学李飞飞团队的公开课CS231n- Convolutional Neural Networks for Visual Recognition, 这篇文章介绍了课程笔记中的线性模型,SVM和Softmax的基本原理, 对应的assignment1中的代码实现见Github">
+<meta name="twitter:image" content="http://simtalk.cn/img/SVM-and-Softmax/imagemap.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-SVM and Softmax" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/02/SVM and Softmax/" class="article-date">
+  	<time datetime="2016-09-02T09:30:59.000Z" itemprop="datePublished">2016-09-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      SVM and Softmax
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SVM/">SVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Softmax/">Softmax</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/正则化/">正则化</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/线性模型/">线性模型</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/cs231n/">cs231n</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#线性模型"><span class="toc-text">线性模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SVM-支持向量机"><span class="toc-text">SVM : 支持向量机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正则化"><span class="toc-text">正则化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Softmax"><span class="toc-text">Softmax</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实现TODO"><span class="toc-text">实现TODO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SVM和Softmax的比较"><span class="toc-text">SVM和Softmax的比较</span></a></li></ol>
+        </div>
+        
+        <p>斯坦福大学李飞飞团队的公开课<code>CS231n- Convolutional Neural Networks for Visual Recognition</code>, 这篇文章介绍了课程笔记中的<code>线性模型</code>,<code>SVM</code>和<code>Softmax</code>的基本原理, 对应的<code>assignment1</code>中的代码实现见<a href="https://github.com/Simshang/CS231n" target="_blank" rel="noopener">Github</a><br><a id="more"></a></p>
+<h3 id="线性模型"><a href="#线性模型" class="headerlink" title="线性模型"></a><strong>线性模型</strong></h3><ul>
+<li><strong>基本概念</strong></li>
+</ul>
+<ol>
+<li><p><code>评分函数score function</code> : 本质上就是训练得到的线性模型, 输出值为在每个类别上的评分, 最终选择最高分达到分类目的</p>
+</li>
+<li><p><code>误差函数loss function</code>或者<code>代价函数cost function</code>或者<code>目标函数Objective</code> : 衡量模型预测值与真实值之间的差距, 差距越大代价越大, 从而对模型参数优化起到指引作用</p>
+</li>
+</ol>
+<ul>
+<li><strong>评分函数</strong></li>
+</ul>
+<p>$$ f(x_i, W, b) =  W x_i + b $$</p>
+<ul>
+<li><p>显然上面是一个线性模型, 如果不够了解请看 <a href="http://simtalk.cn/2016/08/23/%E4%BB%8E%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">从线性模型到神经网络</a> 这篇文章</p>
+</li>
+<li><p>线性模型根据训练数据集去确定$W$和$b$, 一旦训练完成, 模型就确定了, 我们只保留参数就可以了, 对于测试集来说, 通过确定的模型就可以算出得分, 从而得到类别, 与<code>kNN</code>相比不需要和训练集一一比较</p>
+</li>
+</ul>
+<p><img src="/img/SVM-and-Softmax/imagemap.jpg" alt=""></p>
+<ul>
+<li><p>如图所示, 假如我们通过训练数据确定了模型的参数$W$和$b$, 我们有一张新的图片$x_i$需要分类, 这样我们通过模型计算评分得到分类结果, 当然图中把猫分类为狗了, 这时就需要<code>误差函数</code>来对模型的相关参数进行迭代优化, 最终使得模型正确分类</p>
+</li>
+<li><p>图中的线性模型的评分就是一个加权求和, 对于参数$W$的理解, 我们通过训练数据确定的$W$是包含同一类图片的特征信息的, 每行参数代表一类分类器 比如对<code>船舶</code>的分类, 有可能对于蓝色通道内的值的权重就比较大, 最后的到的评分也就比较高</p>
+</li>
+<li><p><strong>图片是一种高维特征的数据类型</strong> : 我们将一张图片为3通道的数组变换为一个1通道的列向量, 比如在CIFAR-10数据集中, 每个样本是<code>32x32x3</code>像素的, 变换之后是一个<code>3072</code>维的列向量, 我们可以想象这是一个<code>3072</code>维的超几何空间, 然后将这个空间分为10份, 虽然我们无法可视化高维空间, 但是假如我们想象将高维空间压扁成二维的, 我们就可以理解线性模型在干什么, 如图所示</p>
+</li>
+</ul>
+<p><img src="/img/SVM-and-Softmax/pixelspace.jpeg" alt=""></p>
+<ul>
+<li><p>图中的箭头表示正样本评分增长的方向, 显然这些分类边界的方向是由参数集$W$决定的</p>
+</li>
+<li><p>对于偏置项$b$的理解, 偏置项$b$使得决策变边界更加灵活, 如果没有偏置项那么所有决策边界都将过原点 </p>
+</li>
+</ul>
+<blockquote>
+<p>关于$W$的另一种理解</p>
+</blockquote>
+<p>我们可以将$W$的每一行理解为某一类的一个<code>模板</code>(也叫<code>原型</code>), 对于一张图片的评分, 可以看作是参数矩阵的每一行分别和这个图像做<code>內积</code>运算, 我们知道内既可以用来计算相关程度, 相关性程度越大则內积越大, 评分也就越高, 这样我们就可以找到与<code>原型</code>最相似的类别了; 这就相当于我们拿新的样本数据在和每一类的原型(可以理解为这一类的通用模板)在做KNN, 只是我们把<code>距离</code>换成了<code>內积</code>来评价相似程度, 如图所示</p>
+<p><img src="/img/SVM-and-Softmax/templates.jpg" alt=""></p>
+<ul>
+<li><p>比如在上图中, 正如我们所想, <code>船舶模板</code>中包含了大量的蓝色像素, 这个模板在和海洋中船舶的图像做内积运算时, 评分就很高。</p>
+</li>
+<li><p>在<code>马模板</code>中有两个方向的头, 这样的话无论样本数据是朝哪个方向, 评分都会很高</p>
+</li>
+</ul>
+<p><strong>编码中的偏置项处理</strong></p>
+<p><img src="/img/SVM-and-Softmax/wb.jpeg" alt=""></p>
+<ul>
+<li>如图所示, 在处理偏置项的时候, 通常将$W$和$b$合并为一个参数矩阵, 因为跟踪两个参数集使得程序过于笨重, 那么在$x_i$的维数就会增加一维, 在$CIFAR-10$数据集中, 样本$x_i$从<code>3072 x 1</code> 变为 <code>3073 x 1</code> , $W$从<code>10 x 3072</code> 变为<code>10 x 3073</code></li>
+</ul>
+<p><strong>编码中的数据预处理</strong></p>
+<ul>
+<li>数据归一化 : 由于每个像素值在[0,255]之间, 我们将其归一化到[-1,1]之间, <code>数据中心化</code>的作用在 <a href="">梯度下降法</a> 里介绍</li>
+</ul>
+<h3 id="SVM-支持向量机"><a href="#SVM-支持向量机" class="headerlink" title="SVM : 支持向量机"></a><strong>SVM : 支持向量机</strong></h3><p>最基本的支持向量机是一种二分类模型, 其基本思想是找到在特征空间上的间隔最大的决策边界, 如下图所示</p>
+<p><img src="/img/SVM-and-Softmax/hsvm.png" alt=""></p>
+<ul>
+<li>其实可以理解为<code>逻辑回归</code>的基础上找到最优的决策边界, 该决策边界具有<code>间隔最大化</code>的特征, 因为用逻辑回归训练出来的决策边界可能有多种选择, <code>间隔最大化</code>的边界鲁棒性最强</li>
+</ul>
+<blockquote>
+<p>如何做到间隔最大化呢? 首先看一下SVM的惩罚函数Hinge Loss</p>
+</blockquote>
+<p><img src="/img/SVM-and-Softmax/LossFunctions.svg" alt=""></p>
+<ul>
+<li>$Hinge Loss$的定义</li>
+</ul>
+<p>$$ Hinge loss(x_i)= \max(0, 1 - y_i w^Tx_i)$$</p>
+<p><img src="/img/SVM-and-Softmax/svmloss.jpg" alt=""></p>
+<ul>
+<li>利用$Hinge loss(x)$构造的二分类SVM代价函数</li>
+</ul>
+<p>$$ L_i = C \max(0, 1 - y_i w^Tx_i) + R(W) $$</p>
+<ul>
+<li><p>$C$是超参数, $C \propto \frac{1}{\lambda}$, 其作用和$\lambda$一样, 后续介绍</p>
+</li>
+<li><p>$y_i \in \{ -1,1 \}$</p>
+</li>
+</ul>
+<p>由二分类的SVM代价函数构造多分类的代价函数, 为了方便表示, 令$s=f(x_i, W)_{y_i}-f(x_i, W)_j$, 惩罚函数$ Cost(x_i) $可被定义为:</p>
+<p>$$<br> Cost(x_i) =<br>    \begin{cases}<br>    -s+\Delta,  &amp; \text{if $s=f(x_i, W)_{y_i}-f(x_i, W)_j&lt; \Delta$ } \\[2ex]<br>    0,   &amp; \text{if $s=f(x_i, W)_{y_i}-f(x_i, W)_j&gt; \Delta$ }<br>    \end{cases}<br>$$</p>
+<p>$$ =\max(0, f(x_i, W)_j-f(x_i, W)_{y_i} + \Delta) $$</p>
+<p>$$ =\max(0, s_j - s_{y_i} + \Delta) $$</p>
+<p>$$ =\max(0, s + \Delta) $$</p>
+<ul>
+<li><strong>多分类SVM代价函数的定义</strong></li>
+</ul>
+<p>$$ L_i = \sum_{j\neq y_i} \max(0, s_j - s_{y_i} + \Delta) $$</p>
+<p>$$ = \sum_{j\neq y_i} \max(0, w_j^T x_i - w_{y_i}^T x_i + \Delta) $$</p>
+<p>其中, </p>
+<ul>
+<li><p>$s_j = f(x_i, W)_j$代表模型预测的其他类别的评分值, 即除最大值以外的所有类别对应的评分值</p>
+</li>
+<li><p>$ s_{y_i}=y_i $代表模型输出的对应类别评分值, 即在评分向量中的最大值</p>
+</li>
+<li><p><strong>注意</strong>:$j = y_i$其实相等也没关系, 二者相等的时候只是$L_i$增加了一个$\Delta$的常数</p>
+</li>
+<li><p>$W_j$指的是, 在$W$矩阵中第$j$类所代表的线性函数的参数</p>
+</li>
+</ul>
+<p><strong>$\Delta$的作用</strong></p>
+<p>正是由于$\Delta$的存在才使得SVM模型可以做到<code>间隔最大化</code>, 为什么这么说呢, 其实当我们判定$y_i-f(x_i, W)&gt; 0$时, 就可以判断模型预测结果是正确的, 但是我们要求$y_i-f(x_i, W)&gt; \Delta$时才行, 那么就相当于在SVM模型中添加了一个安全因子, 而这个安全因子将十分靠近决策边界的某些干扰点过滤掉了, 从而产生了<code>最大间隔</code>, 数学上的解释参考吴恩达课程中的<code>Mathematics Behind Large Margin Classification</code>一节</p>
+<p><img src="/img/SVM-and-Softmax/margin.jpg" alt=""></p>
+<ul>
+<li>正如图中所示, SVM在做多分类任务时, 该模型希望正确类型的评分至少要比其他类别的评分大$\Delta$, 只要其他类的某一评分在<code>红色</code>区间内那么就会产生<code>代价</code>, 反之代价为0, 我们的模型会在这种条件限制下通过训练集来确定模型参数$W$, 这样得到最优模型其决策边界就会产生<code>最大间隔</code></li>
+</ul>
+<ul>
+<li>由图可知, 通过核函数将数据样本从低维空间映射到高维空间, 在低维空间的线性不可分问题在高维空间中就可以找到决策边界了, 当然这个决策边界是<code>(超)平面</code></li>
+</ul>
+<h3 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a><strong>正则化</strong></h3><p>在构造代价函数的时候, 我们常常加入<code>正则惩罚</code>, 在 <a href="http://simtalk.cn/2016/08/23/%E4%BB%8E%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">从线性模型到神经网络</a> 这篇文章中也简单介绍过, 为什么要这样做呢? 假设模型都能够正确地分类, 那么我们训练得到的参数矩阵$W$并不唯一, 我们要选择泛化性能比较好的$W$, 那么就需要给SVM的代价函数引入<code>正则惩罚</code>, </p>
+<p>$$ R(W) = \sum_k\sum_l W_{k,l}^2 $$</p>
+<ul>
+<li>上式代表参数矩阵$W$中所有参数的平方和</li>
+</ul>
+<p><strong>添加正则项后的SVM损失函数</strong> : </p>
+<p>$$ L =  \underbrace{ \frac{1}{N} \sum_i L_i }_\text{data loss} + \underbrace{ \lambda R(W) }_\text{regularization loss}  $$</p>
+<p>$$ = \frac{1}{N} \sum_i \sum_{j\neq y_i} \left[ \max(0, f(x_i; W)_j - f(x_i; W)_{y_i} + \Delta) \right] + \lambda \sum_k\sum_l W_{k,l}^2 $$</p>
+<ul>
+<li><p><code>数据损失(data loss)</code>和<code>正则损失(regularization loss)</code>共同组成</p>
+</li>
+<li><p>$\lambda$代表正则惩罚强度</p>
+</li>
+</ul>
+<blockquote>
+<p>$\lambda$和$\Delta$在损失函数中控制着数据损失和正则化损失之间的权衡</p>
+</blockquote>
+<p>我们来看一个简单的例子, 假设有一个 $x = [1,1,1,1]$ ,两种模型参数$w_1 = [1,0,0,0]$和$w_2 = [0.25,0.25,0.25,0.25]$, 我们计算得分$w_1^Tx = w_2^Tx = 1$ 都等于一, 但是$w_1$的正则惩罚为<code>1</code>, $w_2$的正则惩罚为<code>0.25</code>, 根据正则惩罚值来看, $w_2$更小模型也就更好, 因为$w_2$的参数更小更分散, 也就是说引入<code>正则惩罚</code>之后, 模型的参数更加趋向于更小更分散的参数矩阵, 可以这样理解, 这种矩阵可以考虑到所有维度上的特征值, 相反对于$w_1$来说, 后面三个特征形同虚设, 这样SVM模型就会有<code>最大边界</code>这一良好的性质, 会提高模型的泛化能力, 且避免过拟合</p>
+<ul>
+<li><strong>在基础的SVM模型中, 添加核函数做非线性映射, 得到的SVM模型本质上是一种非线性分类器</strong> </li>
+</ul>
+<p><img src="/img/SVM-and-Softmax/nolsvm.png" alt=""></p>
+<h3 id="Softmax"><a href="#Softmax" class="headerlink" title="Softmax"></a><strong>Softmax</strong></h3><p>对于Softmax分类器, 我们在 <a href="http://simtalk.cn/2016/08/23/%E4%BB%8E%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%88%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">从线性模型到神经网络</a>的逻辑回归部分提到过, 但是没有扩展, 在这里我们好好学习一下, 我们可以理解为利用逻辑回归做多分类任务, 但是我们知道逻辑回归是二分类器, 那么Softmax是怎么做到的呢?</p>
+<ul>
+<li><p><strong>Softmax思想</strong>: 将每一种类别作为一类, 其他类作为一类, 然后对每一类进行二分类操作, 然后计算每一类基于其他类的概率, 得到在每一类上的分类概率, 选择最大类别输出, 这样就实现了多分类任务 </p>
+</li>
+<li><p><strong>Softmax基础</strong></p>
+</li>
+</ul>
+<p>在Softmax模型中, 评分函数$f(x_i; W) =  W x_i$保持不变, 但是在代价函数的构造方面, 不同于SVM的<code>Hinge Loss</code>, Softmax采用了<code>交叉熵损失（cross-entropy loss）</code>, 正则项也保持与SVM一样, </p>
+<p>$$ L_i = -\log\left(\frac{e^{f_{y_i}}}{ \sum_j e^{f_j} }\right) $$</p>
+<p>$$= -f_{y_i} + \log\sum_j e^{f_j} $$</p>
+<p>式中,</p>
+<ul>
+<li>$f_j$代表评分向量的中的第$j$个元素 </li>
+</ul>
+<p>$$f_j(z) = \frac{e^{z_j}}{\sum_k e^{z_k}}$$</p>
+<p>叫做<code>Softmax函数</code></p>
+<ul>
+<li><p>$z$是一个评分向量, $z_k$代表评分向量中第$k$个元素</p>
+</li>
+<li><p>通过Softmax函数, 我们将评分向量$z$中的每个元素映射到了(0,1)之间, 并且输出的向量$f_z$的所有元素之和为1, 其实可以理解为该样本$x_i$在每一个类别上的概率</p>
+</li>
+</ul>
+<h3 id="实现TODO"><a href="#实现TODO" class="headerlink" title="实现TODO"></a><strong>实现TODO</strong></h3><ul>
+<li>数值的稳定性: 由于在计算Softmax函数是存在指数运算导致结果很大, 除以一个非常大的值使得运算不稳定, 所以使用归一化技巧十分重要</li>
+</ul>
+<p>$$\frac{e^{f_{y_i}}}{\sum_j e^{f_j}}<br>  = \frac{Ce^{f_{y_i}}}{C\sum_j e^{f_j}}<br>  = \frac{e^{f_{y_i} + \log C}}{\sum_j e^{f_j + \log C}}$$</p>
+<ul>
+<li>在分子和分母同时乘以一个常数项$C$, $C$的取值没有限制, 但是为了限制指数项的不能过大, 通常$\log C = -\max f_j$, 也就是说将向量$f$中的数值进行平移，使得最大值为0, 这样指数运算的结果就在(0,1)之间了 </li>
+</ul>
+<h3 id="SVM和Softmax的比较"><a href="#SVM和Softmax的比较" class="headerlink" title="SVM和Softmax的比较"></a><strong>SVM和Softmax的比较</strong></h3><p><img src="/img/SVM-and-Softmax/svmvssoftmax.png" alt=""></p>
+<p>首先, 单纯的比较两个模型代价函数的值毫无意义, 我们比较一下两种损失函数的构建思想:</p>
+<ol>
+<li><p>对于SVM, 如果分数是[10, -100, -100]或者[10, 9, 9]，对于SVM来说没设么不同，只要满足超过边界值等于1，那么损失值就等于0</p>
+</li>
+<li><p>对于softmax分类器，情况则不同。对于[10, 9, 9]来说，计算出的损失值就远远高于[10, -100, -100]的损失值, softmax分类器对于分数是永远不会满意的: 正确分类总能得到更高的可能性, 错误分类总能得到更低的可能性, 损失值总是能够更小, 然而SVM只要边界值被满足了就可以了, 不会超过限制去细微地操作具体分数</p>
+</li>
+</ol>
+<p>通过损失函数的计算, SVM将模型输出理解为分类评分, Softmax将模型输出理解为该类别的概率, 但是注意这种概率是受正则化参数$\lambda$影响的, $\lambda$影响概率的离散程度, 举个例子</p>
+<ul>
+<li>$\lambda$的值较小时, 模型输出评分向量$[1, -2, 0]$, Softmax结果:</li>
+</ul>
+<p>$$ [1, -2, 0] \rightarrow [e^1, e^{-2}, e^0] = [2.71, 0.14, 1] \rightarrow [0.7, 0.04, 0.26] $$</p>
+<ul>
+<li>当$ \lambda $增大, Softmax输出为: </li>
+</ul>
+<p>$$ [0.5, -1, 0] \rightarrow [e^{0.5}, e^{-1}, e^0] = [1.65, 0.37, 1] \rightarrow [0.55, 0.12, 0.33] $$</p>
+<p>比较两种结果, 第二种更加分散, 当$\lambda$趋于无穷大的时候, Softmax输出趋于均匀分布, 所以不能将Softmax的结果看作为真正的概率, 最好是看成一种对于分类正确的自信</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/05/Gradient-Descent/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Gradient Descent
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/29/Catch单元测试/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Catch单元测试</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

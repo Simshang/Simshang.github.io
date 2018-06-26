@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Demo LaTeX | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近在学习机器学习和神经网络的一些知识, 在用Markdown做笔记的时候, 发现公式用到LaTeX十分方便, 写篇文章记录在学习过程中的常用的LaTeX公式和用法, 因为本博客支持MathJax, MathJax是一款运行在浏览器中的开源的数学符号渲染引擎，使用MathJax可以方便的在浏览器中显示数学公式，MathJax可以解析Latex、MathML和ASCIIMathML的标记语言。">
+<meta name="keywords" content="LaTeX">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Demo LaTeX">
+<meta property="og:url" content="http://simtalk.cn/2015/12/21/Demo-LaTeX/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="最近在学习机器学习和神经网络的一些知识, 在用Markdown做笔记的时候, 发现公式用到LaTeX十分方便, 写篇文章记录在学习过程中的常用的LaTeX公式和用法, 因为本博客支持MathJax, MathJax是一款运行在浏览器中的开源的数学符号渲染引擎，使用MathJax可以方便的在浏览器中显示数学公式，MathJax可以解析Latex、MathML和ASCIIMathML的标记语言。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/Demo-LaTeX/latex1.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/Demo-LaTeX/latex2.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/Demo-LaTeX/latex3.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/Demo-LaTeX/latex4.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/Demo-LaTeX/latex5.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/Demo-LaTeX/latex6.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/Demo-LaTeX/latex7.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/Demo-LaTeX/latex8.jpg">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Demo LaTeX">
+<meta name="twitter:description" content="最近在学习机器学习和神经网络的一些知识, 在用Markdown做笔记的时候, 发现公式用到LaTeX十分方便, 写篇文章记录在学习过程中的常用的LaTeX公式和用法, 因为本博客支持MathJax, MathJax是一款运行在浏览器中的开源的数学符号渲染引擎，使用MathJax可以方便的在浏览器中显示数学公式，MathJax可以解析Latex、MathML和ASCIIMathML的标记语言。">
+<meta name="twitter:image" content="http://simtalk.cn/img/Demo-LaTeX/latex1.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Demo-LaTeX" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/12/21/Demo-LaTeX/" class="article-date">
+  	<time datetime="2015-12-21T12:53:35.000Z" itemprop="datePublished">2015-12-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Demo LaTeX
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LaTeX/">LaTeX</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/DevTools/">DevTools</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#关键字索引"><span class="toc-text">关键字索引</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本概念"><span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#上标与下标"><span class="toc-text">上标与下标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分式"><span class="toc-text">分式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#根式"><span class="toc-text">根式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#求和与积分"><span class="toc-text">求和与积分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#微分"><span class="toc-text">微分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#加粗"><span class="toc-text">加粗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多重积分"><span class="toc-text">多重积分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#特殊函数与符号"><span class="toc-text">特殊函数与符号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#空格-美化公式"><span class="toc-text">空格 : 美化公式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#括号"><span class="toc-text">括号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字体"><span class="toc-text">字体</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方程组"><span class="toc-text">方程组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#上下文字"><span class="toc-text">上下文字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#公式标记与引用"><span class="toc-text">公式标记与引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#矩阵"><span class="toc-text">矩阵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#增广矩阵"><span class="toc-text">增广矩阵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对齐公式"><span class="toc-text">对齐公式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分类表达式"><span class="toc-text">分类表达式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#表格"><span class="toc-text">表格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#希腊字母"><span class="toc-text">希腊字母</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重音符号"><span class="toc-text">重音符号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二元关系"><span class="toc-text">二元关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二元运算符"><span class="toc-text">二元运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#“大”运算符"><span class="toc-text">“大”运算符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#箭头"><span class="toc-text">箭头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#定界符"><span class="toc-text">定界符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#大定界符"><span class="toc-text">大定界符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他符号"><span class="toc-text">其他符号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注意事项"><span class="toc-text">注意事项</span></a></li></ol>
+        </div>
+        
+        <p>最近在学习机器学习和神经网络的一些知识, 在用Markdown做笔记的时候, 发现公式用到LaTeX十分方便, 写篇文章记录在学习过程中的常用的LaTeX公式和用法, 因为本博客支持MathJax, <code>MathJax</code>是一款运行在浏览器中的开源的数学符号渲染引擎，使用MathJax可以方便的在浏览器中显示数学公式，MathJax可以解析<code>Latex</code>、<code>MathML</code>和<code>ASCIIMathML</code>的标记语言。</p>
+<a id="more"></a>
+<blockquote>
+<p>本篇博客的<a href="https://github.com/Simshang/blog/blob/master/source/_posts/Demo-LaTeX.md" target="_blank" rel="noopener">Markdown文件</a><br><strong>转义问题</strong>: 多个<code>_</code>或者<code>*</code>会和markdown渲染冲突, 需要<code>\</code>对每个<code>_</code>或者<code>*</code>进行转义, 显示<code>{</code>需要<code>\\{</code>来转义</p>
+</blockquote>
+<h3 id="关键字索引"><a href="#关键字索引" class="headerlink" title="关键字索引"></a><strong>关键字索引</strong></h3><p><code>\</code> 或者<code>~</code>: 空格</p>
+<p><code>\verb +text+</code> : 直接打印不执行任何LATEX命令。这里的+仅是分隔符的一个例子, 除了* 或空格，可以使用任意一个字符。</p>
+<p><code>\url{www.baidu.com}</code> : 嵌入超链接, 可在文档中点击访问</p>
+<p><code>\emph{text}</code> : 强调的内容</p>
+<p><code>\section{...}</code> : 章</p>
+<p><code>\subsection{...}</code> : 节</p>
+<p><code>\subsubsection{...}</code> : 子节</p>
+<p><code>\paragraph{...}</code> : 段落</p>
+<p><code>\subparagraph{...}</code> : 子段落</p>
+<p><code></code>text’` : 单引号</p>
+<p><code>`</code>text’’` : 双引号引起来的text</p>
+<p><code>--</code> : 折线</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><strong>基本概念</strong></h3><ul>
+<li><p>控制序列: 以<code>\</code>开头,参数：<code>必须参数{}</code>和<code>可选参数[]</code></p>
+</li>
+<li><p>环境: 以<code>bengin 环境名</code>开始，并以<code>end 环境名</code>结束</p>
+</li>
+<li><p>文本模式:如果你想要在公式中排版普通的文本，那么你必须要把这些文本放在<code>\textrm{...}</code> 命令中</p>
+</li>
+<li><p>数学模式</p>
+</li>
+</ul>
+<ol>
+<li><p>内嵌模式:公式直接放在文字之间，公式高度一般受文本高度限制, <code>$ latex $</code></p>
+<blockquote>
+<p>文字$\sum_{i=0}^{n}i^2$ 文字</p>
+</blockquote>
+</li>
+<li><p>独立模式:公式另起一行，高度可调整</p>
+<blockquote>
+<p>文字$$\sum_{i=0}^{n}i^2$$文字</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>在LaTeX中，花括号是用于分组，即花括号内部文本为一组, 大括号能消除二义性, 一个组即单个字符或者使用{..}包裹起来的内容。</p>
+</blockquote>
+<h3 id="上标与下标"><a href="#上标与下标" class="headerlink" title="上标与下标"></a><strong>上标与下标</strong></h3><ul>
+<li><p>上标<code>^{角标}</code>，下标<code>_{角标}</code>, 默认情况下，上下标符号仅仅对下一个组起作用。</p>
+<p><code>x_1</code> : $x_1$ </p>
+<p><code>x_1^2</code> : $x_1^2$ </p>
+<p><code>x^{2_1}</code> : $x^{2_1}$ </p>
+<p><code>x_{(22)}^{(n)}</code> : $x_{(22)}^{(n)}$</p>
+</li>
+</ul>
+<h3 id="分式"><a href="#分式" class="headerlink" title="分式"></a><strong>分式</strong></h3><ul>
+<li><p><code>\frac{分子}{分母}</code></p>
+<p><code>\frac ab</code> : $\frac ab$</p>
+<p><code>\frac{x+y}{2}</code> : $\frac{x+y}{2}$</p>
+<p><code>\frac{1}{1+\frac{1}{2}}</code> : $\frac{1}{1+\frac{1}{2}}$</p>
+</li>
+</ul>
+<h3 id="根式"><a href="#根式" class="headerlink" title="根式"></a><strong>根式</strong></h3><ul>
+<li><p>开平方：<code>\sqrt{表达式}</code>；开n次方：<code>\sqrt[n]{表达式}</code></p>
+<p><code>\sqrt{2}&lt;\sqrt[3]{3}</code> : $\sqrt{2}&lt;\sqrt[3]{3}$</p>
+<p><code>\sqrt[4]{\frac xy}</code> ：$\sqrt[4]{\frac xy} $</p>
+<p><code>\sqrt{1+\sqrt[^p]{1+a^2}}</code> : $\sqrt{1+\sqrt[^p]{1+a^2}}$</p>
+</li>
+</ul>
+<h3 id="求和与积分"><a href="#求和与积分" class="headerlink" title="求和与积分"></a><strong>求和与积分</strong></h3><ul>
+<li><p>求和<code>\sum</code> ; 求积分<code>\int</code>; 上下限就是<code>上标和下标</code></p>
+<p><code>\int_1^\infty</code> ：$\int_1^\infty$</p>
+<p><code>\int_a^b f(x)dx</code> : $\int_a^b f(x)dx$</p>
+</li>
+</ul>
+<p>  <code>\sum_1^n</code> ：$\sum_1^n$</p>
+<p>  <code>\sum_{k=1}^n\frac{1}{k}</code> : $\sum_{k=1}^n\frac{1}{k}$</p>
+<h3 id="微分"><a href="#微分" class="headerlink" title="微分"></a><strong>微分</strong></h3><p><code>\frac{\partial E_w}{\partial w}</code> : $\frac{\partial E_w}{\partial w}$</p>
+<p>$$\frac{\partial E_\hat{w}}{\partial \hat{w}}= 2X^T(X\vec{\hat{w}}-\vec{y}) = 0$$</p>
+<h3 id="加粗"><a href="#加粗" class="headerlink" title="加粗"></a><strong>加粗</strong></h3><p><code>\mathbf{x}_i :</code>$\mathbf{x}_i$</p>
+<h3 id="多重积分"><a href="#多重积分" class="headerlink" title="多重积分"></a><strong>多重积分</strong></h3><ul>
+<li>对于多重积分，不要使用<code>\int\int</code>此类的表达，应该使用<code>\iint</code>,<code>\iiint</code>等特殊形式。效果如下：</li>
+</ul>
+<p>$$<br>\begin{array}{cc}<br>\mathrm{Bad} &amp; \mathrm{Better} \\<br>\hline \\<br>\int\int_S f(x)\,dy\,dx &amp; \iint_S f(x)\,dy\,dx \\<br>\int\int\int_V f(x)\,dz\,dy\,dx &amp; \iiint_V f(x)\,dz\,dy\,dx<br>\end{array}<br>$$</p>
+<ul>
+<li>在微分前应该使用<code>\</code>,来增加些许空间，否则$\TeX$会将微分紧凑地排列在一起。如下：</li>
+</ul>
+<p>$$<br>\begin{array}{cc}<br>\mathrm{Bad} &amp; \mathrm{Better} \\<br>\hline \\<br>\iiint_V f(x)dz dy dx &amp; \iiint_V f(x)\,dz\,dy\,dx<br>\end{array}<br>$$</p>
+<h3 id="特殊函数与符号"><a href="#特殊函数与符号" class="headerlink" title="特殊函数与符号"></a><strong>特殊函数与符号</strong></h3><ol>
+<li>常见的三角函数，求极限符号可直接使用<code>\+</code>缩写即可<br><code>\sin x</code> , <code>\arctan x</code>, <code>\lim_{1\to\infty}</code> : $\sin x$,$\arctan x$,$\lim_{1\to\infty}$</li>
+<li>比较运算符：<br><code>\lt \gt \le \ge \neq</code> ： $\lt \gt \le \ge \neq$<ul>
+<li>在这些运算符前面加上<code>\not</code><br><code>\not\lt</code> ：$\not\lt$</li>
+</ul>
+</li>
+<li><code>\times \div \pm \mp</code> ：$\times \div \pm \mp$<br> <code>\cdot</code>表示居中的点<br> <code>x \cdot y</code> : $x \cdot y$。</li>
+<li>集合关系与运算<br><code>\cup \cap \setminus \subset \subseteq \subsetneq \supset \in \notin \emptyset \varnothing</code> ：$\cup<br>\cap \setminus \subset \subseteq \subsetneq \supset \in \notin \emptyset \varnothing$</li>
+<li>排列<br><code>{n+1 \choose 2k}</code> : ${n+1 \choose 2k}$<br><code>\binom{n+1}{2k}</code> : ${n+1 \choose 2k}$</li>
+<li>箭头：<br><code>\to \rightarrow \leftarrow \Rightarrow \Leftarrow \mapsto</code> : $\to \rightarrow \leftarrow \Rightarrow \Leftarrow \mapsto$</li>
+<li>逻辑运算符<br><code>\land \lor \lnot \forall \exists \top \bot \vdash \vDash</code> ：$\land \lor \lnot \forall \exists \top \bot \vdash \vDash$</li>
+<li><code>\star \ast \oplus \circ \bullet</code> ： $\star \ast \oplus \circ \bullet$</li>
+<li><code>\approx \sim \cong \equiv \prec</code> ： $\approx \sim \cong \equiv \prec$</li>
+<li><code>\infty \aleph_0</code> : $\infty  \aleph_0$<br><code>\nabla \partial</code> : $\nabla \partial$ \Im \Re $Im \Re$</li>
+<li>模运算 <code>\pmode</code><br><code>a\equiv b\pmod n</code> ：$a\equiv b\pmod n$</li>
+<li><code>\ldots与\cdots</code>区别是dots的位置不同，ldots位置稍低，cdots位置居中<br><code>a_1+a_2+\cdots+a_n</code> : $a_1+a_2+\cdots+a_n$<br><code>a_1, a_2, \ldots ,a_n</code> : $a_1, a_2, \ldots ,a_n$。</li>
+<li>一些希腊字母具有变体形式<br><code>\epsilon \varepsilon</code> : $ \epsilon \varepsilon$<br><code>\phi \varphi</code> : $\phi \varphi$</li>
+</ol>
+<ul>
+<li>使用<a href="http://detexify.kirelabs.org/classify.html" target="_blank" rel="noopener">Detexify</a>在网页上画出符号，Detexify会给出相似的符号及其代码但是不能保证它给出的符号可以在MathJax中使用，你可以参考<a href="http://docs.mathjax.org/en/latest/tex.html#supported-latex-commands" target="_blank" rel="noopener">supported-latex-commands</a>确定MathJax是否支持此符号。</li>
+</ul>
+<h3 id="空格-美化公式"><a href="#空格-美化公式" class="headerlink" title="空格 : 美化公式"></a><strong>空格 : 美化公式</strong></h3><p>  紧贴<code>a!b</code> : $a!b$<br>  没有空格<code>ab</code> : $ab$<br>  小空格<code>a\,b</code> : $a\,b$<br>  中等空格<code>a\;b</code> : $a\;b$<br>  大空格<code>a\ b</code> : $a\ b$<br>  quad空格<code>a\quad b</code> : $a\quad b$<br>  两个quad空格<code>a\qquad b</code> : $a\qquad b$</p>
+<p>  原公式:<code>\int_a^b f(x)\mathrm{d}x</code><br>  $\int_a^b f(x)\mathrm{d}x$</p>
+<p>  插入空格:<code>\int_a^b f(x)\qquad \mathrm{d}x</code><br>  $\int_a^b f(x)\qquad \mathrm{d}x$</p>
+<h3 id="括号"><a href="#括号" class="headerlink" title="括号"></a><strong>括号</strong></h3><ol>
+<li>小括号与方括号：使用原始的<code>( )</code>，<code>[ ]</code>即可，如<code>(2+3)[4+4]</code>：$(2+3)[4+4]$</li>
+<li>大括号：时由于大括号{}被用来分组，使用\lbrace 和\rbrace来表示<br><code>\lbrace a*b \rbrace</code> ：$\lbrace a*b \rbrace$</li>
+<li>尖括号：使用<code>\langle</code> 和 <code>\rangle</code>表示左尖括号和右尖括号<br><code>\langle x \rangle</code> ：$\langle x \rangle$</li>
+<li>上取整：使用<code>\lceil</code> 和 <code>\rceil</code> 表示<br><code>\lceil x \rceil</code> ：$\lceil x \rceil$</li>
+<li>下取整：使用<code>\lfloor</code> 和 <code>\rfloor</code> 表示<br><code>\lfloor x \rfloor</code> ：$\lfloor x \rfloor$</li>
+<li>不可见括号：使用<code>.</code>表示</li>
+</ol>
+<ul>
+<li><p>注意 : 原始符号并不会随着公式大小缩放。如，<code>(\frac12)</code> ：$(\frac12)$。可以使用\left(…\right)来自适应的调整括号大小。<br>如1.1和1.2公式，公式1.2中的括号是经过缩放的。</p>
+<p><code>\lbrace \sum_{i=0}^n i^2 = \frac{(n^2+n)(2n+1)}{6} \rbrace \tag{1.1}</code><br>$$\lbrace\sum_{i=0}^n i^2 = \frac{(n^2+n)(2n+1)}{6}\rbrace\tag{1.1}$$</p>
+<p><code>\left \lbrace \sum_{i=0}^n i^2 = \frac{(n^2+n)(2n+1)}{6} \right\rbrace \tag{1.2}</code><br>$$\left \lbrace \sum_{i=0}^n i^2 = \frac{(n^2+n)(2n+1)}{6} \right\rbrace\tag{1.2}$$</p>
+</li>
+</ul>
+<ul>
+<li><p>定界符之前冠以 \left（修饰左定界符）或 \right（修饰右定界符），可以得到自适应缩放的定界符，它们会根据定界符所包围的公式大小自适应缩放</p>
+<p><code>\left( \sum_{k=\frac{1}{2}}^{N^2}\frac{1}{k} \right)</code><br>$$ \left( \sum_{k=\frac{1}{2}}^{N^2}\frac{1}{k} \right) $$</p>
+</li>
+</ul>
+<h3 id="字体"><a href="#字体" class="headerlink" title="字体"></a><strong>字体</strong></h3><ol>
+<li>使用<code>\mathbb</code>或<code>\Bbb</code>显示黑板粗体字，此字体经常用来表示代表实数、整数、有理数、复数的大写字母。<br><code>\mathbb{CHNQRZ}</code> : $\mathbb{CHNQRZ}$。</li>
+<li>使用<code>\mathbf</code>显示黑体字<br><code>\mathbf{ABCDEFGHIJKLMNOPQRSTUVWXYZ}$，$\mathbf{abcdefghijklmnopqrstuvwxyz}</code><br>$\mathbf{ABCDEFGHIJKLMNOPQRSTUVWXYZ}$，$\mathbf{abcdefghijklmnopqrstuvwxyz}$</li>
+<li>使用<code>\mathtt</code>显示打印机字体<br><code>\mathtt{ABCDEFGHIJKLMNOPQRSTUVWXYZ}$，$\mathtt{abcdefghijklmnopqrstuvwxyz}</code><br>$\mathtt{ABCDEFGHIJKLMNOPQRSTUVWXYZ}$，$\mathtt{abcdefghijklmnopqrstuvwxyz}$</li>
+<li>使用<code>\mathrm</code>显示罗马字体<br><code>\mathrm{ABCDEFGHIJKLMNOPQRSTUVWXYZ}$，$\mathrm{abcdefghijklmnopqrstuvwxyz}</code><br>$\mathrm{ABCDEFGHIJKLMNOPQRSTUVWXYZ}$，$\mathrm{abcdefghijklmnopqrstuvwxyz}$</li>
+<li>使用<code>\mathscr</code>显示手写体, 无小写<br><code>\mathscr{ABCDEFGHIJKLMNOPQRSTUVWXYZ}, $\mathscr{abcdefghijklmnopqrstuvwxyz}</code><br>$\mathscr{ABCDEFGHIJKLMNOPQRSTUVWXYZ}, $\mathscr{abcdefghijklmnopqrstuvwxyz}$</li>
+<li>使用<code>\mathfrak</code>显示Fraktur字母（一种德国字体）<br><code>\mathfrak{ABCDEFGHIJKLMNOPQRSTUVWXYZ}$, $\mathfrak{abcdefghijklmnopqrstuvwxyz}</code><br>$\mathfrak{ABCDEFGHIJKLMNOPQRSTUVWXYZ}$,$\mathfrak{abcdefghijklmnopqrstuvwxyz}$</li>
+</ol>
+<h3 id="方程组"><a href="#方程组" class="headerlink" title="方程组"></a><strong>方程组</strong></h3><ul>
+<li>使用<code>\begin{array} ... \end{array}</code>与<code>\left\{…\right.</code>配合，表示方程组</li>
+</ul>
+<ul>
+<li>使用 <code>\being{aligned} .. \end{aligned}</code></li>
+</ul>
+<p>$$<br>\begin{aligned}<br>\dot{x} &amp; = \sigma(y-x) \\<br>\dot{y} &amp; = \rho x - y - xz \\<br>\dot{z} &amp; = -\beta z + xy<br>\end{aligned}<br>$$</p>
+<ul>
+<li>使用 <code>\being{case} .. \end{case}</code></li>
+</ul>
+<p>$$<br>\begin{cases}<br>a_1x+b_1y+c_1z=d_1 \\<br>a_2x+b_2y+c_2z=d_2 \\<br>a_3x+b_3y+c_3z=d_3<br>\end{cases}<br>$$</p>
+<ul>
+<li>对齐方程组中的<code>=</code>号, 注意<code>{</code>要转义,’\{‘</li>
+</ul>
+<p>$$ \left\{<br>     \begin{aligned}<br>       a_1x+b_1y+c_1z &amp;=d_1+e_1 \\<br>       a_2x+b_2y&amp;=d_2 \\<br>       a_3x+b_3y+c_3z &amp;=d_3<br>\end{aligned}<br>\right.<br>$$</p>
+<ul>
+<li>如果要对齐 <code>=</code>号和<code>项</code>，可以使用<code>\being{array}{列样式} .. \end{array}</code></li>
+</ul>
+<p>$$<br>\left\{<br>\begin{array}{ll}<br>a_1x+b_1y+c_1z &amp;=d_1+e_1 \\<br>a_2x+b_2y &amp;=d_2 \\<br>a_3x+b_3y+c_3z &amp;=d_3<br>\end{array}<br>\right.<br>$$</p>
+<h3 id="上下文字"><a href="#上下文字" class="headerlink" title="上下文字"></a>上下文字</h3><p>$$ \mathop {\arg min }\limits_{(w,b)}^{top} f(x)$$</p>
+<h3 id="公式标记与引用"><a href="#公式标记与引用" class="headerlink" title="公式标记与引用"></a>公式标记与引用</h3><ul>
+<li>使用<code>\tag{tag}</code>来标记公式，如果想在之后引用该公式，则还需要加上<code>\label{label}</code>在<code>\tag</code>之后，如：</li>
+<li>需要<code>\*</code>对标签<code>*</code>进行转义</li>
+</ul>
+<p>$$<br> a := x^2-y^3 \tag{*}\label{*}<br>$$</p>
+<p>$$<br> a := x^2-y^3 \tag{2.1}\label{2.1}<br>$$</p>
+<ul>
+<li>为了引用公式，可以使用<code>\eqref{rlabel}</code>，如：</li>
+</ul>
+<p>$$a+y^3 \stackrel{\eqref{*}}= x^2$$</p>
+<p>$$a+y^3 \stackrel{\eqref{2.1}}= x^2$$</p>
+<ul>
+<li>通过超链接可以跳转到被引用公式位置。</li>
+</ul>
+<h3 id="矩阵"><a href="#矩阵" class="headerlink" title="矩阵"></a><strong>矩阵</strong></h3><ul>
+<li><p>使用<code>$$\begin{matrix}…\end{matrix}$$</code>表示矩阵，矩阵的行之间使用<code>\\\</code>分隔，列之间使用<code>&amp;</code>分隔。</p>
+</li>
+<li><p>效果如下 :</p>
+</li>
+</ul>
+<p>$$<br>        \begin{matrix}<br>        1 &amp; x &amp; x^2 \\<br>        1 &amp; y &amp; y^2 \\<br>        1 &amp; z &amp; z^2 \\<br>        \end{matrix}<br>$$</p>
+<ul>
+<li><strong>加括号</strong><br>如果要对矩阵加括号，可以像上文中提到的一样，使用<code>\left</code>与<code>\right</code>配合表示括号符号。也可以使用特殊的<code>matrix</code>。即替换<code>\begin{matrix}...\end{matrix}</code>中的matrix为<code>pmatrix</code>，<code>bmatrix</code>，<code>Bmatrix</code>，<code>vmatrix</code>,<code>Vmatrix</code></li>
+</ul>
+<p><code>pmatrix</code> : $\begin{pmatrix}1&amp;2\\3&amp;4\\ \end{pmatrix}$<br><code>bmatrix</code> : $\begin{bmatrix}1&amp;2\\3&amp;4\\ \end{bmatrix}$<br><code>Bmatrix</code> : $\begin{Bmatrix}1&amp;2\\3&amp;4\\ \end{Bmatrix}$<br><code>vmatrix</code> : $\begin{vmatrix}1&amp;2\\3&amp;4\\ \end{vmatrix}$<br><code>Vmatrix</code> : $\begin{Vmatrix}1&amp;2\\3&amp;4\\ \end{Vmatrix}$ </p>
+<ul>
+<li><strong>省略元素</strong>  使用<code>\cdots</code> : $\cdots$ <code>\ddots</code> : $\ddots$  <code>\vdots</code> : $\vdots$来省略矩阵中的元素</li>
+</ul>
+<p>$$<br>    \begin{pmatrix}<br>         1 &amp; a_1 &amp; a_1^2 &amp; \cdots &amp; a_1^n \\<br>         1 &amp; a_2 &amp; a_2^2 &amp; \cdots &amp; a_2^n \\<br>         \vdots  &amp; \vdots&amp; \vdots &amp; \ddots &amp; \vdots \\<br>         1 &amp; a_m &amp; a_m^2 &amp; \cdots &amp; a_m^n<br>    \end{pmatrix}<br>$$</p>
+<h3 id="增广矩阵"><a href="#增广矩阵" class="headerlink" title="增广矩阵"></a><strong>增广矩阵</strong></h3><ul>
+<li>增广矩阵需要使用前面的<code>array</code>来实现</li>
+</ul>
+<p>$$ \left[<br>      \begin{array}{cc|c}<br>        1&amp;2&amp;3\\<br>        4&amp;5&amp;6<br>      \end{array}<br>    \right]<br>$$</p>
+<h3 id="对齐公式"><a href="#对齐公式" class="headerlink" title="对齐公式"></a><strong>对齐公式</strong></h3><ul>
+<li>使用形如<code>\begin{align}…\end{align}</code>的格式，使用&amp;来指示需要对齐的位置</li>
+</ul>
+<p>$$<br>    \begin{align}<br>    \sqrt{37} &amp; = \sqrt{\frac{73^2-1}{12^2}} \\<br>     &amp; = \sqrt{\frac{73^2}{12^2}\cdot\frac{73^2-1}{73^2}} \\<br>     &amp; = \sqrt{\frac{73^2}{12^2}}\sqrt{\frac{73^2-1}{73^2}} \\<br>     &amp; = \frac{73}{12}\sqrt{1 - \frac{1}{73^2}} \\<br>     &amp; \approx \frac{73}{12}\left(1 - \frac{1}{2\cdot73^2}\right)<br>    \end{align}<br>$$</p>
+<h3 id="分类表达式"><a href="#分类表达式" class="headerlink" title="分类表达式"></a><strong>分类表达式</strong></h3><ul>
+<li>定义函数时分情况给出表达式，使用<code>\begin{cases}…\end{cases}</code></li>
+<li>使用<code>\\\</code>来分类，使用<code>&amp;</code>指示需要对齐的位置</li>
+</ul>
+<p>$$<br> f(n) =<br>    \begin{cases}<br>    n/2,  &amp; \text{if $n$ is even} \\[2ex]<br>    3n+1, &amp; \text{if $n$ is odd}<br>    \end{cases}<br>$$</p>
+<ul>
+<li><code>[4ex]</code>控制分类之间的垂直间隔, 这里要用<code>\\\\</code>转义</li>
+</ul>
+<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a><strong>表格</strong></h3><ul>
+<li>使用<code>$$\begin{array}{列样式}...\end{array}$$</code>创建表格</li>
+<li>列样式使用<code>clr</code>表示居中，左，右对齐</li>
+<li>使用<code>|</code>表示一条竖线</li>
+<li>使用<code>\\\\</code>分隔行，使用<code>&amp;</code>分隔列</li>
+<li>使用<code>\hline</code>在本行前加入一条直线</li>
+</ul>
+<p>$$<br>    \begin{array}{c|lcr}<br>    n &amp; \text{Left} &amp; \text{Center} &amp; \text{Right} \\<br>    \hline<br>    1 &amp; 0.24 &amp; 1 &amp; 125 \\<br>    2 &amp; -1 &amp; 189 &amp; -8 \\<br>    3 &amp; -20 &amp; 2000 &amp; 1+10i \\<br>    \end{array}<br>$$</p>
+<ul>
+<li>复杂列表</li>
+</ul>
+<h3 id="希腊字母"><a href="#希腊字母" class="headerlink" title="希腊字母"></a><strong>希腊字母</strong></h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>大写</th>
+<th>Tex</th>
+<th>小写</th>
+<th>Tex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>alpha</td>
+<td>$A$</td>
+<td>A</td>
+<td>$\alpha$</td>
+<td>\alpha</td>
+</tr>
+<tr>
+<td>beta</td>
+<td>$B$</td>
+<td>B</td>
+<td>$\beta$</td>
+<td>\beta</td>
+</tr>
+<tr>
+<td>gamma</td>
+<td>$\Gamma$</td>
+<td>\Gamma</td>
+<td>$\gamma$</td>
+<td>\gamma</td>
+</tr>
+<tr>
+<td>delta</td>
+<td>$\Delta$</td>
+<td>\Delta</td>
+<td>$\delta$</td>
+<td>\delta</td>
+</tr>
+<tr>
+<td>epsilon</td>
+<td>$E$</td>
+<td>E</td>
+<td>$\epsilon$</td>
+<td>\epsilon</td>
+</tr>
+<tr>
+<td>zeta</td>
+<td>$Z$</td>
+<td>Z</td>
+<td>$\zeta$</td>
+<td>\zeta</td>
+</tr>
+<tr>
+<td>eta</td>
+<td>$H$</td>
+<td>H</td>
+<td>$\eta$</td>
+<td>\eta</td>
+</tr>
+<tr>
+<td>theta</td>
+<td>$\Theta$</td>
+<td>\Theta</td>
+<td>$\theta$</td>
+<td>\theta</td>
+</tr>
+<tr>
+<td>iota</td>
+<td>$I$</td>
+<td>I</td>
+<td>$\iota$</td>
+<td>\iota</td>
+</tr>
+<tr>
+<td>kappa</td>
+<td>$K$</td>
+<td>K</td>
+<td>$\kappa$</td>
+<td>\kappa</td>
+</tr>
+<tr>
+<td>lambda</td>
+<td>$\Lambda$</td>
+<td>\Lambda</td>
+<td>$\lambda$</td>
+<td>\lambda</td>
+</tr>
+<tr>
+<td>mu</td>
+<td>$M$</td>
+<td>M</td>
+<td>$\mu$</td>
+<td>\mu</td>
+</tr>
+<tr>
+<td>nu</td>
+<td>$N$</td>
+<td>N</td>
+<td>$\nu$</td>
+<td>\nu</td>
+</tr>
+<tr>
+<td>xi</td>
+<td>$\Xi$</td>
+<td>\Xi</td>
+<td>$\xi$</td>
+<td>\xi</td>
+</tr>
+<tr>
+<td>omicron</td>
+<td>$O$</td>
+<td>O</td>
+<td>$\omicron$</td>
+<td>\omicron</td>
+</tr>
+<tr>
+<td>pi</td>
+<td>$\Pi$</td>
+<td>\Pi</td>
+<td>$\pi$</td>
+<td>\pi</td>
+</tr>
+<tr>
+<td>rho</td>
+<td>$P$</td>
+<td>P</td>
+<td>$\rho$</td>
+<td>\rho</td>
+</tr>
+<tr>
+<td>sigma</td>
+<td>$\Sigma$</td>
+<td>\Sigma</td>
+<td>$\sigma$</td>
+<td>\sigma</td>
+</tr>
+<tr>
+<td>tau</td>
+<td>$T$</td>
+<td>T</td>
+<td>$\tau$</td>
+<td>\tau</td>
+</tr>
+<tr>
+<td>upsilon</td>
+<td>$\Upsilon$</td>
+<td>\Upsilon</td>
+<td>$\upsilon$</td>
+<td>\upsilon</td>
+</tr>
+<tr>
+<td>phi</td>
+<td>$\Phi$</td>
+<td>\Phi</td>
+<td>$\phi$</td>
+<td>\phi</td>
+</tr>
+<tr>
+<td>chi</td>
+<td>$X$</td>
+<td>X</td>
+<td>$\chi$</td>
+<td>\chi</td>
+</tr>
+<tr>
+<td>psi</td>
+<td>$\Psi$</td>
+<td>\Psi</td>
+<td>$\psi$</td>
+<td>\psi</td>
+</tr>
+<tr>
+<td>omega</td>
+<td>$\Omega $</td>
+<td>\Omega</td>
+<td>$\omega$</td>
+<td>\omega</td>
+</tr>
+</tbody>
+</table>
+<h3 id="重音符号"><a href="#重音符号" class="headerlink" title="重音符号"></a><strong>重音符号</strong></h3><ul>
+<li><p><code>\hat{A}</code> : $ \hat{A} $</p>
+</li>
+<li><p>单字符<br><code>\hat</code> ：$\hat x$</p>
+</li>
+<li>多字符<br><code>\widehat</code> : $\widehat {xy}$</li>
+</ul>
+<p><img src="/img/Demo-LaTeX/latex1.jpg" alt="重音符号"></p>
+<h3 id="二元关系"><a href="#二元关系" class="headerlink" title="二元关系"></a><strong>二元关系</strong></h3><ul>
+<li><code>a\ll{b}</code> : $ a\ll{b} $</li>
+</ul>
+<p><img src="/img/Demo-LaTeX/latex2.jpg" alt="二元关系"></p>
+<h3 id="二元运算符"><a href="#二元运算符" class="headerlink" title="二元运算符"></a><strong>二元运算符</strong></h3><ul>
+<li><code>\pm</code> : $ \pm $</li>
+</ul>
+<p><img src="/img/Demo-LaTeX/latex3.jpg" alt="二元运算符"></p>
+<h3 id="“大”运算符"><a href="#“大”运算符" class="headerlink" title="“大”运算符"></a><strong>“大”运算符</strong></h3><ul>
+<li><code>\sum</code> : $ \sum $</li>
+</ul>
+<p><img src="/img/Demo-LaTeX/latex4.jpg" alt="大运算符"></p>
+<h3 id="箭头"><a href="#箭头" class="headerlink" title="箭头"></a><strong>箭头</strong></h3><ul>
+<li><code>\to</code> : $ \to $</li>
+</ul>
+<p><img src="/img/Demo-LaTeX/latex5.jpg" alt="箭头"></p>
+<h3 id="定界符"><a href="#定界符" class="headerlink" title="定界符"></a><strong>定界符</strong></h3><ul>
+<li><code>\lbrack</code> : $ \lbrack $</li>
+</ul>
+<p><img src="/img/Demo-LaTeX/latex6.jpg" alt="定界符"></p>
+<h3 id="大定界符"><a href="#大定界符" class="headerlink" title="大定界符"></a><strong>大定界符</strong></h3><ul>
+<li><code>\lgroup</code> : $ \lgroup $</li>
+</ul>
+<p><img src="/img/Demo-LaTeX/latex7.jpg" alt="大定界符"></p>
+<h3 id="其他符号"><a href="#其他符号" class="headerlink" title="其他符号"></a><strong>其他符号</strong></h3><ul>
+<li><code>\dots</code> : $ \dots $</li>
+</ul>
+<p><img src="/img/Demo-LaTeX/latex8.jpg" alt="其他符号"></p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a><strong>注意事项</strong></h3><ul>
+<li>不要在再指数或者积分中使用 <code>\frac</code></li>
+</ul>
+<ul>
+<li>在指数或者积分表达式中使用<code>\frac</code>会使表达式看起来不清晰，应该使用一个水平的<code>/</code>来代替</li>
+</ul>
+<ul>
+<li>使用 \mid 代替 | 作为分隔符<br>符号|作为分隔符时有排版空间大小的问题，应该使用\mid代替。效果如下：</li>
+</ul>
+<p>$$<br>\begin{array}<br>\mathrm{Bad} &amp; \mathrm{Better} \\<br>\hline \\<br>{x|x^2\in\Bbb Z} &amp; {x\mid x^2\in\Bbb Z} \\<br>\end{array}<br>$$</p>
+<ul>
+<li>连分数<br>书写连分数表达式时，请使用<code>\cfrac</code>代替<code>\frac</code>或者<code>\over</code>,两者效果对比如下：</li>
+</ul>
+<p>$$<br>x = a_0 + \cfrac{1^2}{a_1<br>          + \cfrac{2^2}{a_2<br>          + \cfrac{3^2}{a_3 + \cfrac{4^4}{a_4 + \cdots}}}} \tag{\cfrac}<br>$$<br>$$<br>x = a_0 + \frac{1^2}{a_1<br>         + \frac{2^2}{a_2<br>          + \frac{3^2}{a_3 + \frac{4^4}{a_4 + \cdots}}}} \tag{\frac}<br>$$</p>
+<blockquote>
+<p><strong>转义</strong><br>  一些MathJax使用的特殊字符，可以使用<code>\</code>或者<code>\\</code>转义为原来的含义。如<code>\$</code>表示<code>$</code>，<code>\\_</code>表示下划线。</p>
+<ul>
+<li>注意: 换行和方程组的开始<code>{</code>等, 常常需要转义, 用<code>\</code>或者<code>\\</code>或者<code>\\\</code>或者<code>\\\\</code><br><a href="https://github.com/Simshang/blog/blob/master/source/_posts/Demo-LaTeX.md" target="_blank" rel="noopener">Markdown文件</a></li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/12/24/圣诞/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          圣诞
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/11/19/Github指南/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Github指南</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

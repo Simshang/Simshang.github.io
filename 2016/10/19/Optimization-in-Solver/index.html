@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Optimization in Solver | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在Deep Learning中，往往loss function是非凸的，没有解析解，我们需要通过优化方法来求解。solver的主要作用就是交替调用前向（forward)算法和后向（backward)算法来更新参数，从而最小化loss，实际上就是一种迭代的优化算法。">
+<meta name="keywords" content="模型优化,梯度下降法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Optimization in Solver">
+<meta property="og:url" content="http://simtalk.cn/2016/10/19/Optimization-in-Solver/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="在Deep Learning中，往往loss function是非凸的，没有解析解，我们需要通过优化方法来求解。solver的主要作用就是交替调用前向（forward)算法和后向（backward)算法来更新参数，从而最小化loss，实际上就是一种迭代的优化算法。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.952Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Optimization in Solver">
+<meta name="twitter:description" content="在Deep Learning中，往往loss function是非凸的，没有解析解，我们需要通过优化方法来求解。solver的主要作用就是交替调用前向（forward)算法和后向（backward)算法来更新参数，从而最小化loss，实际上就是一种迭代的优化算法。">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Optimization-in-Solver" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/19/Optimization-in-Solver/" class="article-date">
+  	<time datetime="2016-10-19T03:36:47.000Z" itemprop="datePublished">2016-10-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Optimization in Solver
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/梯度下降法/">梯度下降法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/模型优化/">模型优化</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Caffe/">Caffe</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Caffe-Output"><span class="toc-text">Caffe Output</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Solver-Prototxt"><span class="toc-text">Solver Prototxt</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SGD"><span class="toc-text">SGD</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AdaDelta"><span class="toc-text">AdaDelta</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AdaGrad"><span class="toc-text">AdaGrad</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Adam"><span class="toc-text">Adam</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NAG"><span class="toc-text">NAG</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RMSprop"><span class="toc-text">RMSprop</span></a></li></ol>
+        </div>
+        
+        <p>在Deep Learning中，往往loss function是非凸的，没有解析解，我们需要通过优化方法来求解。solver的主要作用就是交替调用前向（forward)算法和后向（backward)算法来更新参数，从而最小化loss，实际上就是一种迭代的优化算法。<br><a id="more"></a></p>
+<p>Solver就是用来使loss最小化的优化方法, 对于一个数据集$D$，需要优化的目标函数是整个数据集$|D|$中所有数据loss的平均值。</p>
+<p>$$ L(W) = \frac{1}{|D|} \sum_i^{|D|} f_W\left(X^{(i)}\right) + \lambda r(W) $$</p>
+<ul>
+<li>$f_W\left(X^{(i)}\right)$ 是计算在数据$X^{(i)}$上的损失值, 即先将每个单独的样本x的loss求出来，然后求和，再求均值。</li>
+<li>$r(W)$ 是正则项，正则项一般指示模型的复杂度, 为了减弱过拟合现象, 带有正则化系数$\lambda$</li>
+</ul>
+<p>由于$|D|$是一个非常大的数据集, 我们通常在每一次迭代中采用数据集的一个随机子集(mini-batch), 每个批次的mini-batch大小为$N$, 其中$N &lt;&lt; |D|$</p>
+<p>$$L(W) \approx \frac{1}{N} \sum_i^N f_W\left(X^{(i)}\right) + \lambda r(W)$$</p>
+<p>前向传播求解$f_W$(即loss), 后向传播求解梯度$\nabla f_W$, 根据误差梯度$\nabla f_W$和正则项梯度$\nabla r(W)$以及其他参数进行参数更新$\Delta W$</p>
+<h3 id="Caffe-Output"><a href="#Caffe-Output" class="headerlink" title="Caffe Output"></a><strong>Caffe Output</strong></h3><p><strong>.caffemodel</strong> : 以一定的迭代间隔保存网络参数, 相当于保存网络的状态</p>
+<ul>
+<li>The caffemodel, which is output at a specified interval while training, is a binary contains the current state of the weights for each layer of the network.</li>
+</ul>
+<p><strong>.solverstate</strong> : 在整个训练过程中保存训练的状态以备从某个状态继续训练模型, 有点断点续传的意思</p>
+<ul>
+<li>The solverstate, which is generated alongside, is a binary contains the information required to continue training the model from where it last stopped.</li>
+</ul>
+<h3 id="Solver-Prototxt"><a href="#Solver-Prototxt" class="headerlink" title="Solver Prototxt"></a><strong>Solver Prototxt</strong></h3><p><strong>Parameters</strong></p>
+<ol>
+<li><p><code>base_lr</code></p>
+<p>This parameter indicates the base (beginning) learning rate of the network. The value is a real number (floating point).</p>
+</li>
+<li><p><code>lr_policy</code></p>
+<p>This parameter indicates how the learning rate should change over time. This value is a quoted string.</p>
+<p>Options include:</p>
+<ul>
+<li>“step” - drop the learning rate in step sizes indicated by the gamma parameter.</li>
+<li>“multistep” - drop the learning rate in step size indicated by the gamma at each specified stepvalue.</li>
+<li>“fixed” - the learning rate does not change.</li>
+<li>“exp” - gamma^iteration</li>
+<li>“poly” -</li>
+<li>“sigmoid” -</li>
+</ul>
+</li>
+<li><p><code>gamma</code></p>
+<p>This parameter indicates how much the learning rate should change every time we reach the next “step.” The value is a real number, and can be thought of as multiplying the current learning rate by said number to gain a new learning rate.</p>
+</li>
+<li><p><code>stepsize</code></p>
+<p>This parameter indicates how often (at some iteration count) that we should move onto the next “step” of training. This value is a positive integer.</p>
+</li>
+<li><p><code>stepvalue</code></p>
+<p>This parameter indicates one of potentially many iteration counts that we should move onto the next “step” of training. This value is a positive integer. There are often more than one of these parameters present, each one indicated the next step iteration.</p>
+</li>
+<li><p><code>max_iter</code></p>
+<p>This parameter indicates when the network should stop training. The value is an integer indicate which iteration should be the last.</p>
+</li>
+<li><p><code>momentum</code></p>
+<p>This parameter indicates how much of the previous weight will be retained in the new calculation. This value is a real fraction.</p>
+</li>
+<li><p><code>weight_decay</code></p>
+<p>This parameter indicates the factor of (regularization) penalization of large weights. This value is a often a real fraction.</p>
+</li>
+<li><p><code>solver_mode</code></p>
+<p>This parameter indicates which mode will be used in solving the network.</p>
+<p>Options include:</p>
+<ul>
+<li>CPU</li>
+<li>GPU</li>
+</ul>
+</li>
+<li><p><code>snapshot</code></p>
+<p>This parameter indicates how often caffe should output a model and solverstate. This value is a positive integer.</p>
+</li>
+<li><p><code>snapshot_prefix:</code></p>
+<p>This parameter indicates how a snapshot output’s model and solverstate’s name should be prefixed. This value is a double quoted string.</p>
+</li>
+<li><p><code>net:</code></p>
+<p>This parameter indicates the location of the network to be trained (path to prototxt). This value is a double quoted string.</p>
+</li>
+<li><p><code>test_iter</code></p>
+<p>This parameter indicates how many test iterations should occur per test_interval. This value is a positive integer.</p>
+</li>
+<li><p><code>test_interval</code></p>
+<p>This parameter indicates how often the test phase of the network will be executed.</p>
+</li>
+<li><p><code>display</code></p>
+<p>This parameter indicates how often caffe should output results to the screen. This value is a positive integer and specifies an iteration count.</p>
+</li>
+<li><p><code>type</code></p>
+<p>This parameter indicates the back propagation algorithm used to train the network. This value is a quoted string.</p>
+<p>Options include:</p>
+<ul>
+<li>Stochastic Gradient Descent “SGD”</li>
+<li>AdaDelta “AdaDelta”</li>
+<li>Adaptive Gradient “AdaGrad”</li>
+<li>Adam “Adam”</li>
+<li>Nesterov’s Accelerated Gradient “Nesterov”</li>
+<li>RMSprop “RMSProp”</li>
+</ul>
+</li>
+</ol>
+<h3 id="SGD"><a href="#SGD" class="headerlink" title="SGD"></a><strong>SGD</strong></h3><p>随机梯度下降（Stochastic gradient descent:<code>type: &quot;SGD&quot;</code>）是在梯度下降法（gradient descent）的基础上发展起来的, 利用负梯度$\nabla L(W)$和上一次的权重更新值$V_t$的线性组合来更新权重$W$</p>
+<p>$$ V_{t+1} = \mu V_t - \alpha \nabla L(W_t) $$</p>
+<p>$$ W_{t+1} = W_t + V_{t+1} $$</p>
+<p>两个超参数: </p>
+<ul>
+<li>学习率（learning rate）$\alpha $是负梯度的权重, 通常学习率初始化为$\alpha \approx 0.01 = 10^{-2}$, 训练达到稳定的时候, 每迭代特定的次数就将$/alpha$除以10</li>
+<li>$\mu$是动量更新的权重, 通常设为$\mu = 0.9$如果上一次的momentum（即$V_t$）与这一次的负梯度方向是相同的，那这次下降的幅度就会加大，这样做能够达到加速收敛的过程</li>
+</ul>
+<p>在<code>./examples/imagenet/alexnet_solver.prototxt.</code>中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">base_lr: 0.01 # 开始学习速率为：α = 0.01=1e-2</span><br><span class="line">lr_policy: &quot;step&quot; # 学习策略: 每 stepsize 次迭代之后，将 α 乘以 gamma</span><br><span class="line">gamma: 0.1 # 学习速率变化因子</span><br><span class="line">stepsize: 100000 # 每 100K 次迭代，降低学习速率</span><br><span class="line">max_iter: 350000 # 训练的最大迭代次数 350K</span><br><span class="line">momentum: 0.9 # 动量 momentum 为：μ = 0.9</span><br></pre></td></tr></table></figure>
+<ul>
+<li>当训练次数达到一定量后，更新值（update）会扩大到$\frac{1}{1 - \mu}$倍, $\mu = 0.9$, 则更新值会扩大$\frac{1}{1 - 0.9} = 10$倍, 如果增大$\mu$则需要减小$\alpha$</li>
+<li>在第0-100K的迭代过程中, $\alpha = 0.01 = 10^{-2}$</li>
+<li>在第100K-200K的迭代过程中, $\alpha’ = \alpha \gamma = (0.01) (0.1) = 0.001 = 10^{-3}$</li>
+<li>在第200K-300K的迭代过程中, $\alpha’’ = 10^{-4}$</li>
+<li>在第300K-350K的迭代过程中, $\alpha’’’ = 10^{-5}$</li>
+</ul>
+<p>如果训练过程中出现了发散现象（例如，<code>loss</code>或者<code>output</code>值非常大导致显示<code>NAN</code>，<code>inf</code>这些符号），试着减小基准学习速率（例如 base_lr 设置为 0.001）再训练，重复这个过程，直到找到一个比较合适的学习速率(base_lr)。</p>
+<h3 id="AdaDelta"><a href="#AdaDelta" class="headerlink" title="AdaDelta"></a><strong>AdaDelta</strong></h3><p>AdaDelta (<code>type: &quot;AdaDelta&quot;</code>) 方法是一种“鲁棒的学习率方法”，同<code>SGD</code> 一样是一种基于梯度的优化方法。</p>
+<p>$$<br>\begin{align}<br>(v_t)_i &amp;= \frac{\operatorname{RMS}((v_{t-1})_i)}{\operatorname{RMS}\left( \nabla L(W_t) \right)_{i}} \left( \nabla L(W_{t’}) \right)_i<br>\\<br>\operatorname{RMS}\left( \nabla L(W_t) \right)_{i} &amp;= \sqrt{E[g^2] + \varepsilon}<br>\\<br>E[g^2]_t &amp;= \delta{E[g^2]_{t-1} } + (1-\delta)g_{t}^2<br>\end{align}<br>$$</p>
+<p>$$(W_{t+1})_i =(W_t)_i - \alpha(v_t)_i.$$</p>
+<blockquote>
+<p>具体原理见 <a href="http://arxiv.org/pdf/1212.5701.pdf" target="_blank" rel="noopener">M. Zeiler ADADELTA: AN ADAPTIVE LEARNING RATE METHOD. </a></p>
+</blockquote>
+<ul>
+<li>例子:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">net: &quot;examples/mnist/lenet_train_test.prototxt&quot;</span><br><span class="line">test_iter: 100</span><br><span class="line">test_interval: 500</span><br><span class="line">base_lr: 1.0</span><br><span class="line">lr_policy: &quot;fixed&quot;</span><br><span class="line">momentum: 0.95</span><br><span class="line">weight_decay: 0.0005</span><br><span class="line">display: 100</span><br><span class="line">max_iter: 10000</span><br><span class="line">snapshot: 5000</span><br><span class="line">snapshot_prefix: &quot;examples/mnist/lenet_adadelta&quot;</span><br><span class="line">solver_mode: GPU</span><br><span class="line">type: &quot;AdaDelta&quot;</span><br><span class="line">delta: 1e-6       //Adadelta时，需要设置delta的值</span><br></pre></td></tr></table></figure>
+<h3 id="AdaGrad"><a href="#AdaGrad" class="headerlink" title="AdaGrad"></a><strong>AdaGrad</strong></h3><p>自适应梯度下降方法（ Adaptive gradient:<code>type: &quot;AdaGrad&quot;</code>）跟随机梯度下降（Stochastic gradient）一样是基于梯度的优化方法</p>
+<p>给定之前更新的信息$\left( \nabla L(W) \right)_{t’}$, 对于$t’ \in \{1, 2, …, t\}$, 通过如下公式对权重$W$进行更新:</p>
+<p>$$<br>(W_{t+1})_i =<br>   (W_t)_i - \alpha<br>   \frac{\left( \nabla L(W_t) \right)_{i}}{<br>       \sqrt{\sum_{t’=1}^{t} \left( \nabla L(W_{t’}) \right)_i^2}<br>   }<br>$$</p>
+<blockquote>
+<p>具体原理见 <a href="http://www.magicbroom.info/Papers/DuchiHaSi10.pdf" target="_blank" rel="noopener">Duchi, E. Hazan, and Y. Singer. Adaptive Subgradient Methods for Online Learning and Stochastic Optimization. </a></p>
+</blockquote>
+<ul>
+<li>例子:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">net: &quot;examples/mnist/mnist_autoencoder.prototxt&quot;</span><br><span class="line">test_state: &#123; stage: &apos;test-on-train&apos; &#125;</span><br><span class="line">test_iter: 500</span><br><span class="line">test_state: &#123; stage: &apos;test-on-test&apos; &#125;</span><br><span class="line">test_iter: 100</span><br><span class="line">test_interval: 500</span><br><span class="line">test_compute_loss: true</span><br><span class="line">base_lr: 0.01</span><br><span class="line">lr_policy: &quot;fixed&quot;</span><br><span class="line">display: 100</span><br><span class="line">max_iter: 65000</span><br><span class="line">weight_decay: 0.0005</span><br><span class="line">snapshot: 10000</span><br><span class="line">snapshot_prefix: &quot;examples/mnist/mnist_autoencoder_adagrad_train&quot;</span><br><span class="line"># solver mode: CPU or GPU</span><br><span class="line">solver_mode: GPU</span><br><span class="line">type: &quot;AdaGrad&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="Adam"><a href="#Adam" class="headerlink" title="Adam"></a><strong>Adam</strong></h3><p>Adam 也是一种基于梯度的优化方法, 包含一对自适应时刻估计变量(adaptivemoment estimation)$(m_t, v_t)$，可以看做是<code>AdaGrad</code>的一种泛化形式</p>
+<p>$$<br>(m_t)_i = \beta_1 (m_{t-1})_i + (1-\beta_1)(\nabla L(W_t))_i,\\<br>(v_t)_i = \beta_2 (v_{t-1})_i + (1-\beta_2)(\nabla L(W_t))_i^2<br>$$</p>
+<p>$$<br>(W_{t+1})_i =<br>  (W_t)_i - \alpha \frac{\sqrt{1-(\beta_2)_i^t}}{1-(\beta_1)_i^t}\frac{(m_t)_i}{\sqrt{(v_t)_i}+\varepsilon}.<br>$$</p>
+<p>超参数默认设置:</p>
+<ul>
+<li>$\beta_1 = 0.9, \beta_2 = 0.999, \varepsilon = 10^{-8}$</li>
+</ul>
+<p>Caffe 中同样使用$momemtum,momentum2,delta$分别代表$\beta_1, \beta_2, \varepsilon$</p>
+<blockquote>
+<p>具体原理见 <a href="http://arxiv.org/abs/1412.6980" target="_blank" rel="noopener">D. Kingma, J. Ba. Adam: A Method for Stochastic Optimization. </a></p>
+</blockquote>
+<h3 id="NAG"><a href="#NAG" class="headerlink" title="NAG"></a><strong>NAG</strong></h3><p>Nesterov 提出的加速梯度下降（Nesterov’s accelerated gradient）是凸优化的一种最优算法, 其收敛速度可以达到$\mathcal{O}(1/t^2)$而不是$\mathcal{O}(1/t)$, 尽管在使用Caffe训练深度神经网络时很难满足$\mathcal{O}(1/t^2)$收敛条件（例如，由于非平滑 non-smoothness 、非凸 non-convexity），但实际中 NAG 对于某些特定结构的深度学习模型仍是一个非常有效的方法</p>
+<p>权重<code>weight</code>更新参数与随机梯度下降（Stochastic gradient）非常相似:</p>
+<p>$$V_{t+1} = \mu V_t - \alpha \nabla L(W_t + \mu V_t)$$</p>
+<p>$$W_{t+1} = W_t + V_{t+1}$$</p>
+<p>与SGD不同的是:</p>
+<ul>
+<li>$\nabla L(W)$项中$W$的取值不同, 我们取当前权重和动量之和的梯度$\nabla L(W_t + \mu V_t)$而在SGD中只取当前权重的动量$\nabla L(W_t)$</li>
+</ul>
+<blockquote>
+<p>具体原理见 <a href="http://www.cs.toronto.edu/~fritz/absps/momentum.pdf" target="_blank" rel="noopener">I. Sutskever, J. Martens, G. Dahl, and G. Hinton. On the Importance of Initialization and Momentum in Deep Learning. </a></p>
+</blockquote>
+<p>例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">net: &quot;examples/mnist/mnist_autoencoder.prototxt&quot;</span><br><span class="line">test_state: &#123; stage: &apos;test-on-train&apos; &#125;</span><br><span class="line">test_iter: 500</span><br><span class="line">test_state: &#123; stage: &apos;test-on-test&apos; &#125;</span><br><span class="line">test_iter: 100</span><br><span class="line">test_interval: 500</span><br><span class="line">test_compute_loss: true</span><br><span class="line">base_lr: 0.01</span><br><span class="line">lr_policy: &quot;step&quot;</span><br><span class="line">gamma: 0.1</span><br><span class="line">stepsize: 10000</span><br><span class="line">display: 100</span><br><span class="line">max_iter: 65000</span><br><span class="line">weight_decay: 0.0005</span><br><span class="line">snapshot: 10000</span><br><span class="line">snapshot_prefix: &quot;examples/mnist/mnist_autoencoder_nesterov_train&quot;</span><br><span class="line">momentum: 0.95</span><br><span class="line">solver_mode: GPU</span><br><span class="line">type: &quot;Nesterov&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="RMSprop"><a href="#RMSprop" class="headerlink" title="RMSprop"></a><strong>RMSprop</strong></h3><p>RMSprop(<code>type: &quot;RMSProp&quot;</code>) 方法同样是一种基于梯度的优化方法, 定义如下:</p>
+<p>$$\operatorname{MS}((W_t)_i)= \delta\operatorname{MS}((W_{t-1})_i)+ (1-\delta)(\nabla L(W_t))_i^2 \\<br>   (W_{t+1})_i= (W_{t})_i -\alpha\frac{(\nabla L(W_t))_i}{\sqrt{\operatorname{MS}((W_t)_i)}}$$</p>
+<ul>
+<li>默认的$\delta=0.99$(rms_decay)</li>
+</ul>
+<blockquote>
+<p>具体原理见 <a href="http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf" target="_blank" rel="noopener">T. Tieleman, and G. Hinton. RMSProp: Divide the gradient by a running average of its recent magnitude. </a><br>COURSERA: Neural Networks for Machine Learning.Technical report, 2012.</p>
+</blockquote>
+<p>例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">net: &quot;examples/mnist/lenet_train_test.prototxt&quot;</span><br><span class="line">test_iter: 100</span><br><span class="line">test_interval: 500</span><br><span class="line">base_lr: 1.0</span><br><span class="line">lr_policy: &quot;fixed&quot;</span><br><span class="line">momentum: 0.95</span><br><span class="line">weight_decay: 0.0005</span><br><span class="line">display: 100</span><br><span class="line">max_iter: 10000</span><br><span class="line">snapshot: 5000</span><br><span class="line">snapshot_prefix: &quot;examples/mnist/lenet_adadelta&quot;</span><br><span class="line">solver_mode: GPU</span><br><span class="line">type: &quot;RMSProp&quot;</span><br><span class="line">rms_decay: 0.98  //需要设置rms_decay值</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>参考<a href="http://caffecn.cn/?/page/tutorial" target="_blank" rel="noopener">Caffe官方教程中译本v1.0</a></p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/10/22/ResNet/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Deep Residual Network
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/10/18/时间味觉/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">时间味觉</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

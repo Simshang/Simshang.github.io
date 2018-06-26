@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Catch单元测试 | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近在写C++的一些小程序, 在书上讲到测试驱动开发的方法, 也就是TDD(Test-Driven Development), 所以要打算掌握单元测试方法, 至少自己在写算法题的时候可以自己测试代码的健壮性, 从网上了解了一个C++的测试工具叫Catch, 看是来十分简单友好, 来学习一下">
+<meta name="keywords" content="C++,单元测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Catch单元测试">
+<meta property="og:url" content="http://simtalk.cn/2016/08/29/Catch单元测试/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="最近在写C++的一些小程序, 在书上讲到测试驱动开发的方法, 也就是TDD(Test-Driven Development), 所以要打算掌握单元测试方法, 至少自己在写算法题的时候可以自己测试代码的健壮性, 从网上了解了一个C++的测试工具叫Catch, 看是来十分简单友好, 来学习一下">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/philsquared/Catch/master/catch-logo-small.png">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.945Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Catch单元测试">
+<meta name="twitter:description" content="最近在写C++的一些小程序, 在书上讲到测试驱动开发的方法, 也就是TDD(Test-Driven Development), 所以要打算掌握单元测试方法, 至少自己在写算法题的时候可以自己测试代码的健壮性, 从网上了解了一个C++的测试工具叫Catch, 看是来十分简单友好, 来学习一下">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/philsquared/Catch/master/catch-logo-small.png">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Catch单元测试" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/29/Catch单元测试/" class="article-date">
+  	<time datetime="2016-08-29T08:55:38.000Z" itemprop="datePublished">2016-08-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Catch单元测试
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/单元测试/">单元测试</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/DevTools/">DevTools</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#关于Catch"><span class="toc-text">关于Catch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#阶乘例子"><span class="toc-text">阶乘例子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TDD风格"><span class="toc-text">TDD风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BDD风格"><span class="toc-text">BDD风格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注意事项"><span class="toc-text">注意事项</span></a></li></ol>
+        </div>
+        
+        <p>最近在写C++的一些小程序, 在书上讲到测试驱动开发的方法, 也就是TDD(Test-Driven Development), 所以要打算掌握单元测试方法, 至少自己在写算法题的时候可以自己测试代码的健壮性, 从网上了解了一个C++的测试工具叫<code>Catch</code>, 看是来十分简单友好, 来学习一下</p>
+<a id="more"></a>
+<h3 id="关于Catch"><a href="#关于Catch" class="headerlink" title="关于Catch"></a><strong>关于Catch</strong></h3><p><img src="https://raw.githubusercontent.com/philsquared/Catch/master/catch-logo-small.png" alt=""></p>
+<p><a href="https://github.com/philsquared/Catch" target="_blank" rel="noopener">Catch</a> 友好到你只需要引入一个头文件就可以做单元测试</p>
+<blockquote>
+<p><code>#include &quot;catch.hpp&quot;</code></p>
+</blockquote>
+<ul>
+<li>查看<code>catch.hpp</code><a href="https://raw.githubusercontent.com/philsquared/Catch/master/single_include/catch.hpp" target="_blank" rel="noopener">点击这里</a></li>
+</ul>
+<h3 id="阶乘例子"><a href="#阶乘例子" class="headerlink" title="阶乘例子"></a><strong>阶乘例子</strong></h3><p>假如我们写了一个求阶乘的函数, 我们要测试这个函数的输出结果, 代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file</span><br><span class="line">#include &quot;catch.hpp&quot;</span><br><span class="line"></span><br><span class="line">unsigned int Factorial( unsigned int number ) &#123;</span><br><span class="line">    return number &lt;= 1 ? number : Factorial(number-1)*number;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TEST_CASE( &quot;Factorials are computed&quot;, &quot;[factorial]&quot; ) &#123;</span><br><span class="line">    REQUIRE( Factorial(1) == 1 );</span><br><span class="line">    REQUIRE( Factorial(2) == 2 );</span><br><span class="line">    REQUIRE( Factorial(3) == 6 );</span><br><span class="line">    REQUIRE( Factorial(10) == 3628800 );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果:</p>
+<p><code>All tests passed (4 assertions in 1 test case)</code></p>
+<ul>
+<li>在一个单元测试中的4个<code>REQUIRE</code>测试结果都正确</li>
+</ul>
+<p>但是我们知道<code>0</code>的阶乘为<code>1</code>, 我们添加一项<code>REQUIRE( Factorial(0) == 1 );</code>, 则运行结果为:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FAILED:</span><br><span class="line">  REQUIRE( Factorial(0) == 1 )</span><br><span class="line">with expansion:</span><br><span class="line">  0 == 1</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>表示我们实际上得到的计算值为<code>0</code>, 但是我们希望运行结果为<code>1</code>, 这就出现了错误</li>
+</ul>
+<p>我们修改函数为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">unsigned int Factorial( unsigned int number ) &#123;</span><br><span class="line">  return number &gt; 1 ? Factorial(number-1)*number : 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在测试就全部通过了</p>
+<p>假如我们添加这样一个测试<code>REQUIRE(Factorial(15) == 1307674368000);</code>, 运行结果是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FAILED:</span><br><span class="line">  REQUIRE( Factorial(15) == 1307674368000 )</span><br><span class="line">with expansion:</span><br><span class="line">  2004310016 (0x77775800) == 1307674368000</span><br></pre></td></tr></table></figure>
+<p>我们知道<code>unsigned int</code>的范围是<code>0~4294967295(4 Bytes)</code>, 我们的计算结果<code>1307674368000</code>超出了<code>unsigned int</code>的范围, 所以报错, 我们将函数返回类型改为<code>long long</code>, 代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file</span><br><span class="line">#include &quot;catch.hpp&quot;</span><br><span class="line"></span><br><span class="line">long long Factorial(unsigned int number) &#123;</span><br><span class="line">	return number &gt; 1 ? Factorial(number - 1)*number : 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">TEST_CASE(&quot;Factorials are computed&quot;, &quot;[factorial]&quot;) &#123;</span><br><span class="line">	REQUIRE(Factorial(0) == 1);</span><br><span class="line">	REQUIRE(Factorial(1) == 1);</span><br><span class="line">	REQUIRE(Factorial(2) == 2);</span><br><span class="line">	REQUIRE(Factorial(3) == 6);</span><br><span class="line">	REQUIRE(Factorial(10) == 3628800);</span><br><span class="line">	REQUIRE(Factorial(15) == 1307674368000);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在测试就全部通过了</p>
+<h3 id="TDD风格"><a href="#TDD风格" class="headerlink" title="TDD风格"></a><strong>TDD风格</strong></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file</span><br><span class="line">#include &quot;catch.hpp&quot;</span><br><span class="line"></span><br><span class="line">TEST_CASE( &quot;vectors can be sized and resized&quot;, &quot;[vector]&quot; ) &#123;</span><br><span class="line"></span><br><span class="line">    std::vector&lt;int&gt; v( 5 );</span><br><span class="line"></span><br><span class="line">    REQUIRE( v.size() == 5 );</span><br><span class="line">    REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line"></span><br><span class="line">    SECTION( &quot;resizing bigger changes size and capacity&quot; ) &#123;</span><br><span class="line">        v.resize( 10 );</span><br><span class="line"></span><br><span class="line">        REQUIRE( v.size() == 10 );</span><br><span class="line">        REQUIRE( v.capacity() &gt;= 10 );</span><br><span class="line">    &#125;</span><br><span class="line">    SECTION( &quot;resizing smaller changes size but not capacity&quot; ) &#123;</span><br><span class="line">        v.resize( 0 );</span><br><span class="line"></span><br><span class="line">        REQUIRE( v.size() == 0 );</span><br><span class="line">        REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line">    &#125;</span><br><span class="line">    SECTION( &quot;reserving bigger changes capacity but not size&quot; ) &#123;</span><br><span class="line">        v.reserve( 10 );</span><br><span class="line"></span><br><span class="line">        REQUIRE( v.size() == 5 );</span><br><span class="line">        REQUIRE( v.capacity() &gt;= 10 );</span><br><span class="line">    &#125;</span><br><span class="line">    SECTION( &quot;reserving smaller does not change size or capacity&quot; ) &#123;</span><br><span class="line">        v.reserve( 0 );</span><br><span class="line"></span><br><span class="line">        REQUIRE( v.size() == 5 );</span><br><span class="line">        REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面是<code>TDD(测试驱动开发)</code>的单元测试代码, <code>resize(n)</code>函数重新分配大小，改变vector的大小，并且创建对象, <code>reserve(n)</code>函数用来给vector预分配存储区大小，即capacity的值($capacity&gt;=n$) ，但是没有给这段内存进行初始化, 其中</p>
+<ol>
+<li><p><code>#define CATCH_CONFIG_MAIN</code>提供了默认的<code>main</code>函数入口去测试代码</p>
+</li>
+<li><p>在一个测试单元<code>TEST_CASE</code>中包含4个部分<code>SECTION</code>和若干个<code>REQUIRE</code></p>
+</li>
+<li><p><code>REQUIRE</code>中包含我们待测试的结果</p>
+</li>
+</ol>
+<ul>
+<li><code>TEST_CASE</code>中有 4 个<code>SECTION</code>，它们并不是单纯的顺序执行关系, 在<code>第一个 SECTION</code>执行完成之后, 会重头开始执行并<code>跳过已经执行过的 SECTION</code>, 也就是说上面的代码去掉了<code>SECTION 宏</code>之后的执行路径大概是这样的 ：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">// SECTION 1</span><br><span class="line">std::vector&lt;int&gt; v( 5 );</span><br><span class="line">REQUIRE( v.size() == 5 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line">v.resize( 10 );</span><br><span class="line">REQUIRE( v.size() == 10 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 10 );</span><br><span class="line"></span><br><span class="line">// SECTION 2</span><br><span class="line">std::vector&lt;int&gt; v( 5 );</span><br><span class="line">REQUIRE( v.size() == 5 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line">v.resize( 0 );</span><br><span class="line">REQUIRE( v.size() == 0 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line"></span><br><span class="line">// SECTION 3</span><br><span class="line">std::vector&lt;int&gt; v( 5 );</span><br><span class="line">REQUIRE( v.size() == 5 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line">v.reserve( 10 );</span><br><span class="line">REQUIRE( v.size() == 5 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 10 );</span><br><span class="line"></span><br><span class="line">// SECTION 4</span><br><span class="line">std::vector&lt;int&gt; v( 5 );</span><br><span class="line">REQUIRE( v.size() == 5 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line">v.reserve( 0 );</span><br><span class="line">REQUIRE( v.size() == 5 );</span><br><span class="line">REQUIRE( v.capacity() &gt;= 5 );</span><br></pre></td></tr></table></figure>
+<h3 id="BDD风格"><a href="#BDD风格" class="headerlink" title="BDD风格"></a><strong>BDD风格</strong></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file</span><br><span class="line">#include &quot;catch.hpp&quot;</span><br><span class="line"></span><br><span class="line">SCENARIO( &quot;vectors can be sized and resized&quot;, &quot;[vector]&quot; ) &#123;</span><br><span class="line"></span><br><span class="line">    GIVEN( &quot;A vector with some items&quot; ) &#123;</span><br><span class="line">       </span><br><span class="line">        std::vector&lt;int&gt; v( 5 );</span><br><span class="line"></span><br><span class="line">        REQUIRE( v.size() == 5 );</span><br><span class="line">        REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line"></span><br><span class="line">        WHEN( &quot;the size is increased&quot; ) &#123;</span><br><span class="line">            v.resize( 10 );</span><br><span class="line"></span><br><span class="line">            THEN( &quot;the size and capacity change&quot; ) &#123;</span><br><span class="line">                REQUIRE( v.size() == 10 );</span><br><span class="line">                REQUIRE( v.capacity() &gt;= 10 );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        WHEN( &quot;the size is reduced&quot; ) &#123;</span><br><span class="line">            v.resize( 0 );</span><br><span class="line"></span><br><span class="line">            THEN( &quot;the size changes but not capacity&quot; ) &#123;</span><br><span class="line">                REQUIRE( v.size() == 0 );</span><br><span class="line">                REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        WHEN( &quot;more capacity is reserved&quot; ) &#123;</span><br><span class="line">            v.reserve( 10 );</span><br><span class="line"></span><br><span class="line">            THEN( &quot;the capacity changes but not the size&quot; ) &#123;</span><br><span class="line">                REQUIRE( v.size() == 5 );</span><br><span class="line">                REQUIRE( v.capacity() &gt;= 10 );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        WHEN( &quot;less capacity is reserved&quot; ) &#123;</span><br><span class="line">            v.reserve( 0 );</span><br><span class="line"></span><br><span class="line">            THEN( &quot;neither size nor capacity are changed&quot; ) &#123;</span><br><span class="line">                REQUIRE( v.size() == 5 );</span><br><span class="line">                REQUIRE( v.capacity() &gt;= 5 );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面是<code>BDD(行为驱动开发)</code>的单元测试代码, BDD(Behaviour-Driven Development)是最新的一种测试方式，它强调的是<code>行为</code>而不是<code>测试</code>, 实际上这两种方式是等价，<code>SCENARIO</code> 只是<code>TEST_CASE</code>的别名，<code>GIVEN、WHEN、THEN</code> 最终也是 map 到 <code>SECTION</code> 上面的，这其中的差异只是存在于测试的思维不同而已</p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a><strong>注意事项</strong></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file</span><br><span class="line">#include &quot;catch.hpp&quot;</span><br></pre></td></tr></table></figure>
+<p>最好将以上两行代码只放在源文件中的一个头文件中, 这个头文件只包含<code>#define</code>和<code>#include</code>, 把测试代码写在其他的文件中, 其他文件只要引入<code>#include &quot;catch.hpp&quot;</code>就可以了, 不需要<code>CATCH_CONFIG_MAIN or CATCH_CONFIG_RUNNER</code>, 之所以这样做是因为Catch是单头文件库，这意味着它里面的内容会最终出现在所有的包含这个头文件的编译单元中。如果我们把测试代码和上面两行代码放在一起会导致每次编译测试代码的时候都需要编译 Catch 的内核，这会导致编译速度非常非常的慢。如果把两者分开，Catch 的内核只需要在一个文件中编译一次，因为 Catch 内部做了判断，即使你在多个文件中使用了 #include “catch.hpp”，如果内核编译过了是不需要再次编译的，这个文件的编译速度相对较慢，但是这个文件不需要改动，所以整个开发周期中它只需要编译一次，对于不断更新的测试代码编译速度就会快很多。</p>
+<blockquote>
+<p><a href="https://github.com/philsquared/Catch/blob/master/docs/Readme.md" target="_blank" rel="noopener">Catch官方文档</a></p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/02/SVM and Softmax/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          SVM and Softmax
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/23/从线性模型到神经网络/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">从线性模型到神经网络</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

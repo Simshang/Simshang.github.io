@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>kNN | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近在学习斯坦福大学李飞飞团队的公开课CS231n- Convolutional Neural Networks for Visual Recognition, 这篇文章介绍了课程笔记中的kNN, 以及课程作业assignment1中kNN算法(k-最邻近算法)实现图像分类的一些基本原理及TODO部分的代码实现. Github">
+<meta name="keywords" content="kNN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kNN">
+<meta property="og:url" content="http://simtalk.cn/2016/08/22/kNN/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="最近在学习斯坦福大学李飞飞团队的公开课CS231n- Convolutional Neural Networks for Visual Recognition, 这篇文章介绍了课程笔记中的kNN, 以及课程作业assignment1中kNN算法(k-最邻近算法)实现图像分类的一些基本原理及TODO部分的代码实现. Github">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/CV1_knn.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/CV2_knn.gif">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/classify.png">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/trainset.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/knn1.png">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/knn.jpeg">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/CV1.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/distance.png">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/cv5.png">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/output1.png">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/dists1.png">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/bestk.png">
+<meta property="og:image" content="http://simtalk.cn/img/kNN/samenorm.png">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.954Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kNN">
+<meta name="twitter:description" content="最近在学习斯坦福大学李飞飞团队的公开课CS231n- Convolutional Neural Networks for Visual Recognition, 这篇文章介绍了课程笔记中的kNN, 以及课程作业assignment1中kNN算法(k-最邻近算法)实现图像分类的一些基本原理及TODO部分的代码实现. Github">
+<meta name="twitter:image" content="http://simtalk.cn/img/kNN/CV1_knn.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-kNN" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/22/kNN/" class="article-date">
+  	<time datetime="2016-08-22T14:30:48.000Z" itemprop="datePublished">2016-08-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      kNN
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kNN/">kNN</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/cs231n/">cs231n</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#计算机视觉"><span class="toc-text">计算机视觉</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#距离概念"><span class="toc-text">距离概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分类问题"><span class="toc-text">分类问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据驱动"><span class="toc-text">数据驱动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分类模型"><span class="toc-text">分类模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kNN基础"><span class="toc-text">kNN基础</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本概念"><span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#超参数调整"><span class="toc-text">超参数调整</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#交叉验证法"><span class="toc-text">交叉验证法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行准备"><span class="toc-text">运行准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#注意事项"><span class="toc-text">注意事项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他"><span class="toc-text">其他</span></a></li></ol>
+        </div>
+        
+        <p>最近在学习斯坦福大学李飞飞团队的公开课<code>CS231n- Convolutional Neural Networks for Visual Recognition</code>, 这篇文章介绍了课程笔记中的kNN, 以及课程作业<code>assignment1</code>中kNN算法(k-最邻近算法)实现图像分类的一些基本原理及<code>TODO</code>部分的代码实现. <a href="https://github.com/Simshang/CS231n" target="_blank" rel="noopener">Github</a><br><a id="more"></a></p>
+<h3 id="计算机视觉"><a href="#计算机视觉" class="headerlink" title="计算机视觉"></a><strong>计算机视觉</strong></h3><p>首先从信息传递的角度来说 , 图片所包含的信息量比文字要多 , 所谓的”百闻不如一见”说的就是这个道理 , 那么在计算机技术引领的信息时代让计算机试图去理解图像信息就十分的必要. 一张图片在计算机中就是一个矩阵, 灰色图片是一维矩阵(灰度) , 彩色是三维矩阵(RGB), 我们创造一些算法来处理这个矩阵, 达到对实际物体和场景做出有意义的判定的目的, 就是计算机视觉.</p>
+<blockquote>
+<p>“区分<code>图像处理</code>和<code>图像理解</code>很重要, 图像处理关心的是图像到图像的变换; 图像理解关心的是基于图像的判定并显性的构造图像描述. 图像处理经常用于支持图像理解.” --  引自&lt;&lt;计算机视觉&gt;&gt;</p>
+</blockquote>
+<h3 id="距离概念"><a href="#距离概念" class="headerlink" title="距离概念"></a>距离概念</h3><blockquote>
+<p>距离</p>
+</blockquote>
+<p>Manhattan distance: $L_1$距离或城市区块距离<br>$$ d_1(I_1,I_2) = \sum_p|I_1^p-I_2^p| $$</p>
+<ul>
+<li>$I_1,I_2$ : 表示图像的矩阵</li>
+<li>$p$ : 表示每个像素</li>
+<li>$|\cdots|$ : 绝对值运算</li>
+</ul>
+<p><img src="/img/kNN/CV1_knn.jpg" alt=""></p>
+<p>Euclidean distance: 欧式距离($L_2$距离)指在$m$维空间中两个点之间的真实距离，或者向量的自然长度（即该点到原点的距离）<br>$$ d_1(I_1,I_2) = \sqrt{\sum_p(I_1^p-I_2^p)^2} $$</p>
+<blockquote>
+<p><code>4-连通区域</code>指的是从区域上一点出发，可通过四个方向，即上、下、左、右移动的组合，在不越出区域的前提下，到达区域内的任意象素<br><code>8-连通区域</code>指的是从区域内每一象素出发，可通过八个方向，即上、下、左、右、左上、右上、左下、右下这八个方向的移动的组合来到达区域内任意像素</p>
+</blockquote>
+<p><img src="/img/kNN/CV2_knn.gif" alt=""></p>
+<h3 id="分类问题"><a href="#分类问题" class="headerlink" title="分类问题"></a><strong>分类问题</strong></h3><ul>
+<li><strong>图像在计算机中的存储</strong></li>
+</ul>
+<p><img src="/img/kNN/classify.png" alt=""></p>
+<ul>
+<li>一幅图像在计算机中就是一个3维数组, 3个维度分别指红绿蓝三个通道, 猫图像是248像素宽，400像素高，且具有三个颜色通道的红，绿，蓝, 因此，图像由248×400×3的数组, 如果用一个向量表示那么总共297600个值</li>
+</ul>
+<h3 id="数据驱动"><a href="#数据驱动" class="headerlink" title="数据驱动"></a>数据驱动</h3><p><img src="/img/kNN/trainset.jpg" alt=""></p>
+<p>所谓数据驱动，指的是我们的算法是由数据决定的, 并不像传统的算法, 比如给一个数组排序所用的算法, 我们给预测算法一些数据样本, 这些样本包含类别信息, 基于这些已有的数据去学习算法, 使得模型能够知道每个类别的特征是什么样的, 从而对新的数据进行分类</p>
+<h3 id="分类模型"><a href="#分类模型" class="headerlink" title="分类模型"></a><strong>分类模型</strong></h3><ul>
+<li>问题模型 : 输入一张图片输出类别</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(image)</span></span></span><br><span class="line"><span class="function">    # </span></span><br><span class="line"><span class="function">    <span class="title">return</span> <span class="title">class_label</span></span></span><br><span class="line"><span class="function">    #<span class="title">output</span></span></span><br><span class="line"><span class="function">    #</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>训练模型</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">(train_image,train_labels)</span>:</span></span><br><span class="line">    <span class="comment"># build a model for image -&gt; label</span></span><br><span class="line">    <span class="keyword">return</span> model</span><br><span class="line">    <span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>预测模型</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">define predict(model,test_images):</span><br><span class="line">    <span class="comment"># predict test image labels </span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> test_labels</span><br></pre></td></tr></table></figure>
+<h3 id="kNN基础"><a href="#kNN基础" class="headerlink" title="kNN基础"></a><strong>kNN基础</strong></h3><ul>
+<li><strong>基本思想</strong></li>
+</ul>
+<p>给定某种测试样本, 基于某种距离度量找出训练集中与其最靠近的$k$个训练样本, 然后基于这$k$个样本所提供的类别信息进行预测, <strong>注意</strong>, kNN并不具有显式的学习过程, 本质上是对训练样本集进行划分并作为模型, 然后基于多数表决的方式进行预测</p>
+<ul>
+<li>在分类任务中, 选择$k$个样本中出现次数最多的类别作为预测结果</li>
+<li><p>在回归任务中, 将$k$个样本的实际值根据距离分配权重, 然后做加权平均</p>
+</li>
+<li><p><strong>特点</strong></p>
+</li>
+</ul>
+<ol>
+<li>不需要训练时间, 因为分类信息只要存起来就可以了, 但是在测试阶段模型的计算代价很高, 因为需要和每一个样本进行距离求值并进行投票统计, 这点非常不好, 因为实际应用中, 我们对测试的时间尽可能高效, 对于训练时间并不太在意, 毕竟和阿法狗下棋, 不能一个小时才走一步, 深度神经网络正好和这个相反</li>
+<li>适合低维特征的数据, 图像分类很明显是高维数据, 并不适合</li>
+</ol>
+<p>我们来看一个维基百科上的例子, 如图:</p>
+<p><img src="/img/kNN/knn1.png" alt=""></p>
+<p>图中的有两个类型的样本数据，一类是蓝色的正方形，另一类是红色的三角形。而那个绿色的圆形是我们待分类的数据。</p>
+<ul>
+<li>如果k=3，那么离绿色点最近的有2个红色三角形和1个蓝色的正方形，这3个点投票，于是绿色的这个待分类点属于红色的三角形。</li>
+<li>如果k=5，那么离绿色点最近的有2个红色三角形和3个蓝色的正方形，这5个点投票，于是绿色的这个待分类点属于蓝色的正方形。</li>
+</ul>
+<p>可以得出, kNN是一种基于数据驱动的算法, 也就是说该算法分类是根据数据本身统计的结果得出来的, 那么kNN是根据什么标准来统计的呢? 下面要了解一些基本的概念</p>
+<ul>
+<li>注意: <code>kNN</code>和<code>k-Means</code>不同, <code>kNN</code> 是一种归类算法, 也就是说事先我们已经知道了有几种类别, 讲一个新的数据归类到已知的类别中, 即原始数据中有类别标签; <code>k-Means</code> 则是一种聚类算法, 其目的是将没有类别标签的数据聚集成几种不同的类型.</li>
+</ul>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><strong>基本概念</strong></h3><p><img src="/img/kNN/knn.jpeg" alt=""></p>
+<p>在上图的<code>5-NN分类器</code>当中, 我们利用$L_2$距离得到决策边界, 白色的区域是投票并列的点, 也就是被分为至少两类, 属于类别模糊区域, 对于<code>5-NN分类器</code>有些异常点被分类错误, 但是可以得到更好的泛化能力, 中间那张图有点过拟合的意思了</p>
+<ul>
+<li><p>$k$值 :　表示最接近新样本的$k$个数据样本</p>
+</li>
+<li><p><strong>距离</strong> : 通过计算已知样本点和新样本之间的<code>距离</code>, 选出最近的k个已知类别的样本点, 统计k个样本点中类别最多的类型, 将新样本点归为此类</p>
+</li>
+</ul>
+<ol>
+<li><p><strong>Manhattan distance</strong>: $L_1$距离或城市区块距离</p>
+<p>$$ d_1(I_1,I_2) = \sum_p|I_1^p-I_2^p| $$</p>
+<ul>
+<li>$I_1,I_2$ : 表示图像的矩阵</li>
+<li>$p$ : 表示每个像素</li>
+<li>$|\cdots|$ : 绝对值运算</li>
+</ul>
+<p><img src="/img/kNN/CV1.jpg" alt=""></p>
+</li>
+<li><p><strong>Euclidean distance</strong>: 欧式距离($L_2$距离)指在$m$维空间中两个点之间的真实距离，或者向量的自然长度（即该点到原点的距离）</p>
+<p>$$ d_1(I_1,I_2) = \sqrt{\sum_p(I_1^p-I_2^p)^2} $$</p>
+</li>
+</ol>
+<blockquote>
+<p>二者区别:</p>
+</blockquote>
+<p><img src="/img/kNN/distance.png" alt=""></p>
+<ul>
+<li><p>曼哈顿与欧几里得距离： <code>红、蓝与黄线</code>分别表示所有曼哈顿距离都拥有一样长度$（12）$，而<code>绿线</code>表示欧几里得距离有$6×\sqrt2 ≈ 8.48$的长度。</p>
+</li>
+<li><p>注意: $L_1$距离和$L_2$距离的区别是, 使用$L_1$距离对于训练集来说并不是百分百的类准确, 因为其边界是锯齿状的, 就有可能覆盖其他相邻的类别; 然而$L_2$距离是准确的距离, 对于训练集训练出的模型其分类边界是连续的曲边,不会覆盖其他分类, 这里可以从二维的角度去理解高维距离, 所以在kNN模型的距离以及$k$值选择上, 要根据具体问题具体分析.</p>
+</li>
+</ul>
+<h3 id="超参数调整"><a href="#超参数调整" class="headerlink" title="超参数调整"></a>超参数调整</h3><p>在模型的搭建过程中, 我们常常有多种选择, 比如$k$的选择, 距离标准的选择, 这个过程就叫做<code>超参数调整</code> 在实际中, 我们并不能用训练集来进行超参数的调整, 因为这样很容易导致模型过拟合, 使得模型的泛化能力很弱</p>
+<ul>
+<li><strong>正确方法</strong></li>
+</ul>
+<p>我们将训练集分为两部分, 一部分作为<code>训练集</code>, 一部分叫做<code>验证集</code>, 使用CIFAR-10数据集, 可以用训练图像49000进行训练，并留下10​​00预留验证, 利用这个验证集去调整模型的超参数, 最后一次性将全部数据作为训练集, 得到模型性能</p>
+<h3 id="交叉验证法"><a href="#交叉验证法" class="headerlink" title="交叉验证法"></a><strong>交叉验证法</strong></h3><p>请看另一篇文章, <a href="http://simtalk.cn/2016/04/15/%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AF%84%E4%BC%B0/">模型的评估</a>, 在这里我们用的5折交叉验证法</p>
+<p><img src="/img/kNN/cv5.png" alt=""></p>
+<ul>
+<li><p>交叉验证法的计算代价很大</p>
+</li>
+<li><p>通常<code>50%-90%</code>作为训练集, 剩余作为验证集</p>
+</li>
+<li><p>典型的有3, 5, 10 折交叉验证法</p>
+</li>
+</ul>
+<h3 id="运行准备"><a href="#运行准备" class="headerlink" title="运行准备"></a><strong>运行准备</strong></h3><p><a href="http://cs231n.github.io/assignments2016/assignment1/" target="_blank" rel="noopener">CS231n第一个作业</a>中包含kNN:</p>
+<ol>
+<li><p>首先点击下载<a href="http://vision.stanford.edu/teaching/cs231n/winter1516_assignment1.zip" target="_blank" rel="noopener">源代码</a></p>
+</li>
+<li><p>在解压目录<code>assignment1</code>下打开<code>ipython notebook</code> </p>
+</li>
+<li><p>点击下载<a href="http://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz" target="_blank" rel="noopener">原始数据</a>, 解压到<code>.\assignment1\cs231n\datasets\cifar-10-batches-py</code>目录下</p>
+</li>
+</ol>
+<blockquote>
+<p>kNN分类器包括两个阶段:</p>
+</blockquote>
+<ul>
+<li><p>在训练阶段, 分类器训练数据并记住每个训练样本的类别标签</p>
+</li>
+<li><p>在测试阶段, 分类器计算每一个测试样本和所有的训练样本的<code>距离</code>, 并得出与测试样本距离最近的k个被标记的训练样本</p>
+</li>
+<li><p>注意: k的值是交叉验证的</p>
+</li>
+</ul>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a><strong>注意事项</strong></h3><ul>
+<li><p>数据路径的修改, 输出数据参数, 在输出信息中可以看出, 每个样本是32*32大小3通道(RGB)的图片, <code>fold1</code>-<code>fold5</code>每个10000张共50000张, 测试集10000张</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Load the raw CIFAR-10 data.</span><br><span class="line">cifar10_dir = &apos;./cs231n/datasets/cifar-10-batches-py&apos;</span><br><span class="line"># 以项目为根目录</span><br><span class="line">#</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p><code>断点CodeLine68 : plt.show()</code>输出部分样本及类别标签</p>
+<p> <img src="/img/kNN/output1.png" alt=""></p>
+</li>
+<li><p>在<code>In[8]</code>中, 将数据集分成子集去训练模型更有效 </p>
+</li>
+</ul>
+<p><strong>kNN中的TODO</strong>在<code>k_nearest_neighbor.py</code>文件中</p>
+<blockquote>
+<p><code>def compute_distances_two_loops(self, X):</code></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#####################################################################</span></span><br><span class="line"><span class="comment"># <span class="doctag">TODO:</span>                                                             #</span></span><br><span class="line"><span class="comment"># Compute the l2 distance between the ith test point and the jth    #</span></span><br><span class="line"><span class="comment"># training point, and store the result in dists[i, j]. You should   #</span></span><br><span class="line"><span class="comment"># not use a loop over dimension.                                    #</span></span><br><span class="line"><span class="comment">#####################################################################</span></span><br><span class="line">dists[i, j] = np.linalg.norm(self.X_train[j, :] - X[i, :])</span><br><span class="line"><span class="comment">#####################################################################</span></span><br><span class="line"><span class="comment">#                       END OF YOUR CODE                            #</span></span><br><span class="line"><span class="comment">#####################################################################</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>X</code>的每一行代表一张图片</p>
+</li>
+<li><p><code>dists</code>是一个500*5000的距离矩阵 </p>
+</li>
+<li><p><strong>如果计算正确则输出:</strong></p>
+</li>
+</ul>
+<p><img src="/img/kNN/dists1.png" alt=""></p>
+<blockquote>
+<p><code>def compute_distances_one_loop(self, X):</code></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#######################################################################</span></span><br><span class="line"><span class="comment"># <span class="doctag">TODO:</span>                                                               #</span></span><br><span class="line"><span class="comment"># Compute the l2 distance between the ith test point and all training #</span></span><br><span class="line"><span class="comment"># points, and store the result in dists[i, :].                        #</span></span><br><span class="line"><span class="comment">#######################################################################</span></span><br><span class="line">dists[i, :] = np.linalg.norm(self.X_train - X[i,:], axis = <span class="number">1</span>)</span><br><span class="line"><span class="comment">#######################################################################</span></span><br><span class="line"><span class="comment">#                         END OF YOUR CODE                            #</span></span><br><span class="line"><span class="comment">#######################################################################</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><a href="https://github.com/numpy/numpy/blob/v1.11.0/numpy/linalg/linalg.py#L1976-L2224" target="_blank" rel="noopener">np.linalg.norm</a> 这个函数是计算矩阵或者向量的<code>范数</code></li>
+</ul>
+<p>$$ ||A||_F = [\sum_{i,j} abs(a_{i,j})^2]^{1/2} $$</p>
+<ul>
+<li><p><code>axis = 1</code> 表示计算列向量的$L_2$距离</p>
+</li>
+<li><p><strong>如果计算正确则输出:</strong><br><code>Good! The distance matrices are the same</code></p>
+</li>
+</ul>
+<blockquote>
+<p><code>def compute_distances_no_loops(self, X):</code></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#########################################################################</span></span><br><span class="line"><span class="comment"># <span class="doctag">TODO:</span>                                                                 #</span></span><br><span class="line"><span class="comment"># Compute the l2 distance between all test points and all training      #</span></span><br><span class="line"><span class="comment"># points without using any explicit loops, and store the result in      #</span></span><br><span class="line"><span class="comment"># dists.                                                                #</span></span><br><span class="line"><span class="comment">#                                                                       #</span></span><br><span class="line"><span class="comment"># You should implement this function using only basic array operations; #</span></span><br><span class="line"><span class="comment"># in particular you should not use functions from scipy.                #</span></span><br><span class="line"><span class="comment">#                                                                       #</span></span><br><span class="line"><span class="comment"># HINT: Try to formulate the l2 distance using matrix multiplication    #</span></span><br><span class="line"><span class="comment">#       and two broadcast sums.                                         #</span></span><br><span class="line"><span class="comment">#########################################################################</span></span><br><span class="line">M = np.dot(X, self.X_train.T)</span><br><span class="line">te = np.square(X).sum(axis = <span class="number">1</span>)</span><br><span class="line">tr = np.square(self.X_train).sum(axis = <span class="number">1</span>)</span><br><span class="line">dists = np.sqrt(<span class="number">-2</span>*M+tr+np.matrix(te).T)</span><br><span class="line"><span class="comment">#########################################################################</span></span><br><span class="line"><span class="comment">#                         END OF YOUR CODE                              #</span></span><br><span class="line"><span class="comment">#########################################################################</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>这种计算方式利用了</p>
+</li>
+<li><p><code>X</code>是一个<code>500*3072</code>的矩阵 ; <code>self.train</code>是<code>5000*3072</code></p>
+</li>
+<li><p><code>M</code>是一个<code>500*5000</code>的矩阵</p>
+</li>
+<li><p><code>T</code>表示转置;<code>axis=1</code>表示按列求和</p>
+</li>
+<li><p><code>dot</code>函数就是矩阵相乘;<code>square</code>函数对每个元素平方; <code>sqrt</code>开方; <code>matrix</code>转化为矩阵</p>
+</li>
+<li><p><strong>如果计算正确则输出:</strong><br><code>Good! The distance matrices are the same</code></p>
+</li>
+</ul>
+<blockquote>
+<p>三种求距离方式的比较: 这个过程就是编码向量化的一个过程</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Two loop version took 66.147000 seconds</span><br><span class="line">One loop version took 69.600000 seconds</span><br><span class="line">No loop version took 0.297000 seconds</span><br><span class="line"><span class="comment">#################output################</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>由运行时间可知, 学习向量化的编码, 以及利用线性代数的基本知识十分重要</li>
+</ul>
+<blockquote>
+<p><code>def predict_labels(self, dists, k=1):</code></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#########################################################################</span></span><br><span class="line"><span class="comment"># <span class="doctag">TODO:</span>                                                                 #</span></span><br><span class="line"><span class="comment"># Use the distance matrix to find the k nearest neighbors of the ith    #</span></span><br><span class="line"><span class="comment"># testing point, and use self.y_train to find the labels of these       #</span></span><br><span class="line"><span class="comment"># neighbors. Store these labels in closest_y.                           #</span></span><br><span class="line"><span class="comment"># Hint: Look up the function numpy.argsort.                             #</span></span><br><span class="line"><span class="comment">#########################################################################</span></span><br><span class="line">labels = self.y_train[np.argsort(dists[i,:])].flatten()</span><br><span class="line"><span class="comment"># print labels.shape</span></span><br><span class="line">closest_y = labels[<span class="number">0</span>:k]</span><br><span class="line"><span class="comment"># print 'k is %d' % k</span></span><br><span class="line"><span class="comment">#########################################################################</span></span><br><span class="line"><span class="comment"># <span class="doctag">TODO:</span>                                                                 #</span></span><br><span class="line"><span class="comment"># Now that you have found the labels of the k nearest neighbors, you    #</span></span><br><span class="line"><span class="comment"># need to find the most common label in the list closest_y of labels.   #</span></span><br><span class="line"><span class="comment"># Store this label in y_pred[i]. Break ties by choosing the smaller     #</span></span><br><span class="line"><span class="comment"># label.                                                                #</span></span><br><span class="line"><span class="comment">#########################################################################</span></span><br><span class="line">c = Counter(closest_y)</span><br><span class="line">y_pred[i] = c.most_common(<span class="number">1</span>)[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line"><span class="comment">#########################################################################</span></span><br><span class="line"><span class="comment">#                           END OF YOUR CODE                            # </span></span><br><span class="line"><span class="comment">#########################################################################</span></span><br></pre></td></tr></table></figure>
+<p><strong>交叉验证的TODO</strong> 在<code>knn.py</code>文件中</p>
+<blockquote>
+<p>数据分组</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">X_train_folds = np.array_split(X_train, num_folds)</span><br><span class="line">y_train_folds = np.array_split(y_train, num_folds)</span><br><span class="line"><span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>找到最佳的$k$值</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> k_choices:</span><br><span class="line">    k_to_accuracies[k] = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> k_choices:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'evaluating k=%d'</span> % k</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(num_folds):</span><br><span class="line">        X_train_cv = np.vstack(X_train_folds[<span class="number">0</span>:j] + X_train_folds[j + <span class="number">1</span>:])</span><br><span class="line">        X_test_cv = X_train_folds[j]</span><br><span class="line"></span><br><span class="line">        y_train_cv = np.hstack(y_train_folds[<span class="number">0</span>:j] + y_train_folds[j + <span class="number">1</span>:])</span><br><span class="line">        y_test_cv = y_train_folds[j]</span><br><span class="line"></span><br><span class="line">        classifier.train(X_train_cv, y_train_cv)</span><br><span class="line">        dists_cv = classifier.compute_distances_no_loops(X_test_cv)</span><br><span class="line">        <span class="comment"># print 'predicting now'</span></span><br><span class="line">        y_test_pred = classifier.predict_labels(dists_cv, k)</span><br><span class="line">        num_correct = np.sum(y_test_pred == y_test_cv)</span><br><span class="line">        accuracy = float(num_correct) / num_test</span><br><span class="line"></span><br><span class="line">        k_to_accuracies[k].append(accuracy)</span><br><span class="line"><span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>如果计算正确则输出:</strong></li>
+</ul>
+<p><img src="/img/kNN/bestk.png" alt=""></p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p><img src="/img/kNN/samenorm.png" alt=""></p>
+<p>上面四幅图像中, 人很容易判定是一幅图像变换得来的, 但是<code>距离</code>会很大, 说明距离标准并不会评估像素之间的相关性, 人之所以可以判定, 是因为人能够判定图像的像素之间的相关性</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/23/从线性模型到神经网络/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          从线性模型到神经网络
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/21/Caffe-in-docker/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Caffe in Docker</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

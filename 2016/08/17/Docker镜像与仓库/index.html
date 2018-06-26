@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Docker镜像与仓库 | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本篇记录了Docker容器和主机如何互相拷贝传输文件, 并且制作自己的镜像, 并在 网易蜂巢和阿里云上创建私有仓库并上传自己制作的镜像">
+<meta name="keywords" content="Dockerhub">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker镜像与仓库">
+<meta property="og:url" content="http://simtalk.cn/2016/08/17/Docker镜像与仓库/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="本篇记录了Docker容器和主机如何互相拷贝传输文件, 并且制作自己的镜像, 并在 网易蜂巢和阿里云上创建私有仓库并上传自己制作的镜像">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/制作镜像并上传到私有仓库/docker1.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/制作镜像并上传到私有仓库/docker2.JPG">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker镜像与仓库">
+<meta name="twitter:description" content="本篇记录了Docker容器和主机如何互相拷贝传输文件, 并且制作自己的镜像, 并在 网易蜂巢和阿里云上创建私有仓库并上传自己制作的镜像">
+<meta name="twitter:image" content="http://simtalk.cn/img/制作镜像并上传到私有仓库/docker1.JPG">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Docker镜像与仓库" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/17/Docker镜像与仓库/" class="article-date">
+  	<time datetime="2016-08-17T08:50:28.000Z" itemprop="datePublished">2016-08-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Docker镜像与仓库
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dockerhub/">Dockerhub</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Docker/">Docker</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用仓库"><span class="toc-text">常用仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本结构"><span class="toc-text">基本结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用指令"><span class="toc-text">常用指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建镜像"><span class="toc-text">创建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据操作"><span class="toc-text">数据操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建镜像-1"><span class="toc-text">创建镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#环境部署"><span class="toc-text">环境部署</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#推送镜像"><span class="toc-text">推送镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#效果"><span class="toc-text">效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#阿里云仓库"><span class="toc-text">阿里云仓库</span></a></li></ol>
+        </div>
+        
+        <p>本篇记录了Docker容器和主机如何互相拷贝传输文件, 并且制作自己的镜像, 并在 <a href="https://c.163.com/" target="_blank" rel="noopener">网易蜂巢</a>和阿里云上创建私有仓库并上传自己制作的镜像</p>
+<a id="more"></a>
+<h3 id="常用仓库"><a href="#常用仓库" class="headerlink" title="常用仓库"></a><strong>常用仓库</strong></h3><p><a href="https://dev.aliyun.com/search.html" target="_blank" rel="noopener">阿里云Hub</a></p>
+<h3 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a><strong>基本结构</strong></h3><p>Dockerfile 由一行行命令语句组成，并且支持以 <code>#</code> 开头的注释行。</p>
+<ul>
+<li>基础镜像信息</li>
+<li>维护者信息</li>
+<li>镜像操作指令</li>
+<li>容器启动时执行指令</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># Start with Ubuntu base image</span><br><span class="line">FROM ubuntu:14.04</span><br><span class="line">MAINTAINER Kai Arulkumaran &lt;design@kaixhin.com&gt;</span><br><span class="line"></span><br><span class="line"># Install build-essential, git, wget, python-dev, pip and other dependencies</span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y \</span><br><span class="line">  build-essential \</span><br><span class="line">  git \</span><br><span class="line">  wget \</span><br><span class="line">  libopenblas-dev \</span><br><span class="line">  python-dev \</span><br><span class="line">  python-pip \</span><br><span class="line">  python-nose \</span><br><span class="line">  python-numpy \</span><br><span class="line">  python-scipy</span><br><span class="line"></span><br><span class="line"># Install bleeding-edge Theano</span><br><span class="line">RUN pip install --upgrade --no-deps git+git://github.com/Theano/Theano.git</span><br><span class="line">#</span><br></pre></td></tr></table></figure>
+<p>点击查看<a href="https://hub.docker.com/r/kaixhin/theano/~/dockerfile/" target="_blank" rel="noopener">theano的Dockerfile</a></p>
+<blockquote>
+<p><a href="https://github.com/Kaixhin/dockerfiles" target="_blank" rel="noopener">Github上深度学习工具的Dockerfile
+</a></p>
+</blockquote>
+<h3 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a><strong>常用指令</strong></h3><p>指令的一般格式为 <code>INSTRUCTION arguments</code>，指令包括 <code>FROM</code>、<code>MAINTAINER</code>、<code>RUN</code> 等。</p>
+<ol>
+<li><p><code>FROM &lt;image&gt;:&lt;tag&gt;</code><br> 第一条指令必须为 <code>FROM</code> 指令。并且，如果在同一个Dockerfile中创建多个镜像时，可以使用多个 <code>FROM</code> 指令（每个镜像一次）。</p>
+</li>
+<li><p><code>MAINTAINER &lt;name&gt;</code> : 指定维护者信息</p>
+</li>
+<li><p><code>RUN &lt;command&gt;</code> 或者 <code>RUN [&quot;executable&quot;, &quot;param1&quot;, &quot;param2&quot;]</code><br> 前者将在 <code>shell</code> 终端中运行命令，即 /bin/sh -c；后者则使用 <code>exec</code>执行</p>
+</li>
+</ol>
+<blockquote>
+<p>更多指令请看 <a href="https://yeasy.gitbooks.io/docker_practice/content/dockerfile/instructions.html" target="_blank" rel="noopener">Gitbook</a></p>
+</blockquote>
+<h3 id="创建镜像"><a href="#创建镜像" class="headerlink" title="创建镜像"></a><strong>创建镜像</strong></h3><ol>
+<li><p><code>docker build [选项]</code> : 创建镜像<br> 该命令将读取指定路径下（包括子目录）的 Dockerfile，并将该路径下所有内容发送给 Docker 服务端，由服务端来创建镜像。</p>
+</li>
+<li><p>$<code>docker build -t ubuntu/keras ./</code></p>
+<ul>
+<li><code>-t</code>表示指定镜像的标签信息</li>
+<li>镜像名称为<code>ubuntu</code> , 标签为<code>keras</code></li>
+<li><code>./</code>在本目录生成镜像</li>
+</ul>
+</li>
+</ol>
+<h3 id="数据操作"><a href="#数据操作" class="headerlink" title="数据操作"></a><strong>数据操作</strong></h3><ol>
+<li><p><code>sudo docker run -i -t -d -P --name anaconda -v /home/:/home/ centos:anaconda</code></p>
+<ul>
+<li>创建一个名字为<code>anaconda</code>的容器, 并将主机的<code>/home/</code>目录挂载到容器的<code>/home/</code>上</li>
+<li><code>centos:anaconda</code>是镜像名和标签</li>
+</ul>
+</li>
+<li><p><code>sudo docker ps</code> 查看运行的容器 </p>
+</li>
+<li><p><code>sudo docker attach [CONTAINER ID]</code>进入容器, 进入<code>home</code>目录查看文件</p>
+</li>
+</ol>
+<ul>
+<li>后面使用了<code>docker-enter</code>命令进入容器, 具体安装方法见 <a href="https://yeasy.gitbooks.io/docker_practice/content/container/enter.html" target="_blank" rel="noopener">页面底部</a></li>
+</ul>
+<h3 id="创建镜像-1"><a href="#创建镜像-1" class="headerlink" title="创建镜像"></a><strong>创建镜像</strong></h3><p>针对镜像做出更改, 现在有两种方法。</p>
+<ol>
+<li>从已经创建的容器中更新镜像，并且提交这个镜像。</li>
+<li>使用Dockerfile指令来创建一个镜像。</li>
+</ol>
+<p>我们采用第一种方式, 首先在网易镜像中心<code>docker pull</code>下来centos7.0 , 然后<code>docker tag</code>重命名, 然后<code>docker run</code>创建容器, 最后<code>docker-enter</code>进入容器</p>
+<h3 id="环境部署"><a href="#环境部署" class="headerlink" title="环境部署"></a><strong>环境部署</strong></h3><p>安装<code>python环境</code>为例,</p>
+<ol>
+<li><p>首先安装epel扩展源 : <code>sudo yum -y install epel-release</code></p>
+</li>
+<li><p>然后安装python-pip : <code>sudo yum -y install python-pip</code></p>
+</li>
+<li><p>清除一下cache : <code>sudo yum clean all</code></p>
+</li>
+<li><p>安装依赖包<code>sudo yum install blas-devel lapack-devel</code></p>
+</li>
+<li><p>安装numpy : <code>pip install numpy</code></p>
+</li>
+<li>安装scipy : <code>pip install scipy</code>     </li>
+<li>安装scikit-learn : <code>pip install scikit-learn</code></li>
+</ol>
+<p>这时我们相当于把容器中的运行环境改变了, 我们要将新的环境作为自己的镜像</p>
+<h3 id="推送镜像"><a href="#推送镜像" class="headerlink" title="推送镜像"></a><strong>推送镜像</strong></h3><ol>
+<li><p>列出本地镜像<code>docker images</code>, 查看运行容器<code>docker ps</code></p>
+</li>
+<li><p>登录蜂巢镜像仓库 : <code>docker login –u [你的蜂巢邮箱帐号或手机号码] –p [你的蜂巢密码] –e [你的邮箱] hub.c.163.com</code></p>
+<ul>
+<li>返回<code>「Login Succeded」</code>即为登录成功</li>
+</ul>
+</li>
+<li><p>标记本地镜像 : <code>docker tag [镜像名或ID]  hub.c.163.com/[你的用户名]/[标签名]</code></p>
+<ul>
+<li>你的蜂巢镜像仓库推送地址为 <code>hub.c.163.com/[你的用户名]/[标签名]</code></li>
+<li>推送至不存在的镜像仓库时，自动创建镜像仓库并保存新推送的镜像版本；</li>
+<li>推送至已存在的镜像仓库时，在该镜像仓库中保存新推送的版本，当版本号相同时覆盖原有镜像。</li>
+</ul>
+</li>
+<li><p>推送至蜂巢镜像仓库 : <code>docker push hub.c.163.com/[你的用户名]/[标签名]</code></p>
+</li>
+</ol>
+<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a><strong>效果</strong></h3><ol>
+<li><p>命令<code>docker push hub.c.163.com/simshang/python</code>上传</p>
+<p> <img src="/img/制作镜像并上传到私有仓库/docker1.JPG" alt=""></p>
+</li>
+<li><p>网易蜂巢查看</p>
+<p> <img src="/img/制作镜像并上传到私有仓库/docker2.JPG" alt=""></p>
+</li>
+</ol>
+<h3 id="阿里云仓库"><a href="#阿里云仓库" class="headerlink" title="阿里云仓库"></a><strong>阿里云仓库</strong></h3><ol>
+<li><p>登录阿里云docker registry:</p>
+<p>$ <code>sudo docker login --username=shang.yan@aliyun.com registry.cn-hangzhou.aliyuncs.com</code></p>
+<ul>
+<li>登录registry的用户名是您的阿里云账号全名，密码是您开通namespace时设置的密码。 你可以在镜像管理首页点击右上角按钮修改docker login密码。</li>
+</ul>
+</li>
+<li><p>从registry中拉取镜像：</p>
+<p>$ <code>sudo docker pull registry.cn-hangzhou.aliyuncs.com/shang/caffe:[镜像版本号]</code></p>
+<ul>
+<li>将镜像推送到registry：</li>
+</ul>
+<p>$ <code>sudo docker login --username=shang.yan@aliyun.com registry.cn-hangzhou.aliyuncs.com</code><br>$ <code>sudo docker tag [ImageId] registry.cn-hangzhou.aliyuncs.com/shang/caffe:[镜像版本号]</code><br>$ <code>sudo docker push registry.cn-hangzhou.aliyuncs.com/shang/caffe:[镜像版本号]</code></p>
+<ul>
+<li>其中[ImageId],[镜像版本号]请你根据自己的镜像信息进行填写。</li>
+</ul>
+</li>
+</ol>
+<p><strong>sample:</strong> : 使用docker tag重命名镜像，并将它通过私网ip推送至registry：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker images</span><br><span class="line">REPOSITORY                                                         TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</span><br><span class="line">registry.aliyuncs.com/acs/agent                                    0.7-dfb6816         37bb9c63c8b2        7 days ago          37.89 MB</span><br><span class="line"></span><br><span class="line">$ sudo docker tag 37bb9c63c8b2 registry-cn-hangzhou-internal.aliyuncs.com/acs/agent:0.7-dfb6816</span><br><span class="line">通过docker images 找到您的imageId 并对于改imageId重命名镜像domain到registry内网地址。</span><br><span class="line"></span><br><span class="line">$ sudo docker push registry-cn-hangzhou-internal.aliyuncs.com/acs/agent</span><br><span class="line">从内网push镜像，速度将大大提升，并且将不会损耗您的公网流量。注意，如果您申请的机器是在vpc网络的，请使用registry-cn-hangzhou-vpc.aliyuncs.com的域名前缀进行推送。</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/18/CppPrimer/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          C++ Primer
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/11/IDE指南/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">IDE指南</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

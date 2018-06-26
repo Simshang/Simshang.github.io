@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>AlexNet | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="关于Alexnet的介绍, 我们在 CNNs的扩展阅读里简单的讲过了, 下面我们要用Caffe真正的实践一下Alexnet, 并且关于网络中的一些知识点进行讲解">
+<meta name="keywords" content="AlexNet">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AlexNet">
+<meta property="og:url" content="http://simtalk.cn/2016/09/20/AlexNet/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="关于Alexnet的介绍, 我们在 CNNs的扩展阅读里简单的讲过了, 下面我们要用Caffe真正的实践一下Alexnet, 并且关于网络中的一些知识点进行讲解">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/architecture.png">
+<meta property="og:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/AlexCaffe.png">
+<meta property="og:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/conv1.png">
+<meta property="og:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/conv2.png">
+<meta property="og:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/conv3.png">
+<meta property="og:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/conv4.png">
+<meta property="og:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/conv5.png">
+<meta property="og:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/fc6.png">
+<meta property="og:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/fc7.png">
+<meta property="og:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/fc8.png">
+<meta property="og:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/dataAu.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/result.jpg">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.943Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AlexNet">
+<meta name="twitter:description" content="关于Alexnet的介绍, 我们在 CNNs的扩展阅读里简单的讲过了, 下面我们要用Caffe真正的实践一下Alexnet, 并且关于网络中的一些知识点进行讲解">
+<meta name="twitter:image" content="http://simtalk.cn/img/Alexnet-in-Caffe/architecture.png">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-AlexNet" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/09/20/AlexNet/" class="article-date">
+  	<time datetime="2016-09-20T13:46:35.000Z" itemprop="datePublished">2016-09-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      AlexNet
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AlexNet/">AlexNet</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/深度学习/">深度学习</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#网络架构"><span class="toc-text">网络架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ReLU"><span class="toc-text">ReLU</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LRN"><span class="toc-text">LRN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Overlapping-Pooling"><span class="toc-text">Overlapping Pooling</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Data-Augmentation"><span class="toc-text">Data Augmentation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dropout"><span class="toc-text">Dropout</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参数更新"><span class="toc-text">参数更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实践AlexNet"><span class="toc-text">实践AlexNet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#相关资料"><span class="toc-text">相关资料</span></a></li></ol>
+        </div>
+        
+        <p>关于Alexnet的介绍, 我们在 <a href="http://simtalk.cn/2016/09/12/CNNs/#拓展阅读">CNNs</a>的扩展阅读里简单的讲过了, 下面我们要用Caffe真正的实践一下Alexnet, 并且关于网络中的一些知识点进行讲解<br><a id="more"></a></p>
+<h3 id="网络架构"><a href="#网络架构" class="headerlink" title="网络架构"></a><strong>网络架构</strong></h3><p><img src="\img\Alexnet-in-Caffe\architecture.png" alt=""></p>
+<ul>
+<li>图中的网络架构是双GPU下的并行训练架构</li>
+</ul>
+<p><strong>注意</strong>, 在原文中的输入是$[224*224]$的图像, 但是并不能得到$[55*55]$的输出, 根据计算卷积层输出大小的公式实际上的输入应为$[227*227]$</p>
+<ul>
+<li><a href="https://gist.github.com/Simshang/d5e821d859b871671ecef6029bcffc60" target="_blank" rel="noopener">Alexnet的.prototxt文件</a></li>
+</ul>
+<p><strong><a href="http://ethereon.github.io/netscope/#/gist/d5e821d859b871671ecef6029bcffc60" target="_blank" rel="noopener">Alexnet的网络结构</a></strong> :   </p>
+<ul>
+<li>共有8层，其中前5层<code>convolutional</code>，后边3层<code>full-connected</code>，最后的一个full-connected层的output是具有1000个输出的<code>softmax</code>，最后的优化目标是最大化平均的<code>multinomial logistic regression</code></li>
+</ul>
+<blockquote>
+<p>一个卷积层中除了卷积层以外还可能包含一个ReLU层, 一个Pool层, 一个Norm层</p>
+</blockquote>
+<p><strong><a href="http://ethereon.github.io/netscope/#/gist/003720497dd718c07c14ebf38e7acec1" target="_blank" rel="noopener">Caffenet的网络结构</a></strong> :<br>针对2012年的这组数据集Caffe也定义了自己的结构，被称为<code>CaffeNet</code>，文档中说在迭代30多万次的的情况下精度大概提高了<code>0.2</code>个百分点, Caffenet的区别在于<code>norm1，pool1</code>，<code>norm2，pool2</code>互换了顺序。</p>
+<p>   <img src="\img\Alexnet-in-Caffe\AlexCaffe.png" alt=""></p>
+<ul>
+<li><a href="http://blog.csdn.net/losteng/article/details/50827606" target="_blank" rel="noopener">Caffenet的layer的参数说明</a></li>
+</ul>
+<ol>
+<li><p>第一个卷积层<br><img src="\img\Alexnet-in-Caffe\conv1.png" alt=""></p>
+<ul>
+<li>首先通过$96$个$[11*11*3]$的kernel在$stride=4$(经验值)的情况下对于$[224*224*3]$的图像进行了滤波, 就是采用了$[11*11]$的卷积模板在三个通道上，间隔为4个像素的采样频率上对于图像进行了卷积操作, 最后得到的<code>map</code>大小为$[55*55*1]$, 因为有96个滤波器, 所以深度为$96$</li>
+<li>然后通过ReLU激活函数处理<code>map</code>, 通过Pooling运算, $[3*3]$的Pooling大小, 步长为2, 得到$[27*27*96]$的输出</li>
+<li>最后跟的是<code>Response-nomalization layer</code></li>
+</ul>
+</li>
+<li><p>第二个卷积层</p>
+<p><img src="\img\Alexnet-in-Caffe\conv2.png" alt=""></p>
+<ul>
+<li>第二个卷积层中, 卷积核数目为$256$, 卷积核大小为$[5*5]$(<strong>卷积核的深度默认和输入数据保持一致</strong>), $padding=2$, 步长为1</li>
+<li>输出数据尺寸$[13*13*256]$</li>
+</ul>
+</li>
+<li><p>第三个卷积层</p>
+<p><img src="\img\Alexnet-in-Caffe\conv3.png" alt=""></p>
+<ul>
+<li>第三个卷积层中, 卷积核数目为$384$, 卷积核大小为$[3*3]$(<strong>卷积核的深度默认和输入数据保持一致</strong>), $padding=1$, 步长为1</li>
+<li>输出数据尺寸$[13*13*384]$</li>
+</ul>
+</li>
+<li><p>第四个卷积层</p>
+<p><img src="\img\Alexnet-in-Caffe\conv4.png" alt=""></p>
+<ul>
+<li>第四个卷积层中, 卷积核数目为$384$, 卷积核大小为$[3*3]$(<strong>卷积核的深度默认和输入数据保持一致</strong>), $padding=1$, 步长为1</li>
+<li>输出数据尺寸$[13*13*384]$</li>
+</ul>
+</li>
+<li><p>第五个卷积层</p>
+<p><img src="\img\Alexnet-in-Caffe\conv5.png" alt=""></p>
+<ul>
+<li>第五个卷积层中, 卷积核数目为$256$, 卷积核大小为$[3*3]$(<strong>卷积核的深度默认和输入数据保持一致</strong>), $padding=1$, 步长为1</li>
+<li>输出数据尺寸$[6*6*256]$</li>
+</ul>
+</li>
+<li><p>全连接层</p>
+<p><img src="\img\Alexnet-in-Caffe\fc6.png" alt=""></p>
+<ul>
+<li>输入是$6*6*256=9216$维的向量, 输出是$4096$维的向量, 所以含有4096个神经元</li>
+</ul>
+</li>
+<li><p>全连接层</p>
+<p><img src="\img\Alexnet-in-Caffe\fc7.png" alt=""></p>
+<ul>
+<li>输入是$6*6*256=9216$维的向量, 输出是$4096$维的向量, 所以含有4096个神经元</li>
+</ul>
+</li>
+<li><p>全连接层</p>
+<p><img src="\img\Alexnet-in-Caffe\fc8.png" alt=""></p>
+<ul>
+<li>输入是$4096$维的向量, 输出是$1000$维的向量, 所以含有1000个神经元</li>
+</ul>
+</li>
+</ol>
+<h3 id="ReLU"><a href="#ReLU" class="headerlink" title="ReLU"></a><strong>ReLU</strong></h3><p>ReLU（Rectified Linear Units）是神经网络中的激活函数, 其形式为$f(x)=max(x,0)$, 是不饱和线性函数, 最原始的神经网络输出函数是<code>sigmoid：</code> $f(x)=(1+e^{-x})^{-1}$ 或者 <code>tanh:</code> $f(x) = tanh(x)$, 它们是饱和线性函数, 饱和的线性函数很容易出现梯度消失的问题, 采用ReLU函数可以使得网络做的更深, 在训练时间上，非饱和函数比饱和函数训练更快</p>
+<ul>
+<li><a href="http://simtalk.cn/2016/09/08/Neural-Network/#常用激活函数">常用激活函数详解</a></li>
+</ul>
+<h3 id="LRN"><a href="#LRN" class="headerlink" title="LRN"></a><strong>LRN</strong></h3><p>LRN(Local Response Normalization)是局部响应归一化, 选取临近的n个特征图，在特征图的同一个空间位置（x,y）,依次平方，然后求和，在乘以alpha，在加上K, ReLU函数不需要归一化来防止饱和现象，如果没有神经元产生一个正的激活值，学习就会在这个神经元发生, 但是作者发现局部归一化会帮助泛化。 </p>
+<p>定义如下:</p>
+<p>$$b_{x,y}^{i} = a_{x,y}^{i}/(k+\alpha \sum_{j=max(0,i-n/2)}^{min(N-1,i+n/2)}(a_{x,y}^{i})^{2})^{\beta}$$</p>
+<ul>
+<li>$a_{x,y}^{i}$是以第$i$个卷积核计算得到的Map值, 即经过神经元中的激活函数后的输出值</li>
+<li>$N$ 是该层的<code>feature map</code>总数</li>
+<li>$n$表示取该<code>feature map</code>为中间的左右各n/2个feature map来求均值</li>
+<li>$b_{x,y}^{i}$是下一层的输入<br>本文的归一化只是多个特征图同一个位置上的归一化，属于特征图之间的局部归一化（属于纵向归一化）, 论文中在特征图之间基础上还有同一特征图内邻域位置像素的归一化（横向，纵向归一化结合）, 归一化方法没有减去均值，因为ReLU只对正值部分产生学习，如果减去均值会丢失掉很多信息, 论文中的参数$k=2,n=5,\alpha=10^{-4},\beta = 0.75$, 每一层ReLU后面都接一层LRN, 论文中提到使用LRN来训练他们的网络, 在ImageNet上<code>top-1</code>和<code>top-5</code>的错误率分别下降了<code>1.4%</code>和<code>1.2%</code></li>
+</ul>
+<h3 id="Overlapping-Pooling"><a href="#Overlapping-Pooling" class="headerlink" title="Overlapping Pooling"></a><strong>Overlapping Pooling</strong></h3><p>Pooling层一般用于降维, 在一个区域内取平均或取最大值, 作为这一个小区域内的特征传递到下一层, 传统的Pooling层是不重叠的, 而本论文提出使Pooling层相邻池化窗口之间会有重叠区域, 可以减少信息的损失, 可以降低错误率，而且对防止过拟合有一定的效果。</p>
+<h3 id="Data-Augmentation"><a href="#Data-Augmentation" class="headerlink" title="Data Augmentation"></a><strong>Data Augmentation</strong></h3><ul>
+<li>为了防止过拟合论文进行了数据增广, 将原始图像进行平移, 水平翻转等变换</li>
+</ul>
+<p><img src="\img\Alexnet-in-Caffe\dataAu.jpg" alt=""></p>
+<p>原始图像为一个大图a，想把一短边缩小到256维得到b，然后在b的中心取$256*256$的正方形图片得到c，然后在c上随机提取(256-224=32)$224*224$的小图片作为训练样本，然后在结合图像水平反转(x2)来增加样本达到数据增益。这种增益方法是样本增加了2048(32x32x2)倍，允许我们运行更大的网络。</p>
+<ul>
+<li>对图片的RGB通道进行强度改变, 在训练集的RGB通道上做PCA, 但是不降维, 只取特征向量和特征值, 对训练集上每张图片的每个像素$I_{x,y}=[I_{x,y}^{R},I_{x,y}^{G},I_{x,y}^{B}]^{T}$加上下面的值形成新的训练数据</li>
+</ul>
+<p>$$[p_{1},p_{2},p_{3}][\alpha_{1}\lambda_{1},\alpha_{2}\lambda_{2},\alpha_{3}\lambda_{3}]^{T}$$</p>
+<ul>
+<li>其中, $p_{i}$表示特征向量, $\lambda_{i}$表示特征值, $\alpha$表示均值为0，方差为0.1的高斯随机变量</li>
+</ul>
+<p>论文中表示将top-1误差降低了1%</p>
+<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a><strong>Dropout</strong></h3><p>Dropout层一般用在FC层之后, 每次forward的时候FC之前层的每个神经元会以一定的概率不参与前向传播, 而后向传播的时候这些单元也不参与, 这种方式使得网络以部分神经元来表示当前的特征，相当于间接降低了模型的复杂度, 很大程度上降低了过拟合。具体做法是以0.5的概率将每个隐层神经元的输出设置为零, 被“dropped out”的神经元既不参与前向传播，也不参与反向传播。在测试时，我们将所有神经元的输出都仅仅只乘以0.5</p>
+<ul>
+<li><a href="http://simtalk.cn/2016/09/09/Neural-Network-in-Practice/#随机失活Dropout">Dropout详解</a></li>
+<li><a href="https://www.cs.toronto.edu/~hinton/absps/JMLRdropout.pdf" target="_blank" rel="noopener">Dropout: A Simple Way to Prevent Neural Networks from Overfitting-PDF</a></li>
+</ul>
+<h3 id="参数更新"><a href="#参数更新" class="headerlink" title="参数更新"></a><strong>参数更新</strong></h3><p>使用带动量项的梯度下降法SGD:</p>
+<p>$$v_{i+1}=0.9 \cdot v_{i} - 0.0005 \cdot lr \cdot \omega_{i} - lr \cdot \langle \frac{\partial L}{\partial \omega}|_{\omega_{i}}\rangle_{D_{i}}$$</p>
+<p>$$\omega_{i+1} = \omega_{i}+v_{i+1}$$</p>
+<ul>
+<li>其中，$\omega$是最后的结果，$v$是增量，权值削减$0.0005$是weight decay的值，$0.9$是momentum的系数, 批量$D=128$</li>
+<li>该模型用均值为0、标准差为0.01的高斯分布初始化每一层的权重, 用常数1初始化第二、第四和第五个卷积层以及全连接隐层的神经元偏差, 在其余层用常数0初始化神经元偏差</li>
+<li><p>$lr$是学习率，初始为0.01，启发式方式: 当验证误差率在当前学习率下不再提高时，就将学习率除以10。</p>
+</li>
+<li><p><a href="http://simtalk.cn/2016/09/09/Neural-Network-in-Practice/#参数更新">参数更新详解</a></p>
+</li>
+</ul>
+<h3 id="实践AlexNet"><a href="#实践AlexNet" class="headerlink" title="实践AlexNet"></a><strong>实践AlexNet</strong></h3><p>首先去 <a href="https://github.com/BVLC/caffe/tree/master/models/bvlc_alexnet" target="_blank" rel="noopener">Github</a>上下载AlexNet的Modle</p>
+<p><a href="http://caffe.berkeleyvision.org/tutorial/layers.html" target="_blank" rel="noopener">Caffe各层的功能</a></p>
+<p><strong>测试方法</strong></p>
+<p>在$256*256$图片的四角和中心提取5个$224*224$片段，在水平翻转后形成10个样本，输入网络结果求平均。</p>
+<p><strong>结果</strong> :</p>
+<p>在ILSVRC2012上，单个模型的top-5结果为18.2%；5个模型求平均结果为16.4%。</p>
+<ul>
+<li>在一个大的数据集训练网络，然后在另一现对较小的数据上finetuning网络的方式，类似transfer learning，在以后的论文中经常出现。</li>
+</ul>
+<p><img src="\img\Alexnet-in-Caffe\result.jpg" alt=""></p>
+<ul>
+<li>从第一个卷基层卷积核可视图可以看出，卷积核具有方向，“频率”选择性，还有一些圆点状的, 也有许多死的卷积核；</li>
+<li>无论在什么初始值下，值得注意的是两个GPU学习到的卷积核不一样，GPU1学习到的特征不具有颜色特征，GPU2学习到的特征大部分体现了颜色特征，相同的结构，学习的卷积核却不同</li>
+</ul>
+<p>另一个值得注意的地方就是在最后的一个具有4096个神经元的全连接层，通过计算欧氏距离，欧氏距离比较近的图片具有相似的图片对象。说明网络确实提取到了有用的特征，此外作者还介绍可以通过在4096处的输出，通过一个Autoencoder算法，来生产一个维数较少的二元向量，这样就可以通过比较这个维数较小的向量来进行图像检索。</p>
+<h3 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a><strong>相关资料</strong></h3><ol>
+<li><p>Original paper: <strong>“ImageNet Classification with Deep Convolutional Neural Networks”</strong> [<a href="http://www.cs.toronto.edu/~fritz/absps/imagenet.pdf" target="_blank" rel="noopener">PDF</a>]</p>
+</li>
+<li><p>PPT : <strong>Deep Convolutional Neural Networks for Image Classification</strong> <a href="http://slazebni.cs.illinois.edu/spring14/lec24_cnn.pdf" target="_blank" rel="noopener">PPT</a></p>
+</li>
+<li><p><a href="http://blog.csdn.net/whiteinblue/article/details/43202399" target="_blank" rel="noopener">参考博客</a></p>
+</li>
+</ol>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/09/25/VGGNet/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          VGGNet
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/09/14/Caffe-in-Action/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Caffe in Action</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

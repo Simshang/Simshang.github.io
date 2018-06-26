@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>特征与匹配 | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="介绍一下计算机视觉中的常见的特征描述子和匹配算法，主要是对基于orb特征的深入分析和匹配算法的分析。">
+<meta name="keywords" content="Harris,SIFT,SURF,BRIEF,ORB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="特征与匹配">
+<meta property="og:url" content="http://simtalk.cn/2017/08/18/特征与匹配/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="介绍一下计算机视觉中的常见的特征描述子和匹配算法，主要是对基于orb特征的深入分析和匹配算法的分析。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/corner.png">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/harris_non_scale_constant.png">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/sift_picture.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/sift_dog.png">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/sift_detection_maximum.png">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/128dimsift.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/ii.png">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/iid.png">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/iidd.png">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/scale.png">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/diff.png">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/direction.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/directionf.png">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/brief.png">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/fast.png">
+<meta property="og:image" content="http://simtalk.cn/img/特征与匹配/gms.jpg">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.958Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="特征与匹配">
+<meta name="twitter:description" content="介绍一下计算机视觉中的常见的特征描述子和匹配算法，主要是对基于orb特征的深入分析和匹配算法的分析。">
+<meta name="twitter:image" content="http://simtalk.cn/img/特征与匹配/corner.png">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-特征与匹配" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/08/18/特征与匹配/" class="article-date">
+  	<time datetime="2017-08-18T07:44:38.000Z" itemprop="datePublished">2017-08-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      特征与匹配
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/BRIEF/">BRIEF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Harris/">Harris</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ORB/">ORB</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SIFT/">SIFT</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SURF/">SURF</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/计算机视觉/">计算机视觉</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#特征部分"><span class="toc-text">特征部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Harris"><span class="toc-text">Harris</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SIFT"><span class="toc-text">SIFT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SURF"><span class="toc-text">SURF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BRIEF"><span class="toc-text">BRIEF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FAST"><span class="toc-text">FAST</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ORB"><span class="toc-text">ORB</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#匹配部分"><span class="toc-text">匹配部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Brute-force"><span class="toc-text">Brute-force</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flann-based"><span class="toc-text">Flann-based</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GMS"><span class="toc-text">GMS</span></a></li></ol></li></ol>
+        </div>
+        
+        <p>介绍一下计算机视觉中的常见的特征描述子和匹配算法，主要是对基于orb特征的深入分析和匹配算法的分析。</p>
+<a id="more"></a>
+<h2 id="特征部分"><a href="#特征部分" class="headerlink" title="特征部分"></a><strong>特征部分</strong></h2><p>特征本质上就是对图像的描述，比如一幅图像的均值和方差就可以作为特征，在特征匹配问题中常常需要不同角度下的同一个目标进行匹配，利用全局特征很难做到这一点，所以我们通常用多个局部特征点来描述一幅图像。</p>
+<h3 id="Harris"><a href="#Harris" class="headerlink" title="Harris"></a><strong>Harris</strong></h3><p>角点一般是对灰度图像或者二值图像进行处理，角点和边缘最大的区别就是角点在两个方向上都有较为剧烈的灰度变化，而边缘只在一个方向上有剧烈的灰度变化，如下图所示：</p>
+<p><img src="/img/特征与匹配/corner.png" alt=""></p>
+<ul>
+<li>左边的图是平滑区域，沿任意方向平移矩形框内的灰度变化率变化很小</li>
+<li>中间的图是边缘区域，沿某些方向灰度变化率大，某些方向灰度变化率小</li>
+<li>右边的图是角点，沿任意方向平移矩形框内的灰度变化率变化很大</li>
+</ul>
+<p><strong>Harris角点检测</strong></p>
+<p>根据角点的平移特点，定义了$E(u,v)$表示窗口沿着$(u,v)$方向移动后的梯度变化，定义如下：</p>
+<p>$$E(u,v)=\underset{x,y}{\Sigma} w(x,y)[I(x+u,y+v)-I(x,y)]^2$$</p>
+<p>其中，</p>
+<ul>
+<li>$(x,y)$表示像素点的坐标，$(u,v)$表示方向向量</li>
+<li>$w(x,y)$表示该像素点的权值，当用0或者1赋值表示是否选定该像素点，$w(x,y)$也表示选定的窗口</li>
+</ul>
+<p>其中，</p>
+<p>$I(x+u,y+v)-I(x,y)=I(x,y)+uI_x+vI_y, I_y和I_y$为灰度沿$x,y$方向的导数，则将原式转化为矩阵形式：</p>
+<p>$$ E(u,v) = \begin{bmatrix} u\ v \end{bmatrix}M\begin{bmatrix} u\\v \end{bmatrix}$$</p>
+<p>其中：</p>
+<p>$$ M=\underset{x,y} \Sigma w(x,y) \begin{bmatrix} I_x^2&amp;I_xI_y \\ I_xI_y&amp;I_y^2 \end{bmatrix} $$</p>
+<p>最后定义一个评估函数来衡量灰度变化率的大小：</p>
+<p>$$ R=det(M)=k(trace(M))^2 $$</p>
+<p>其中，</p>
+<p>$$ det(M)=\lambda_1\lambda_2,trace(M)=\lambda_1+\lambda_2 $$</p>
+<ul>
+<li>$k$为控制参数</li>
+<li>$\lambda_1,\lambda_2$为$M$的特征值</li>
+</ul>
+<p>当$R$较小的时，图像平滑；<br>当$R$小于零的时，为边缘；<br>当$R$较大的时，为角点。</p>
+<p>为了减弱噪声的影响，常常使用高斯窗函数：</p>
+<p>$$w(x,y) = \exp(-\frac{x^2+y^2}{2\sigma^2})$$</p>
+<blockquote>
+<p>缺点：不具有尺度不变性</p>
+</blockquote>
+<p>如下图所示：当尺度放大后，原来判定为<code>角点</code>的地方现在判定为<code>边缘</code></p>
+<p><img src="/img/特征与匹配/harris_non_scale_constant.png" alt=""></p>
+<h3 id="SIFT"><a href="#SIFT" class="headerlink" title="SIFT"></a><strong>SIFT</strong></h3><p>SIFT(Scale Invariant Feature Transform)的优势在于尺度变换、平移变换和旋转变换的不变性，主要步骤如下：</p>
+<ol>
+<li><p>使用DoG（Difference of Gaussian）在不同的尺度空间上找到特征点</p>
+<ul>
+<li>DoG特征就是在不同参数下的高斯滤波（卷积操作）结果相减</li>
+</ul>
+</li>
+<li><p>对得到的特征点进行稳定度检测，得到特征点的尺度和位置</p>
+</li>
+<li><p>计算图像的梯度图，确定特征点的方向</p>
+<p><img src="/img/特征与匹配/sift_picture.jpg" alt=""></p>
+</li>
+<li><p>使用图像的局部梯度作为特征点的描述子，最终构成SIFT特征向量</p>
+</li>
+</ol>
+<blockquote>
+<p>如何解决尺度空间的不变性：</p>
+</blockquote>
+<p>相关研究已经证明，在一些合理的假设条件下，高斯核是唯一满足尺度不变性的，尺度空间就是指原始图像$I(x,y)$和可变尺度的高斯核$G(x,y,\sigma)$的卷积结果:</p>
+<p>$$L(x,y,\sigma) = G(x,y,\sigma)\ast I(x,y)$$</p>
+<p>$$G(x,y, \sigma) = \frac{1}{2\pi\sigma^2}\exp(-\frac{x^2+y^2}{2\sigma^2})$$</p>
+<ul>
+<li>不同的$\sigma$代表不同的尺度</li>
+</ul>
+<p>DoG(difference of Gaussian)函数定义为不同尺度的高斯核与图像卷积结果之差：</p>
+<p>$$D(x,y,\sigma) = L(x,y,k\sigma) - L(x,y,\sigma)$$</p>
+<p>如下图所示，输入的图像重复地与高斯核进行卷积得到结果图像LL（左侧），这样构成了一个octave。相邻的LL之间作差得到DoG图像（右侧）。当一个octave处理完之后，将当前octave的最后一张高斯卷积结果图像降采样两倍，按照前述方法构造下一个octave。</p>
+<p><img src="/img/特征与匹配/sift_dog.png" alt=""></p>
+<ul>
+<li><p>一个octave划分为$s$个间隔，假设$\sigma$最终变为原来的2倍，那么相邻两层之间的k的间隔为$k = 2^\frac{1}{s}$</p>
+</li>
+<li><p>为了保证首位两张图也能够进行计算差值，我们需要做两张图片的Padding，图中实际的$s=2$, 也就是说一个octave内的总图像为$s+3$</p>
+</li>
+</ul>
+<p>理论上可以证明，通过高斯核滤波的不同尺度空间下对于检测极值没有影响，这样就保证了保证尺度不变性。</p>
+<p>检测DoG图像金字塔的极值：</p>
+<p><img src="/img/特征与匹配/sift_detection_maximum.png" alt=""></p>
+<ul>
+<li>将每个点与金字塔中相邻的26个点作比较，图中标记<code>x</code>的像素点的特征值若大于周围像素则可确定该点为该区域的特征点</li>
+<li>将输入图像行列预先使用线性插值的方法resize为原来的2倍可以获得更多的极值</li>
+</ul>
+<p>对于每个极值点可以获得位于图像金字塔中的具体层数以及像素点位置，选取其周围16x16大小的区域作为一个Patch，将其分为4x4共计16个cell，每个cell内共有16个像素点。对于每个cell，我们计算它的局部梯度方向直方图，直方图共有8个bin，也就是说每个cell可以得到一个8维的特征向量，将16个cell的特征向量首尾相接，就得到了128维的SIFT特征向量。</p>
+<p><img src="/img/特征与匹配/128dimsift.jpg" alt=""></p>
+<h3 id="SURF"><a href="#SURF" class="headerlink" title="SURF"></a><strong>SURF</strong></h3><p><strong>积分图</strong></p>
+<p>SURF与SIFT算法相似，SIFT算法比较稳定，检测特征点更多，但是复杂度较高，而SURF要运算简单，效率高，运算时间短。</p>
+<p>SURF算法中要用到积分图像的概念，借助积分图像，图像与高斯二阶微分模板的滤波转化为对积分图像的加减运算从而加速运算，积分图像中任意一点$(i,j)$的值$ii(i,j)$为原图像左上角到点$(i,j)$相应的对角线区域灰度值的总和，即</p>
+<p>$$ii(i,j) = \sum_{r\le i,\ c\le j}p(r,c)$$</p>
+<p>如图所示：</p>
+<p><img src="/img/特征与匹配/ii.png" alt=""></p>
+<ul>
+<li>利用积分图计算图像内任何矩形区域的像素值的和只需要三个加法</li>
+</ul>
+<blockquote>
+<p>与SIFT相比的不同点：</p>
+</blockquote>
+<ol>
+<li><p>构造金字塔尺度空间：</p>
+<p>SIFT算法建立一幅图像的金字塔，在每一层进行高斯滤波并求取图像差(DOG)进行特征点的提取，而SURF则用的是Hessian Matrix进行特征点的提取：</p>
+<p>给定图像$I$中的一个点$x(i,j)$，在点$x$处，尺度为$\sigma$的Hessian矩阵$H(x,\sigma)$定义如下：</p>
+<p>$$ H(x,\sigma) = \begin{bmatrix}L_{xx}(x,\sigma) &amp; L_{xy}(x,\sigma) \\ L_{xy}(x,\sigma) &amp; L_{yy}(x,\sigma) \end{bmatrix} $$</p>
+<ul>
+<li>$L_{xx}(x,\sigma)$是高斯二阶微分$\frac{\partial ^2g(\sigma)}{\partial x^2}$在点$x$处与图像$I$的卷积,$L_{xy}(x,\sigma)$和$L_{yy}(x,\sigma)$具有相同的含义。</li>
+</ul>
+<p>上面三种高斯微分算子的图形：</p>
+<p><img src="/img/特征与匹配/iid.png" alt=""></p>
+<p>为了将模板与图产像的卷积转换为盒子滤波运算（在固定大小的滑动窗口下，对每个窗口内的像素值进行快速相加求和），我们需要对高斯二阶微分模板进行简化，使得简化后的模板只是由几个矩形区域组成，矩形区域内填充同一值，如下图所示：</p>
+<p><img src="/img/特征与匹配/iidd.png" alt=""></p>
+<ul>
+<li>在简化模板中白色区域的值为正数，黑色区域的值为负数，灰度区域的值为0</li>
+</ul>
+<p>使用近似的Hessian矩阵行列式来表示图像中某一点$x$处的Hessian Matrix响应值，遍历图像中所有的像素点，便形成了在某一尺度下特征点检测的响应图像。使用不同的模板尺寸，便形成了多尺度特征点响应的金字塔图像，利用这一金字塔图像，就可以进行响应极值点的搜索，其过程完全与SIFT算法相同。</p>
+<p>由于采用了盒子滤波和积分图像，SURF算法并不需要像SIFT算法那样去直接建立图像金字塔，而是采用不断增大盒子滤波模板的尺寸的间接方法，通过不同尺寸盒子滤波模板与积分图像求取Hessian矩阵行列式的响应图像。然后在响应图像上采用3D非最大值抑制，求取各种不同尺度的特征点。</p>
+<p><img src="/img/特征与匹配/scale.png" alt=""></p>
+<ul>
+<li>与SIFT算法类似，需要将尺度空间划分为若干组（Octaves），一个组代表了逐步放大的滤波模板对同一输入图像进行滤波的一系列响应图</li>
+</ul>
+<p>由于积分图像离散化的原因，两个层之间的最小尺度变化量是由高斯二阶微分滤波器在微分方向上对正负特征值响应长度决定的，它是盒子滤波器模板尺寸的1/3。</p>
+<p><img src="/img/特征与匹配/diff.png" alt=""></p>
+</li>
+<li><p>特征点主方向的确定</p>
+<p>为了保证旋转不变性，在SURF中，不统计其梯度直方图，而是统计特征点领域内的Harr小波特征。即以特征点为中心，计算半径为6s(S为特征点所在的尺度值)的邻域内，统计60度扇形内所有点在x(水平)和y(垂直)方向的Haar小波响应总和(Haar小波边长取4s)，并给这些响应值赋高斯权重系数，使得靠近特征点的响应贡献大，而远离特征点的响应贡献小，然后60度范围内的响应相加以形成新的矢量，遍历整个圆形区域，选择最长矢量的方向为该特征点的主方向。过程如下：</p>
+<p><img src="/img/特征与匹配/direction.jpg" alt=""></p>
+</li>
+<li><p>构造SURF特征点描述算子</p>
+<p>在得到特征点的主方向之后，在特征点周围取一个正方形框，框的边长为20s(s是所检测到该特征点所在的尺度), 然后把该框分为16个子区域，每个子区域统计25个像素的水平方向和垂直方向的haar小波特征，这里的x(水平)和y(垂直)方向都是相对主方向而言的。</p>
+<p>如下图所示：</p>
+<p><img src="/img/特征与匹配/directionf.png" alt=""></p>
+<p>对每个子区域的$dx、dy、|dx|、|dy|$进行求和，归一化为单位向量,那么该正方形框可以构成64维空间。</p>
+</li>
+</ol>
+<h3 id="BRIEF"><a href="#BRIEF" class="headerlink" title="BRIEF"></a><strong>BRIEF</strong></h3><p>SIFT特征采用了128维的特征描述子，由于描述子用的浮点数，所以将会占用512 bytes的空间；对于SURF特征，常见的是64维的描述子，也将占用256bytes的空间，SIFT或SURF特征描述子将占用大量的内存空间，对于那些资源紧张的应用，尤其是嵌入式的应用，这样的特征描述子显然是不可行的。而且，越占有越大的空间，意味着越长的匹配时间。实际上SFIT或SURF的特征描述子中，并不是所有维都在匹配中有着实质性的作用。我们可以用PCA、LDA等特征降维的方法来压缩特征描述子的维度。还有一些算法，例如LSH，将SIFT的特征描述子转换为一个二值的码串，然后这个码串用汉明距离进行特征点之间的匹配将大大提高特征之间的匹配，因为汉明距离的计算可以用异或操作然后计算二进制位数来实现。</p>
+<p>BRIEF就是一种提取二值码串的特征描述子的方法，它提供了一种计算二值串的捷径，而并不需要去计算一个类似于SIFT的特征描述子。具体步骤如下：</p>
+<ol>
+<li><p>选定建立描述子的区域Patch（特征点的一个正方形邻域）</p>
+</li>
+<li><p>对该邻域用σ=2的高斯核卷积，以消除一些噪声。因为该描述子随机性强，对噪声较为敏感。</p>
+</li>
+<li><p>以一定的随机化算法生成$n_d$个点对（p,q），如果$I(p)&gt;I(q)$则这个点对生成了二值串中一个的值为1，如果$I(p)&lt;I(q)$，则对应在二值串中的值为-1，否则为0</p>
+</li>
+<li><p>得到一个$n_d$位的二进制编码即该特征点的描述子，$n_d$通常为128、256、512</p>
+</li>
+</ol>
+<p>关于点对的选择，采用了五种随机采样的方式：</p>
+<ul>
+<li><p>在图像块内平均采样</p>
+</li>
+<li><p>$p$和$q$都符合$(0,\frac{1}{25}S^2)$的高斯分布</p>
+</li>
+<li><p>$p$符合$(0,\frac{1}{25}S^2)$的高斯分布, $q$符合$(0,\frac{1}{100}S^2)$的高斯分布</p>
+</li>
+<li><p>在空间量化极坐标下的离散位置随机采样</p>
+</li>
+<li><p>把$p$固定为$(0,0)$，$q$在周围平均采样</p>
+</li>
+</ul>
+<p>采样示意图如下所示：</p>
+<p><img src="/img/特征与匹配/brief.png" alt=""></p>
+<blockquote>
+<p>缺点: 对噪声敏感并且不具备旋转不变性和尺度不变性</p>
+</blockquote>
+<h3 id="FAST"><a href="#FAST" class="headerlink" title="FAST"></a><strong>FAST</strong></h3><p>为了满足在工程实践中的性能需求，FAST角点应运而生，FAST角点定义为：若某像素点与其周围领域内足够多的像素点处于不同的区域，则该像素点可能为角点。</p>
+<p>具体算法步骤如下：</p>
+<ol>
+<li><p>在图片中选择一个像素点P，并把它的亮度值设为$I_p$</p>
+</li>
+<li><p>以该像素点为中心的一个半径等于3像素的离散化的Bresenham圆，这个圆的边界上有16个像素，如下图所示：</p>
+<p><img src="/img/特征与匹配/fast.png" alt=""></p>
+</li>
+<li><p>设定一个合适的阈值$t$, 如果在这个大小为16个像素的圆上有$n$个<code>连续的像素点</code>，它们的像素值要么都比$I_p+t$大，要么都比$I_p−t$小，那么它就是一个角点</p>
+</li>
+</ol>
+<ul>
+<li>$n$的值可以设置为12或者9，实验证明选择9可能会有更好的效果</li>
+</ul>
+<p>快速算法：</p>
+<p>仅仅检查在位置1，9，5和13四个位置的像素，首先检测位置1和位置9，如果它们都比阈值暗或比阈值亮，再检测位置5和位置13，如果$P$是一个角点，那么上述四个像素点中至少有3个应该必须都大于$Ip+t$或者小于$Ip−t$，因为若是一个角点，超过四分之三圆的部分应该满足判断条件。</p>
+<p>采用非极大值抑制的方法解决从邻近的位置选取了多个特征点的问题：</p>
+<ol>
+<li>为每一个检测到的特征点计算它的响应大小（score function）$V$。这里$V$定义为点$p$和它周围16个像素点的绝对偏差的和</li>
+<li>考虑两个相邻的特征点，并比较它们的$V$值，$V$值较低的点将会被删除。</li>
+</ol>
+<h3 id="ORB"><a href="#ORB" class="headerlink" title="ORB"></a><strong>ORB</strong></h3><p>ORB（Oriented FAST and Rotated BRIEF）特征是对FAST特征点与BREIF特征描述子的一种结合与改进，具体算法步骤如下：</p>
+<ol>
+<li><p>利用FAST特征点检测的方法来检测特征点</p>
+</li>
+<li><p>利用Harris角点的度量方法，从FAST特征点从挑选出Harris角点响应值最大的$N$个特征点。</p>
+</li>
+</ol>
+<p>其中Harris角点的响应函数定义为：</p>
+<p>$$R=det \boldsymbol{M} - \alpha(trace\boldsymbol{M})^2$$</p>
+<blockquote>
+<p>为FAST特征添加尺度不变性和旋转不变性：</p>
+</blockquote>
+<p>FAST特征点是没有尺度不变性的，可以通过构建高斯金字塔然后在每一层金字塔图像上检测角点，来实现尺度不变性；</p>
+<p>对于旋转不变性，需要局部特征点具有方向信息，ORB的论文中提出了一种利用灰度质心法来解决这个问题，灰度质心法假设角点的灰度与质心之间存在一个偏移，这个向量可以用于表示一个方向。</p>
+<p>对于任意一个特征点$p$，定义$p$的邻域像素的矩为：</p>
+<p>$$ m_{pq} = \sum_{x,y}x^py^qI(x,y) $$</p>
+<ul>
+<li>$I(x,y)$为点$(x,y)$处的灰度值</li>
+</ul>
+<p>得到图像的质心为：</p>
+<p>$$C = \left(\frac{m_{10}}{m_{00}},\frac{m_{01}}{m_{00}}\right)$$</p>
+<p>特征点与质心的夹角定义为FAST特征点的方向：</p>
+<p>$$ \theta = arctan(m_{01},m_{10}) $$</p>
+<ul>
+<li>为了提高方法的旋转不变性，需要确保$x$和$y$在半径为$r$的圆形区域内，即$x,y\in [-r,r]$，$r$等于邻域半径。</li>
+</ul>
+<blockquote>
+<p>用BRIEF特征作为特征描述方法：</p>
+</blockquote>
+<p>ORB选择BRIEF作为特征描述方法，但是BRIEF是没有旋转不变性的，给BRIEF加上旋转不变性的方法称为“Steer BREIF”。对于任何一个特征点来说，它的BRIEF描述子是一个长度为$n$的二值码串，这个二值串是由特征点周围$n$个点对(共$2n$个点)生成的，将这$2n$个点$(x_i,y_i),i = 1,2,\cdots,2n$组成矩阵$S$,</p>
+<p>$$S =\begin{pmatrix}x_1&amp;x_2&amp;\cdots&amp;x_{2n}\\y_1&amp;y_2&amp;\cdots&amp;y_{2n}\end{pmatrix}$$</p>
+<p>然后使用领域方向$\theta$和对应的旋转矩阵$R_{\theta}$,构建$S$的校正版本$S_{\theta}$,</p>
+<p>$$S_{\theta} = R_{\theta}S$$</p>
+<p>其中，</p>
+<p>$$R_{\theta} = \begin{bmatrix}cos\theta &amp; sin\theta \\ –sin\theta &amp;cos\theta\end{bmatrix}$$</p>
+<ul>
+<li>$\theta$为FAST特征点的方向，实际上可以把角度离散化，即把360度分为12份，每一份是30度，然后我们对这个12个角度分别求得一个$S_{\theta}$，这样我们就创建了一个查找表，对于每一个$\theta$，只需查表即可快速得到它的点对的集合$S_{\theta}$</li>
+</ul>
+<p><strong>OpenCV中的ORB</strong></p>
+<p>在OpenCV中它可以通过ORB来创建一个ORB检测器:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ORB::ORB(<span class="keyword">int</span> nfeatures=<span class="number">500</span>, <span class="keyword">float</span> scaleFactor=<span class="number">1.2f</span>, <span class="keyword">int</span> nlevels=<span class="number">8</span>, <span class="keyword">int</span> edgeThreshold=<span class="number">31</span>, <span class="keyword">int</span> firstLevel=<span class="number">0</span>, <span class="keyword">int</span> WTA_K=<span class="number">2</span>, <span class="keyword">int</span> scoreType=ORB::HARRIS_SCORE, <span class="keyword">int</span> patchSize=<span class="number">31</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>nfeatures: 最多提取的特征点的数量</p>
+</li>
+<li><p>scaleFactor: 金字塔图像之间的尺度参数，类似于SIFT中的$k$</p>
+</li>
+<li><p>nlevels: 高斯金字塔的层数</p>
+</li>
+<li><p>edgeThreshold: 边缘阈值，这个值主要是根据后面的patchSize来定的，靠近边缘edgeThreshold以内的像素是不检测特征点的</p>
+</li>
+<li><p>firstLevel: 指定第一层的索引值，默认为0。</p>
+</li>
+<li><p>WET_K: 用于产生BIREF描述子的点对的个数，一般为2个，也可以设置为3个或4个这时候描述子之间的距离计算就不能用汉明距离而是应该用一个变种。OpenCV中，如果设置WET_K = 2，则选用点对就只有2个点，匹配的时候距离参数选择NORM_HAMMING，如果WET_K设置为3或4，则BIREF描述子会选择3个或4个点，那么后面匹配的时候应该选择的距离参数为NORM_HAMMING2</p>
+</li>
+<li><p>scoreType: 用于对特征点进行排序的算法，可以选择HARRIS_SCORE，也可以选择FAST_SCORE，但是也只是比前者快一点</p>
+</li>
+<li><p>patchSize: 用于计算BIREF描述子的特征点邻域大小</p>
+</li>
+</ul>
+<h2 id="匹配部分"><a href="#匹配部分" class="headerlink" title="匹配部分"></a><strong>匹配部分</strong></h2><p>在特征点检测完成之后就会进入匹配阶段， Brute Force匹配和FLANN匹配是opencv二维特征点匹配常见的两种办法，我们知道对于一幅图像提取出来的Descriptor是一个二维矩阵，其中的每一行代表一个特征点，</p>
+<h3 id="Brute-force"><a href="#Brute-force" class="headerlink" title="Brute-force"></a><strong>Brute-force</strong></h3><ul>
+<li>Brute-force matcher (cv::BFMatcher) ：暴力匹配就是将待匹配图片的Descriptor中每一行都与被匹配图片的Descriptor中每一行计算汉明距离，从而得到最佳匹配</li>
+</ul>
+<h3 id="Flann-based"><a href="#Flann-based" class="headerlink" title="Flann-based"></a><strong>Flann-based</strong></h3><ul>
+<li>Flann-based matcher (cv::FlannBasedMatcher) ：使用快速近似最近邻搜索算法寻找，这是一种近似匹配，不一定能找到最佳匹配，它是目前最完整的近似最近邻开源库，不但实现了一系列查找算法，还包含了一种自动选取最快算法的机制。</li>
+</ul>
+<p>构建索引的方式：</p>
+<ul>
+<li><p>LinearIndexParams，该结构对应的索引进行线性的、暴力(brute-force)的搜索</p>
+</li>
+<li><p>KDTreeIndexParams，该方法对应的索引结构由一组随机kd树构成(randomized kd-trees)可以平行地进行搜索</p>
+</li>
+<li><p>KMeansIndexParams，该方法对应的索引结构是一个层次k均值树(a hierarchical k-means tree)</p>
+</li>
+<li><p>CompositeIndexParams，该结构结合随机kd树和层次k均值树来构建索引</p>
+</li>
+<li><p>LshIndexParams，该结构使用multi-probe LSH方法创建索引</p>
+</li>
+</ul>
+<p>特征搜索方式：</p>
+<ul>
+<li><p>knnSearch：根据给定的查询数据，利用构建的索引来执行k近邻搜索</p>
+</li>
+<li><p>radiusSearch：根据给定的查询数据，执行基于半径的最近邻搜索</p>
+</li>
+</ul>
+<h3 id="GMS"><a href="#GMS" class="headerlink" title="GMS"></a><strong>GMS</strong></h3><p><a href="">Grid-based Motion Statistics for Fast, Ultra-robust Feature Correspondence</a></p>
+<p>错误的匹配分为两种：</p>
+<ul>
+<li>False-positive matches: 将非对应特征点检测为匹配（可消除）</li>
+<li>False-negative matches: 未将匹配的特征点检测出来（优化特征提取）</li>
+</ul>
+<p>论文GMS的方法实际上是消除错误匹配的一种方案，算法执行的大致流程是：先执行任意一种特征点的检测和特征点的描述子计算，论文中采用的是ORB特征，然后执行暴力匹配BF，最后执行GMS以消除错误匹配。</p>
+<p><img src="/img/特征与匹配/gms.jpg" alt=""></p>
+<ul>
+<li><p>传统的匹配： ORB + BF + RANSAC的时间比例是：30% + 30% + 40%</p>
+</li>
+<li><p>GMS匹配 ： ORB + BF + GMS的时间比例是 ：50% + 40% + 10%</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/09/04/CDC/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          CDC
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/07/28/Bag-of-Words/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Bag of Words</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

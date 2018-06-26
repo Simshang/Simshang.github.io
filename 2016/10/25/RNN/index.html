@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>RNN | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一般我们用CNN来提取特征, 但是在现实生活中有很多的数据是基于时间序列的, 比如语音识别, 机器翻译等任务, 下面我们介绍一种处理序列数据的神经网络RNN, LSTM可以看做是一种特殊的RNN">
+<meta name="keywords" content="RNN,LSTM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RNN">
+<meta property="og:url" content="http://simtalk.cn/2016/10/25/RNN/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="一般我们用CNN来提取特征, 但是在现实生活中有很多的数据是基于时间序列的, 比如语音识别, 机器翻译等任务, 下面我们介绍一种处理序列数据的神经网络RNN, LSTM可以看做是一种特殊的RNN">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/rnn.jpg">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/rnn-forward.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/bptt-output.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/bptt-hidden.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/bptt-hidden1.PNG">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/Long_Term_Dependencies.png">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/Long_Term_Dependencies1.png">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/SimpleRNN.png">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/SimpleLSTM.png">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/SimpleLSTM1.png">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/LSTMline.png">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/LSTM1.png">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/LSTM2.png">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/LSTM3.png">
+<meta property="og:image" content="http://simtalk.cn/img/RNN/LSTM4.png">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.953Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RNN">
+<meta name="twitter:description" content="一般我们用CNN来提取特征, 但是在现实生活中有很多的数据是基于时间序列的, 比如语音识别, 机器翻译等任务, 下面我们介绍一种处理序列数据的神经网络RNN, LSTM可以看做是一种特殊的RNN">
+<meta name="twitter:image" content="http://simtalk.cn/img/RNN/rnn.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-RNN" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/10/25/RNN/" class="article-date">
+  	<time datetime="2016-10-25T01:56:08.000Z" itemprop="datePublished">2016-10-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RNN
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/LSTM/">LSTM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/RNN/">RNN</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/cs231n/">cs231n</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#参数共享"><span class="toc-text">参数共享</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RNN"><span class="toc-text">RNN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RNN-Forward"><span class="toc-text">RNN Forward</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RNN-BPTT"><span class="toc-text">RNN BPTT</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#代价函数"><span class="toc-text">代价函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#梯度下降"><span class="toc-text">梯度下降</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#权值更新"><span class="toc-text">权值更新</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#长期依赖"><span class="toc-text">长期依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LSTM"><span class="toc-text">LSTM</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#长期依赖-1"><span class="toc-text">长期依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#逐步解析"><span class="toc-text">逐步解析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考文献"><span class="toc-text">参考文献</span></a></li></ol>
+        </div>
+        
+        <p>一般我们用CNN来提取特征, 但是在现实生活中有很多的数据是基于时间序列的, 比如语音识别, 机器翻译等任务, 下面我们介绍一种处理序列数据的神经网络RNN, LSTM可以看做是一种特殊的RNN</p>
+<a id="more"></a>
+<h3 id="参数共享"><a href="#参数共享" class="headerlink" title="参数共享"></a><strong>参数共享</strong></h3><p>参数共享使得模型能够扩展到不同形式的样本并进行泛化, 在CNN中我们认为图像在局部区域是具有相关性的, 基于这样的假设我们进行参数共享, 在RNN中, 我们假设在一个序列中相同的信息会在不同的位置出现, 这是RNN中参数共享的条件, 在现实生活中这两种假设都是成立的.  </p>
+<h3 id="RNN"><a href="#RNN" class="headerlink" title="RNN"></a><strong>RNN</strong></h3><p>RNN叫做循环神经网络, 如下图所示, 循环结构有效的保存了历史信息</p>
+<p><img src="/img/RNN/rnn.jpg" alt=""></p>
+<p>在循环神经网络中, $x$为输入向量</p>
+<ul>
+<li>RNN输入到隐藏的连接由权重矩阵$ U $参数化</li>
+<li>隐藏到隐藏的循环连接由权重矩阵$ W $参数化</li>
+<li>隐藏到输出的连接由权重矩阵$ V $参数化</li>
+</ul>
+<p><strong>注意,</strong></p>
+<ul>
+<li>在RNN的训练过程中，RNN的参数被所有的时间点所共享, 这主要是说明RNN中的每一步都在做相同的事，只是输入不同，因此大大地降低了网络中需要学习的参数 </li>
+</ul>
+<p>RNN的数学定义如下: 在$t$时刻, RNN的输入是$I(t)$, 输出是$y(t)$, 隐藏层的状态为$s(t)$, 隐藏层的输入为$x(t)$,</p>
+<p>$$<br>x(t)=I(t)+s(t-1)\\<br>s_j(t)=f(\sum_{i}{x_i(t)u_{ji}})\\<br>y_k(t)=g(\sum_{j}{s_j(t)v_{kj}})<br>$$</p>
+<p>其中:</p>
+<p>$f$为<code>sigmoid激活函数</code>: $$f(z)=\frac{1}{1+e^{-z}}$$</p>
+<p>$g$为<code>softmax函数</code>: $$g(z_m) = \frac{e^{z_m}}{\sum_k{e^{z_k}}}$$</p>
+<h3 id="RNN-Forward"><a href="#RNN-Forward" class="headerlink" title="RNN Forward"></a><strong>RNN Forward</strong></h3><p><img src="/img/RNN/rnn-forward.PNG" alt=""></p>
+<ul>
+<li>输入层-&gt;隐藏层: </li>
+</ul>
+<p>$$<br>net_j(t)=\sum_{i}^Nx_i(t)u_{ji}+\sum_{h}^Ms_h(t-1)w_{jh}+\theta_j \\<br>s_j(t)=f(net_j(t))<br>$$</p>
+<ul>
+<li>隐藏层-&gt;输出层:</li>
+</ul>
+<p>$$<br>net_k(t)=\sum_{j}^Ms_j(t)v_{kj}+\theta_k \\<br>y_k(t)=g(net_k(t))<br>$$</p>
+<h3 id="RNN-BPTT"><a href="#RNN-BPTT" class="headerlink" title="RNN BPTT"></a><strong>RNN BPTT</strong></h3><p>BPTT是BackPropagation Through Time的缩写, 是基于时间序列的后向优化算法, 为了衡量序列的误差函数我们定义SSE(summed squared error)作为代价函数, 我们的优化目标就是代价函数最小 </p>
+<h4 id="代价函数"><a href="#代价函数" class="headerlink" title="代价函数"></a>代价函数</h4><p>$$<br>C=\frac{1}{2}\sum_l^P\sum_k^O(d_{lk}-y_{lk})^2<br>$$</p>
+<p>我们基于SSD作为优化函数:</p>
+<ul>
+<li>输出单元的误差:</li>
+</ul>
+<p><img src="/img/RNN/bptt-output.PNG" alt=""></p>
+<p>$$<br>\delta_{lk}=-\frac{\partial C}{\partial net_{lk}}=-\frac{\partial C}{\partial y_{lk}}\frac{\partial y_{lk}}{\partial net_{lk}}=(d_{lk}-y_{lk})g’(y_{lk})<br>$$</p>
+<ul>
+<li>隐藏单元的误差:</li>
+</ul>
+<p><img src="/img/RNN/bptt-hidden.PNG" alt=""></p>
+<p>$$<br>\delta_{lj}=-(\sum_k^O\frac{\partial C}{\partial y_{lk}}\frac{\partial y_{lk}}{\partial net_{lk}}\frac{\partial net_{lk}}{\partial s_{lj}})\frac{\partial s_{lj}}{\partial net_{lj}}=\sum_k^O\delta_{lk}v_{kj}f’(net_{lj})<br>$$</p>
+<ul>
+<li>激活函数的反向求导:</li>
+</ul>
+<p><strong>sigmoid的函数:</strong></p>
+<p>$$<br>f(net)=\frac{1}{1+e^{-net}}\\<br>f’(net)=f(net){1-f(net)}<br>$$</p>
+<p><strong>softmax函数:</strong></p>
+<p>$$g(net_k)=\frac{e^{net_k}}{\sum_k^Oe^{net_k}} $$</p>
+<p>$$ g’(net_k)=\frac{e^{net_k}(\sum_j^Oe^{net_j}-e^{net_k})}{(\sum_j^Oe^{net_j})^2} $$</p>
+<h4 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h4><p>在梯度下降法中, 代价函数和权值的关系是:</p>
+<p>$$\Delta w=-\eta \frac{\partial C}{\partial w}$$</p>
+<p>其中, $\eta$是学习率, $C$是代价函数, $w$为权值矩阵</p>
+<ul>
+<li>输入到隐藏层:</li>
+</ul>
+<p>$$\Delta u_{ji}=-\eta \frac{\partial C}{\partial u_{ji}}=\eta \sum_l^P\delta_{lj}x_{li}$$</p>
+<ul>
+<li>隐藏层到输出层:</li>
+</ul>
+<p>$$\Delta v_{kj}=-\eta \frac{\partial C}{\partial v_{kj}}=\eta \sum_l^P(-\frac{\partial C}{\partial net_{lk}})\frac{\partial net_{lk}}{\partial v_{kj}}=\eta \sum_l^P\delta_{lk}\frac{\partial net_{lk}}{\partial v_{kj}}=\eta \sum_l^P\delta_{lk}s_{lj}$$</p>
+<ul>
+<li>隐藏层到隐藏层:</li>
+</ul>
+<p>$$\Delta w_{jh}=-\eta \frac{\partial C}{\partial w_{jh}}=\eta \sum_l^P\delta_{lj}s_{(l-1)h}$$</p>
+<p>在循环神经网络中, 由于神经元的状态信息是递归传递的, 为了在反向传播时获取历史状态信息, 我们将按照时间序列将RNN展开计算, 这个过程叫<code>Unfolding</code></p>
+<p><img src="/img/RNN/bptt-hidden1.PNG" alt=""></p>
+<p>$$<br>\delta_{lj}(t-1)=-\frac{\partial C}{\partial s_{lj(t-1)}}=-\sum_h^M\frac{\partial C}{\partial s_{lh}}\frac{\partial s_{lh}}{\partial s_{lj}(t-1)}\\<br>=(-\sum_h^M\frac{\partial C}{\partial s_{lh}})(\frac{\partial s_{lh}}{\partial s_{lj}(t-1)})(\frac{\partial s_{lj}(t-1)}{\partial s_{lj}(t-1)})\\<br>=\sum_h^M\delta_{lh}(t)w_{hj}f’(s_{lj}(t-1))<br>$$</p>
+<h4 id="权值更新"><a href="#权值更新" class="headerlink" title="权值更新"></a>权值更新</h4><ul>
+<li>输入层-&gt;隐藏层:</li>
+</ul>
+<p>$$u_{ji}(t+1)=u_{ji}(t)+\eta \sum_z^T\sum_l^P\delta_{lj}(t-z)x_{li}(t-z)$$</p>
+<ul>
+<li>隐藏层-&gt; 隐藏层:</li>
+</ul>
+<p>$$w_{jh}(t+1)=w_{jh}(t)+\eta \sum_z^T\sum_l^P\delta_{lj}(t-z)s_{(l-1)h}(t-z)$$</p>
+<ul>
+<li>隐藏层-&gt; 输出层:</li>
+</ul>
+<p>$$v_{kj}(t+1)=v_{kj}(t)+\eta \sum_l^P\delta_{lk}s_{lj}$$</p>
+<p>由此看见BPTT是基于时间步骤的后向传播算法</p>
+<blockquote>
+<p><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.16.6652&amp;rep=rep1&amp;type=pdf" target="_blank" rel="noopener">BackPropagation Through Time </a><br><a href="http://ir.hit.edu.cn/~jguo/docs/notes/bptt.pdf" target="_blank" rel="noopener">A guide to recurrent neural networks and backpropagation</a></p>
+</blockquote>
+<h3 id="长期依赖"><a href="#长期依赖" class="headerlink" title="长期依赖"></a><strong>长期依赖</strong></h3><p><img src="/img/RNN/Long_Term_Dependencies.png" alt=""></p>
+<ul>
+<li>如上图所示, 如果我们在很近的一个上下文中试着预测<code>the clouds are in the sky</code>, 我们并不需要其他的上下文, 因为在这种语境下<code>sky</code>的概率是很大的</li>
+</ul>
+<p><img src="/img/RNN/Long_Term_Dependencies1.png" alt=""></p>
+<ul>
+<li>如上图所示, 假设我们试着去预测<code>I grew up in France... I speak fluent French</code>最后的词。当前的信息建议下一个词可能是一种语言的名字，但是如果我们需要弄清楚是什么语言，我们是需要先前提到的离当前位置很远的<code>France</code>的上下文的。在这个间隔不断增大时，RNN会丧失学习到连接如此远的信息的能力。</li>
+</ul>
+<p><strong>出现长期依赖的本质是因为隐含层的连乘导致权值矩阵过小或者过大, 就会引起梯度消失或者梯度爆炸, 这都会导致历史信息无法传递</strong></p>
+<h3 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a><strong>LSTM</strong></h3><h4 id="长期依赖-1"><a href="#长期依赖-1" class="headerlink" title="长期依赖"></a>长期依赖</h4><p>LSTM网络可以看做是特殊的RNN, 该网络结构克服了<code>长期依赖</code>问题, 首先我们来看一下RNN和LSTM的结构对比:</p>
+<ul>
+<li>所有RNN都具有一种重复神经网络模块的链式的形式。在标准的RNN中，这个重复的模块只有一个非常简单的结构，例如一个<code>tanh</code>层</li>
+</ul>
+<p><img src="/img/RNN/SimpleRNN.png" alt=""></p>
+<ul>
+<li>LSTM有四个神经网络层, 分别是遗忘门, 输入控制门, 输出控制门, 状态输出</li>
+</ul>
+<p><img src="/img/RNN/SimpleLSTM.png" alt=""></p>
+<p><img src="/img/RNN/SimpleLSTM1.png" alt=""></p>
+<ul>
+<li>每一条黑线传输着一整个向量，从一个节点的输出到其他节点的输入, 合在一起的线表示向量的连接，分开的线表示内容被复制，然后分发到不同的位置</li>
+<li>粉色的圈代表 pointwise 的操作，诸如向量的和，</li>
+<li>黄色的矩阵是学习到的神经网络层</li>
+</ul>
+<p>如下图所示, LSTM克服梯度问题的核心思想就是<strong>引入了细胞状态传输<code>高速路</code>, 通过一个加法器将历史信息通过<code>高速路</code>传递到更远的相对位置</strong></p>
+<p><img src="/img/RNN/LSTMline.png" alt=""></p>
+<ul>
+<li>其中的<code>乘法器</code>和<code>sigmoid神经网络层</code>组成了门结构, 门是一种让信息选择式通过的方法。</li>
+</ul>
+<h4 id="逐步解析"><a href="#逐步解析" class="headerlink" title="逐步解析"></a>逐步解析</h4><ul>
+<li>遗忘门: 遗忘门控制是否将前一个状态信息传入但前状态信息, 即决定是否丢弃信息, 在语言模型中, 细胞状态可能包含当前主语的性别，因此正确的代词可以被选择出来。当我们看到新的主语，我们希望忘记旧的主语。</li>
+</ul>
+<p><img src="/img/RNN/LSTM1.png" alt=""></p>
+<ul>
+<li>输入控制门: 确定什么样的新信息被存放在细胞状态中,sigmoid层决定是否更新, tanh层产生新的候选值向量, 在我们语言模型的例子中，我们希望增加新的主语的性别到细胞状态中，来替代旧的需要忘记的主语。</li>
+</ul>
+<p><img src="/img/RNN/LSTM2.png" alt=""></p>
+<ul>
+<li>更新细胞单元状态: 在语言模型的例子中，这就是我们实际根据前面确定的目标，丢弃旧代词的性别信息并添加新的信息的地方。</li>
+</ul>
+<p><img src="/img/RNN/LSTM3.png" alt=""></p>
+<ul>
+<li>输出控制门: 确定输出什么值。这个输出将会基于我们的细胞状态，但是也是有选择性的输出, 由一个sigmoid层来确定细胞状态的哪个部分将输出出去, 然后把细胞状态通过 tanh 进行处理并将它和sigmoid门的输出相乘，最终我们仅仅会输出我们确定输出的那部分。</li>
+</ul>
+<p><img src="/img/RNN/LSTM4.png" alt=""></p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a><strong>参考文献</strong></h3><blockquote>
+<p><a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="noopener">Understanding LSTM Networks</a></p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/10/25/面向对象设计/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          面向对象设计
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/10/23/Caffe-Tools/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Caffe Tools</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

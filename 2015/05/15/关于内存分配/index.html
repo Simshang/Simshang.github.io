@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>关于内存分配 | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="内存计算机的内存是算计亿万计的位(bit)组成的, 每个位非0即1 ,但是在计算机中单独的位用处不大, 通常将8个位组合在一起作为一个单位来存储较大的值,这个单位叫做字节(Byte),每个字节通过地址来标识, 真实内存的结构如下图所示:">
+<meta name="keywords" content="内存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于内存分配">
+<meta property="og:url" content="http://simtalk.cn/2015/05/15/关于内存分配/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="内存计算机的内存是算计亿万计的位(bit)组成的, 每个位非0即1 ,但是在计算机中单独的位用处不大, 通常将8个位组合在一起作为一个单位来存储较大的值,这个单位叫做字节(Byte),每个字节通过地址来标识, 真实内存的结构如下图所示:">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/关于内存分配/pointer1.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/关于内存分配/pointer2.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/关于内存分配/pointer3.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/关于内存分配/pointer4.JPG">
+<meta property="og:image" content="http://simtalk.cn/img/关于内存分配/memory.JPG">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.955Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于内存分配">
+<meta name="twitter:description" content="内存计算机的内存是算计亿万计的位(bit)组成的, 每个位非0即1 ,但是在计算机中单独的位用处不大, 通常将8个位组合在一起作为一个单位来存储较大的值,这个单位叫做字节(Byte),每个字节通过地址来标识, 真实内存的结构如下图所示:">
+<meta name="twitter:image" content="http://simtalk.cn/img/关于内存分配/pointer1.JPG">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-关于内存分配" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/05/15/关于内存分配/" class="article-date">
+  	<time datetime="2015-05-15T13:23:08.000Z" itemprop="datePublished">2015-05-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      关于内存分配
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/内存/">内存</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/计算机/">计算机</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#内存"><span class="toc-text">内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#地址与内容"><span class="toc-text">地址与内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#指针"><span class="toc-text">指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#指针变量"><span class="toc-text">指针变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#指针的功能"><span class="toc-text">指针的功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#寻址空间"><span class="toc-text">寻址空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#动态内存分配"><span class="toc-text">动态内存分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内存功能区"><span class="toc-text">内存功能区</span></a></li></ol>
+        </div>
+        
+        <h3 id="内存"><a href="#内存" class="headerlink" title="内存"></a><strong>内存</strong></h3><p>计算机的内存是算计亿万计的<code>位(bit)</code>组成的, 每个位非0即1 ,但是在计算机中单独的位用处不大, 通常将8个位组合在一起作为一个单位来存储较大的值,这个单位叫做<code>字节(Byte)</code>,每个字节通过<code>地址</code>来标识, 真实内存的结构如下图所示:<br><a id="more"></a><br><img src="\img\关于内存分配\pointer1.JPG" alt="内存"></p>
+<p>如果我们想要存储更大的值, 就要把多个<code>字节</code>合在一起作为更大的存储单位, 许多机器以<code>字(word)</code>为单位存储整数, 每个字一般有2或者4个字节.如图:</p>
+<p><img src="\img\关于内存分配\pointer2.JPG" alt="内存"></p>
+<ul>
+<li><strong>注意</strong>: 尽管一个字包含了4个字节, 但是仍然只有一个地址.</li>
+</ul>
+<h3 id="地址与内容"><a href="#地址与内容" class="headerlink" title="地址与内容"></a><strong>地址与内容</strong></h3><p><img src="\img\关于内存分配\pointer3.JPG" alt="内存"></p>
+<p>上面这幅图显示了5个字所存储的内容, 并且由<code>地址</code>唯一确定, 如果你拥有了一个值的内存地址, 就可以根据这个地址来获取这个值,这个内存地址叫做<code>指针</code>, 但是在高级程序语言中使用<code>地址</code>太不方便, 所以要通过<code>名字</code>而不是<code>地址</code>来访问存储的内容, 如图所示:</p>
+<p><img src="\img\关于内存分配\pointer4.JPG" alt="内存"></p>
+<p>这些<code>名字</code>就是变量, 我们成为<code>指针变量</code>, 就是存放内存地址的变量, <code>名字</code>和<code>地址</code>的映射关系是由编译器实现的, 但是在底层硬件中依然是用<code>地址</code>来访问内存, <code>名字</code>只是在编程中提供方便记住的方法.</p>
+<h3 id="指针"><a href="#指针" class="headerlink" title="指针"></a><strong>指针</strong></h3><ul>
+<li>变量的值存储于计算机的内存中,每个变量都占据一个特定的位置, 这个位置由<code>地址</code>唯一确定(并引用) , 就像一条街上的门牌号一样, 当我们<code>引用</code>了这个地址, 就可以操作这块内存空间. </li>
+</ul>
+<!--more-->
+<ul>
+<li><strong>指针</strong>：一个操作受限的<code>非负</code>整数（地址加乘除没有意义，可以相减）</li>
+</ul>
+<blockquote>
+<p>指针只能访问<code>动态变量的地址</code>或者<code>本函数中静态变量的地址</code>，即在使用之前没有被释放，静态变量因此不能跨函数使用，因为使用完内存空间被释放，无法访问,比如:<br> <code>int* p</code>：p也是个变量但只能存放某类型的地址的变量，<code>int*</code> 表示存放整型变量类型地址的变量，<code>p</code>只能存放<code>整形变量</code>（int age = 3）的地址；<code>double*</code>：只能存放<code>double</code>类型的变量地址；<code>char*</code>同理，</p>
+</blockquote>
+<h3 id="指针变量"><a href="#指针变量" class="headerlink" title="指针变量"></a><strong>指针变量</strong></h3><ul>
+<li><p>提起<code>指针</code>一般含有两层含义, 在不同的上下文下含义不一样 , 一种是内存空间的<code>地址</code>, 就是一块内存空间的标识 , 跟门牌号一样, 地址是一个固定不变的值; 另一种是<code>指针变量</code>,即存放地址的变量</p>
+</li>
+<li><p><code>指针</code>就是地址，地址就是指针；地址就是内存单元的编号，所以指针只是一个<code>值</code>，不是变量，不可以改变；</p>
+</li>
+<li><p><code>指针变量</code>存放地址的变量，可以存放地址，是变量，可以改变。</p>
+</li>
+</ul>
+<blockquote>
+<p>注意:通常在表述时，指针就是指针变量，把变量省去，具体情况具体分析！！！</p>
+</blockquote>
+<h3 id="指针的功能"><a href="#指针的功能" class="headerlink" title="指针的功能"></a>指针的功能</h3><ol>
+<li>表示一些复杂的数据结构</li>
+<li>直接访问硬件地址</li>
+<li>方便的处理字符串</li>
+<li>使函数返回上一个值</li>
+<li>理解OOP中的“引用”概念</li>
+</ol>
+<blockquote>
+<p>指针变量不能相加和相除,可以相加减,<code>*(p+1)</code>其地址移动的位数与该指针类型有关,因为不同类型占用的字节数不一样.</p>
+</blockquote>
+<h3 id="寻址空间"><a href="#寻址空间" class="headerlink" title="寻址空间"></a><strong>寻址空间</strong></h3><p>下面看一个有趣的问题:</p>
+<blockquote>
+<p>为什么32位的系统最大内存空间为4G?</p>
+</blockquote>
+<ul>
+<li>首先, 要区分<code>bit</code>和<code>Byte</code>的概念, <code>bit</code>表示位, <code>Byte</code>表示字节,<code>1Byte=8bit</code> 在问题中我故意没有写明确是<code>GB</code>还是<code>Gb</code>, 当然再仔细一想肯定是<code>GB</code>, 因为在计算机存储空间通常用<code>Byte</code>为单位, 在通信的传输速率上通常用<code>bit</code>为单位, 比如<code>Gbps</code>表示 Giga bit per second(千兆位每秒) , 每秒传输1G比特的信息(信息论的基本概念), 那么我们的问题更明确的问法应该是:</li>
+</ul>
+<blockquote>
+<p><code>为什么32bit的系统最大内存空间为4GB?</code></p>
+</blockquote>
+<ul>
+<li>32位指的是一串32个01序列, 2的32次方个不同的序列, 每个序列代表一个内存地址, 一个内存地址有8bit也就是1Byte, 那么就有2的32次方个Byte, 4GB = 4*1024*1024*1024 = 2^32 Byte , 所以寻址范围大小为4GB</li>
+</ul>
+<h3 id="动态内存分配"><a href="#动态内存分配" class="headerlink" title="动态内存分配"></a><strong>动态内存分配</strong></h3><blockquote>
+<p>对于数组而言, 必须指定数组的长度,数组的长度只有在运行时才知道,在定义数组的时候通常根据输入数据的个数来确定,但是很多时候输入数据的个数是不确定的, 这就需要我们<code>按需供应</code>内存空间, 也就是说在程序运行的过程中,某种数据类型(结构体,数组等)需要多少内存空间,就分配多少内存空间,这就是动态内存分配.</p>
+</blockquote>
+<ul>
+<li>动态内存分配注意事项:<ol>
+<li>不要忘记检查内存是否分配成功</li>
+<li>在操作内存时, 是否超出了分配内存的边界</li>
+<li>不要忘记释放内存空间, 这样可以使内存重新分配使用, 否则会引起<code>内存泄漏</code>, 释放后的内存不可再访问</li>
+<li>在释放内存空间的时候, 不允许只释放内存的一部分, 动态分配的内存只能整块一起释放.</li>
+</ol>
+</li>
+</ul>
+<h3 id="内存功能区"><a href="#内存功能区" class="headerlink" title="内存功能区"></a><strong>内存功能区</strong></h3><p><img src="\img\关于内存分配\memory.JPG" alt="内存"></p>
+<p>如上图所示, 在内存条中, </p>
+<ul>
+<li>动态分配的内存是放在<code>堆(Heap)</code>中的, 随着分配的内存越来越多, 地址由低地址向高地址延伸的</li>
+<li>在程序运行时, <code>压栈</code>所占用的内存是由高地址向低地址延伸的</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/10/24/Git指南/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Git指南
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/05/10/老妈才是老大！/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">老妈才是老大！</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

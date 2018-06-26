@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>体验Docker | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近在部署服务器的过程中实在是把我虐惨了, 各种层出不穷的问题, 好不容易部署好了在测试服务器和生产环境服务器的迁移过程中又费了很多时间.去年偶尔间了解过docker但是并没有深入学习, 真是书到用时方恨少啊, docker一大特点就是提高开发效率, 准备好好学习一下这个工具, 看看它是怎么提高开发效率的.">
+<meta name="keywords" content="Docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="体验Docker">
+<meta property="og:url" content="http://simtalk.cn/2016/07/26/体验Docker/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="最近在部署服务器的过程中实在是把我虐惨了, 各种层出不穷的问题, 好不容易部署好了在测试服务器和生产环境服务器的迁移过程中又费了很多时间.去年偶尔间了解过docker但是并没有深入学习, 真是书到用时方恨少啊, docker一大特点就是提高开发效率, 准备好好学习一下这个工具, 看看它是怎么提高开发效率的.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/体验Docker/docker1.png">
+<meta property="og:image" content="http://simtalk.cn/img/体验Docker/docker2.png">
+<meta property="og:updated_time" content="2018-06-02T05:28:22.955Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="体验Docker">
+<meta name="twitter:description" content="最近在部署服务器的过程中实在是把我虐惨了, 各种层出不穷的问题, 好不容易部署好了在测试服务器和生产环境服务器的迁移过程中又费了很多时间.去年偶尔间了解过docker但是并没有深入学习, 真是书到用时方恨少啊, docker一大特点就是提高开发效率, 准备好好学习一下这个工具, 看看它是怎么提高开发效率的.">
+<meta name="twitter:image" content="http://simtalk.cn/img/体验Docker/docker1.png">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-体验Docker" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/07/26/体验Docker/" class="article-date">
+  	<time datetime="2016-07-26T08:45:49.000Z" itemprop="datePublished">2016-07-26</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      体验Docker
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Docker/">Docker</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/Docker/">Docker</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker简介"><span class="toc-text">Docker简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本概念"><span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#基本环境"><span class="toc-text">基本环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令行安装"><span class="toc-text">命令行安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Centos6-5-安装"><span class="toc-text">Centos6.5 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker常用命令"><span class="toc-text">Docker常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#镜像"><span class="toc-text">镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#容器"><span class="toc-text">容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#仓库"><span class="toc-text">仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拓展"><span class="toc-text">拓展</span></a></li></ol>
+        </div>
+        
+        <p>最近在部署服务器的过程中实在是把我虐惨了, 各种层出不穷的问题, 好不容易部署好了在测试服务器和生产环境服务器的迁移过程中又费了很多时间.去年偶尔间了解过docker但是并没有深入学习, 真是书到用时方恨少啊, docker一大特点就是提高开发效率, 准备好好学习一下这个工具, 看看它是怎么提高开发效率的.</p>
+<a id="more"></a>
+<h3 id="Docker简介"><a href="#Docker简介" class="headerlink" title="Docker简介"></a><strong>Docker简介</strong></h3><p><img src="/img/体验Docker/docker1.png" alt=""></p>
+<p><code>Docker</code>项目的目标是实现轻量级的操作系统虚拟化解决方案。 Docker的基础是 <code>Linux容器（LXC）</code>等技术。在 LXC 的基础上 Docker 进行了进一步的封装，让用户不需要去关心容器的管理，使得操作更为简便。用户操作 Docker 的容器就像操作一个快速轻量级的虚拟机一样简单。</p>
+<ul>
+<li><a href="https://github.com/docker/docker" target="_blank" rel="noopener">Docker on Github</a></li>
+<li><a href="https://www.gitbook.com/book/yeasy/docker_practice/details" target="_blank" rel="noopener">Docker——从入门到实践 on GitBook</a></li>
+</ul>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><strong>基本概念</strong></h3><p><img src="/img/体验Docker/docker2.png" alt=""></p>
+<blockquote>
+<p>镜像（Image）: 是一个只读模板</p>
+</blockquote>
+<ul>
+<li>一个镜像可以包含一个完整的ubuntu操作系统环境，里面仅安装了Apache或用户需要的其它应用程序。</li>
+<li>在某个镜像中可以创建Docker容器</li>
+</ul>
+<blockquote>
+<p>容器（Container）: 从镜像中创建的运行实例, 可写可读</p>
+</blockquote>
+<ul>
+<li>容器可以被启动、开始、停止、删除。每个容器都是相互隔离的、保证安全的平台。</li>
+<li>可以把容器看做是一个简易版的 Linux 环境（包括root用户权限、进程空间、用户空间和网络空间等）和运行在其中的应用程序。</li>
+</ul>
+<blockquote>
+<p>仓库（Repository）: 集中存放镜像文件的场所</p>
+</blockquote>
+<ul>
+<li>仓库和仓库注册服务器（Registry）并不严格区分, 仓库注册服务器上往往存放着多个仓库，每个仓库中又包含了多个镜像，每个镜像有不同的标签（tag）。</li>
+<li>最大的公开仓库 <a href="https://hub.docker.com/" target="_blank" rel="noopener">Docker Hub</a>, 国内 <a href="https://hub.tenxcloud.com/" target="_blank" rel="noopener">时速云</a>, <a href="https://c.163.com/hub#/m/home/" target="_blank" rel="noopener">网易云</a></li>
+</ul>
+<blockquote>
+<p>在本地创建好的镜像可以使用<code>push</code>上传到公有或者私有仓库,这样下次在另外一台机器上使用这个镜像时候，只需要从仓库上 <code>pull</code> 下来就可以了。<code>Docker 仓库</code>的概念跟 <code>Git</code> 类似，<code>仓库注册服务器</code>可以理解为<code>GitHub</code>, <code>镜像</code>可以理解为<code>Github</code>上的项目 。</p>
+</blockquote>
+<h3 id="基本环境"><a href="#基本环境" class="headerlink" title="基本环境"></a><strong>基本环境</strong></h3><blockquote>
+<p>系统:<code>ubuntu14.04 LTS(64bit)</code><br>内核版本高于<code>3.10</code>, 用<code>uname -r</code>查看</p>
+</blockquote>
+<h3 id="命令行安装"><a href="#命令行安装" class="headerlink" title="命令行安装"></a>命令行安装</h3><ol>
+<li><p>获得安装包<br><code>wget -qO- https://get.docker.com/ | sh</code></p>
+</li>
+<li><p>启动后台服务<br><code>sudo service docker start</code></p>
+<ul>
+<li>或者用<code>su</code>切换到<code>root</code>用户, 执行<code>service docker start</code>, 总之必须要获得root权限</li>
+</ul>
+</li>
+<li><p>检查是否安装成功<br><code>docker run hello-world</code></p>
+</li>
+</ol>
+<h3 id="Centos6-5-安装"><a href="#Centos6-5-安装" class="headerlink" title="Centos6.5 安装"></a><a href="https://docs.docker.com/engine/installation/linux/centos/" target="_blank" rel="noopener">Centos6.5 安装</a></h3><ol>
+<li><p>yum添加源</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo tee /etc/yum.repos.d/docker.repo &lt;&lt;-&apos;EOF&apos;</span><br><span class="line">[dockerrepo]</span><br><span class="line">name=Docker Repository</span><br><span class="line">baseurl=https://yum.dockerproject.org/repo/main/centos/$releasever/</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://yum.dockerproject.org/gpg</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>sudo yum update</code>更新yum软件缓存</p>
+</li>
+<li><p><code>sudo yum install -y docker-engine</code> 安装docker engine</p>
+</li>
+<li><p><code>sudo yum install docker-io</code></p>
+</li>
+<li><p>启动后台服务<br><code>sudo service docker start</code></p>
+<ul>
+<li>或者用<code>su</code>切换到<code>root</code>用户, 执行<code>service docker start</code>, 总之必须要获得root权限</li>
+</ul>
+</li>
+<li><p>检查是否安装成功<br><code>docker run hello-world</code></p>
+</li>
+</ol>
+<blockquote>
+<p>输出:</p>
+</blockquote>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took the following steps:</span><br><span class="line"> 1. The Docker client contacted the Docker daemon.</span><br><span class="line"> 2. The Docker daemon pulled the &quot;hello-world&quot; image from the Docker Hub.</span><br><span class="line"> 3. The Docker daemon created a new container from that image which runs the</span><br><span class="line">    executable that produces the output you are currently reading.</span><br><span class="line"> 4. The Docker daemon streamed that output to the Docker client, which sent it</span><br><span class="line">    to your terminal.</span><br><span class="line"></span><br><span class="line">To try something more ambitious, you can run an Ubuntu container with:</span><br><span class="line"> $ docker run -it ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, and more with a free Docker Hub account:</span><br><span class="line"> https://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples and ideas, visit:</span><br><span class="line"> https://docs.docker.com/engine/userguide/</span><br></pre></td></tr></table></figure>
+</code></pre><h3 id="Docker常用命令"><a href="#Docker常用命令" class="headerlink" title="Docker常用命令"></a><strong>Docker常用命令</strong></h3><blockquote>
+<p>所有命令用<code>sudo</code>执行</p>
+</blockquote>
+<ol>
+<li><p><code>docker version</code> 查看docker版本</p>
+</li>
+<li><p><code>docker command [-- help]</code> 查看某个命令的使用方法</p>
+</li>
+</ol>
+<h3 id="镜像"><a href="#镜像" class="headerlink" title="镜像"></a><strong>镜像</strong></h3><p>Docker 运行容器前需要本地存在对应的镜像，如果镜像不存在本地，Docker 会从镜像仓库下载（默认是<code>Docker Hub</code>公共注册服务器中的仓库）。</p>
+<ol>
+<li><code>docker images</code> 查看镜像</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>REPOSITORY</th>
+<th>TAG</th>
+<th>IMAGE ID</th>
+<th>CREATED</th>
+<th>VIRTUAL SIZE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hello-world</td>
+<td>latest</td>
+<td>f0cb9bdcaa69</td>
+<td>5 weeks ago</td>
+<td>1.848 kB</td>
+</tr>
+<tr>
+<td>hub.c.163.com/nce2/ubuntu</td>
+<td>16.04</td>
+<td>9e3b42ffc453</td>
+<td>6 months ago</td>
+<td>223.6 MB</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>来自于哪个仓库，比如 ubuntu</li>
+<li>镜像的标记，比如 14.04用来标记来自同一个仓库的不同镜像</li>
+<li><code>唯一ID号</code></li>
+<li>创建时间</li>
+<li>镜像大小</li>
+</ul>
+<ol start="2">
+<li><p><code>docker pull</code> 从仓库获取所需要的镜像</p>
+<p> $ <code>sudo docker pull hub.c.163.com/nce2/ubuntu:16.04</code> </p>
+<ul>
+<li>从网易云注册服务器 <code>hub.c.163.com</code>中的 <code>/nce2/ubuntu</code>仓库来下载标记(Tags)为<code>16.04</code>的镜像, 如果不指定具体的标记，则默认使用 <code>latest</code>标记信息</li>
+</ul>
+</li>
+<li><p><code>docker run</code></p>
+<p> $ <code>sudo docker run -t -i hub.c.163.com/nce2/ubuntu:16.04 /bin/bash</code> </p>
+<ul>
+<li>创建一个容器实例, 运行bash应用</li>
+<li><code>-t</code> 选项让Docker分配一个伪终端（pseudo-tty）并绑定到容器的标准输入上</li>
+<li><code>-i</code>让容器的标准输入保持打开<br>root@795ec0d7cc39:/# pwd (在bash中修改镜像,用<code>exit</code>退出)</li>
+</ul>
+</li>
+<li><p><code>docker commit</code> 提交已经修改的镜像</p>
+<p> $ <code>sudo docker commit -m &quot;Added json gem&quot; -a &quot;Docker Newbee&quot; 795ec0d7cc39 hub.c.163.com/nce2/ubuntu:16.04</code></p>
+<ul>
+<li><code>-m</code> 指定提交的说明信息，跟使用的版本控制Git一样</li>
+<li><code>-a</code> 指定更新的用户信息</li>
+<li>创建镜像的容器的 <code>ID</code> ,紧跟在<code>root@</code>后面</li>
+<li><p>指定目标镜像的<code>仓库名</code>和<code>tag</code></p>
+<p>创建成功后会返回这个镜像的 ID 信息:<br><code>6459005ad1ca4098f75b7722fda3b9ca90f7d955409cb57a75f250057525a92c</code><br>现在就可以用新镜像创建容器了</p>
+</li>
+</ul>
+</li>
+<li><p>本地导入镜像 : <code>docker import</code></p>
+<ul>
+<li>从 <a href="https://openvz.org/Download/template/precreated" target="_blank" rel="noopener">openvz</a>下载一个Ubuntu14.04<br>$ <code>sudo cat ubuntu-14.04-x86_64-minimal.tar.gz  |docker import - ubuntu:14.04</code></li>
+</ul>
+</li>
+<li><p>上传镜像 : <code>docker push</code></p>
+<p> $ <code>sudo docker push hub.c.163.com/nce2/ubuntu</code></p>
+<ul>
+<li>输入网易云的用户名密码</li>
+</ul>
+</li>
+<li><p>另存镜像到本地 : <code>docker save hub.c.163.com/nce2/ubuntu:16.04</code></p>
+<p> $ <code>sudo docker save -o ubuntu_16.04.tar hub.c.163.com/nce2/ubuntu:16.04</code><br> 查看本地目录有了<code>ubuntu_16.04.tar</code>文件</p>
+</li>
+<li><p>从导出的本地文件中再导入到本地镜像库 : <code>docker load</code></p>
+<p> $ <code>sudo docker load --input ubuntu_16.04.tar</code><br> $ <code>sudo docker load &lt; ubuntu_16.04.tar</code></p>
+</li>
+<li><p>移除本地的镜像 : <code>docker rmi [-f]</code> + <code>IMAGE ID</code>或者<code>REPOSITORY</code></p>
+<p> $ <code>docker rmi hub.c.163.com/nce2/ubuntu</code><br> $ <code>docker rmi -f 9e3b42ffc453</code> </p>
+<ul>
+<li>强制删除ID为<code>9e3b42ffc453</code>的镜像</li>
+<li>在删除镜像之前要先用<code>docker rm</code>删掉依赖于这个镜像的所有容器。</li>
+</ul>
+</li>
+<li><p>清理所有未打过标签的本地镜像</p>
+<ul>
+<li>使用下面的命令可以清理所有未打过标签的本地镜像</li>
+</ul>
+<p>$ <code>sudo docker rmi $(docker images -q -f &quot;dangling=true&quot;)</code><br>$ 全写 : <code>sudo docker rmi $(docker images --quiet --filter &quot;dangling=true&quot;)</code></p>
+</li>
+<li><p>重命名镜像 <code>docker tag [imagename:tag] [new name:tag]</code> 或者 <code>docker tag [IMAGE ID] [new name:tag]</code></p>
+</li>
+</ol>
+<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a><strong>容器</strong></h3><ol>
+<li><p><code>docker ps</code> 查看正在运行的容器</p>
+<p> <code>docker ps -a</code> 查看所有容器</p>
+</li>
+<li><p><code>docker run</code> 基于已有的镜像新建容器并启动</p>
+<p> $ <code>docker run hub.c.163.com/nce2/ubuntu:16.04 /bin/echo &#39;Hello docker&#39;</code><br> hello docker </p>
+<p> 当利用 docker run 来创建容器时，Docker 在后台运行的标准操作包括：</p>
+<ul>
+<li>检查本地是否存在指定的镜像，不存在就从公有仓库下载</li>
+<li>利用镜像创建并启动一个容器</li>
+<li>分配一个文件系统，并在只读的镜像层外面挂载一层可读写层</li>
+<li>从宿主主机配置的网桥接口中桥接一个虚拟接口到容器中去</li>
+<li>从地址池配置一个 ip 地址给容器</li>
+<li>执行用户指定的应用程序</li>
+<li>执行完毕后容器被终止</li>
+</ul>
+</li>
+<li><p><code>docker start</code> 启动已终止容器</p>
+<p> 容器的核心为所执行的应用程序，所需要的资源都是应用程序运行所必需的。除此之外，并没有其它的资源。</p>
+</li>
+<li><p><code>docker run -d</code> : 后台运行容器</p>
+<p> <code>docker logs [container ID or NAMES]</code> : 查看输出结果</p>
+<ul>
+<li><code>-d</code> : 让docker容器在后台中运行, 参数启动后会返回一个唯一的 id，也可以通过 <code>docker ps</code> 命令来查看容器信息。</li>
+<li><code>-i</code> : 保持对于容器的stdin为打开的状态</li>
+<li><code>-t</code> : 为容器分配一个虚拟的终端，一般<code>-i</code>与 <code>-t</code> 参数结合在一起使用</li>
+<li><code>-P</code> : 将任何容器内部需要的网络端口号映射到host主机上, web应用一定要加上这个参数的，比如添加之后容器跑起来，然后在ports的状态信息的位置。端口会显示成：<code>0.0.0.0:49155-&gt;5000/tcp</code> 之后在其他机器上直接访问 <code>hostip:49155</code>就可以显示出对应的web应用</li>
+</ul>
+</li>
+<li><p><code>docker stop</code> : 终止一个运行中的容器</p>
+<ul>
+<li>当Docker容器中指定的应用终结时，容器也自动终止。 对于启动了一个终端的容器，用户通过<code>exit</code>命令或<code>Ctrl+d</code>来退出终端时，所创建的容器立刻终止。</li>
+<li>终止状态的容器可以用<code>docker ps -a</code>命令看到</li>
+<li>处于终止状态的容器通过<code>docker start</code> 命令来重新启动</li>
+<li><code>docker restart</code>命令会将一个运行态的容器终止，然后再重新启动</li>
+</ul>
+</li>
+<li><p><code>docker attach [NAMES]</code> : 进入一个后台运行的容器<br> $ <code>docker run -idt ubuntu</code><br> 12d1f3b849229e0997d3d97bfb97608f3b615c398dfa41627cd88ce751aa82f0<br> $ <code>docker ps</code></p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>CONTAINER ID</th>
+<th>IMAGE</th>
+<th>COMMAND</th>
+<th>CREATED</th>
+<th>STATUS</th>
+<th>PORTS</th>
+<th>NAMES</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>12d1f3b84922</td>
+<td>ubuntu:16.04</td>
+<td>“/bin/bash”</td>
+<td>4 seconds ago</td>
+<td>Up 4 seconds</td>
+<td></td>
+<td>tender_swartz</td>
+</tr>
+</tbody>
+</table>
+<p>   $ docker attach tender_swartz<br>   root@12d1f3b84922:/#</p>
+<ol start="7">
+<li><p><code>docker export</code> : 导出容器到本地</p>
+<p> $ <code>docker export 12d1f3b84922 &gt; ubuntu.tar</code><br> <code>ls</code>出现ubuntu.tar文件</p>
+<ul>
+<li>用 <code>docker ps -a</code>查看容器ID</li>
+</ul>
+</li>
+<li><p><code>docker import</code> : 从容器快照文件中再导入为镜像</p>
+<p> $ <code>cat ubuntu.tar | sudo docker import - ubuntu:imported</code><br> <code>250bc562bcc80298c6090190eef2b6c150abb443222028ece63cd3c8f8473fcc</code><br> $ <code>docker images</code></p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>REPOSITORY</th>
+<th>TAG</th>
+<th>IMAGE ID</th>
+<th>CREATED</th>
+<th>VIRTUAL SIZE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ubuntu</td>
+<td>imported</td>
+<td>250bc562bcc8</td>
+<td>44 seconds ago</td>
+<td>110.2 MB</td>
+</tr>
+</tbody>
+</table>
+<ol start="9">
+<li><p><code>docker rm [NAMES]</code> 删除一个处于终止状态的容器</p>
+<p> $ <code>docker rm  tender_swartz</code><br> tender_swartz</p>
+<ul>
+<li>如果要删除一个运行中的容器，可以添加<code>-f</code>参数</li>
+<li>如果数量太多要一个个删除可能会很麻烦，用 <code>docker rm $(docker ps -a -q)</code> 可以全部清理掉, 正在运行的容器删不掉</li>
+</ul>
+</li>
+<li><p><code>docker top [CONTAINER ID]</code> 查看运行在这个容器中的进程信息 </p>
+</li>
+<li><p><code>docker inspect [CONTAINER ID]</code> 查看出这个容器的基本的配置信息 </p>
+<ul>
+<li>返回的是一个json格式的信息, 比如每个容器的id之类的相关的信息 </li>
+<li>可以结合一些linux的命令比如grep选择自己所需要的关键的信息</li>
+</ul>
+</li>
+</ol>
+<h3 id="仓库"><a href="#仓库" class="headerlink" title="仓库"></a><strong>仓库</strong></h3><p>一个容易混淆的概念是注册服务器（Registry）。实际上注册服务器是管理仓库的具体服务器，每个服务器上可以有多个仓库，而每个仓库下面有多个镜像。从这方面来说，仓库可以被认为是一个具体的项目或目录。例如对于仓库地址 dl.dockerpool.com/ubuntu 来说，dl.dockerpool.com 是注册服务器地址，ubuntu 是仓库名。</p>
+<ol>
+<li><p><code>docker login</code></p>
+<ul>
+<li>第一次: 输入用户名和密码, 注册邮箱, 去邮箱确认邮件</li>
+</ul>
+</li>
+<li><p><code>docker search centos</code> : 查找相应镜像</p>
+<ul>
+<li>在查找的时候通过 -s N 参数可以指定仅显示评价为 N 星以上的镜像<br>$ <code>docker search -s 20 centos</code></li>
+<li>返回了很多包含关键字的镜像，其中包括镜像名字、描述、星级（表示该镜像的受欢迎程度）、是否官方创建、是否自动创建</li>
+<li>比如 tianon/centos 镜像，它是由 Docker 的用户创建并维护的，往往带有用户名称前缀</li>
+</ul>
+</li>
+<li><p><code>docker pull centos</code> </p>
+<ul>
+<li><p>通过<code>docker push</code>命令来将镜像推送到 Docker Hub</p>
+</li>
+<li><p>更多内容请访问 <a href="https://yeasy.gitbooks.io/docker_practice/content/repository/dockerhub.html" target="_blank" rel="noopener">自动创建</a></p>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>三者之间的关系:</strong></p>
+</blockquote>
+<ul>
+<li><code>Registry(仓库中心)</code>包含一个或多个<code>Repository(仓库)</code></li>
+<li><code>Repository(仓库)</code>包含一个或多个<code>Image(镜像)</code></li>
+<li><p><code>Image(镜像)</code>用GUID表示，有一个或多个<code>Tag(标签)</code>与之关联</p>
+<h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a><strong>拓展</strong></h3><p><strong>docker-enter</strong></p>
+</li>
+</ul>
+<p><code>nsenter --help</code> </p>
+<ul>
+<li>检查安装nsenter成功, nsenter可以访问另一个进程的名称空间, 为了连接到某个容器我们还需要获取该容器的第一个进程的PID</li>
+</ul>
+<p><code>sudo docker inspect 12d1f3b84922</code></p>
+<ul>
+<li>返回容器的详细信息, 查找PID</li>
+</ul>
+<p><code>sudo nsenter --target 27820 --mount --uts --ipc --net --pid</code></p>
+<ul>
+<li><p>进入容器</p>
+<p><a href="https://gist.github.com/Simshang/0651f7da3237b050c635c39ddafc5207" target="_blank" rel="noopener">docker-enter命令</a></p>
+<ul>
+<li>将上述文件保存为<code>docker-enter</code>, 并<code>sudo chmod +x docker-enter</code></li>
+</ul>
+<p><code>docker-enter 12d1f3b84922</code> 或者 <code>sudo ./docker-enter 12d1f3b84922</code></p>
+<ul>
+<li><code>12d1f3b84922</code>是容器ID , 进入容器</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/03/Pink-Floyd/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Pink Floyd
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/07/14/Java编程笔记/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Java编程笔记</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>

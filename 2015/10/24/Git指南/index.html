@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Git指南 | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在一开始接触实验室项目的时候, 用的是SVN, 后来把自己写的东西分享到Github上开始接触Git, 整理一下Git常用知识点.">
+<meta name="keywords" content="Git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git指南">
+<meta property="og:url" content="http://simtalk.cn/2015/10/24/Git指南/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="在一开始接触实验室项目的时候, 用的是SVN, 后来把自己写的东西分享到Github上开始接触Git, 整理一下Git常用知识点.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://simtalk.cn/img/Git指南/trees.png">
+<meta property="og:image" content="http://simtalk.cn/img/Git指南/branches.png">
+<meta property="og:updated_time" content="2018-06-02T06:13:55.694Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git指南">
+<meta name="twitter:description" content="在一开始接触实验室项目的时候, 用的是SVN, 后来把自己写的东西分享到Github上开始接触Git, 整理一下Git常用知识点.">
+<meta name="twitter:image" content="http://simtalk.cn/img/Git指南/trees.png">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Git指南" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2015/10/24/Git指南/" class="article-date">
+  	<time datetime="2015-10-24T11:37:49.000Z" itemprop="datePublished">2015-10-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Git指南
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Git/">Git</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/DevTools/">DevTools</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#创建仓库-repository"><span class="toc-text">创建仓库(repository)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#克隆仓库-clone"><span class="toc-text">克隆仓库(clone)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工作流"><span class="toc-text">工作流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Push本地分支"><span class="toc-text">Push本地分支</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分支-brancd"><span class="toc-text">分支(brancd)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分支衍合（rebase）"><span class="toc-text">分支衍合（rebase）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#远程仓库"><span class="toc-text">远程仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#合并-merge"><span class="toc-text">合并(merge)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标签-tag"><span class="toc-text">标签(tag)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#团队协作"><span class="toc-text">团队协作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改commit历史"><span class="toc-text">修改commit历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#子模块"><span class="toc-text">子模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更多"><span class="toc-text">更多</span></a></li></ol>
+        </div>
+        
+        <p>在一开始接触实验室项目的时候, 用的是SVN, 后来把自己写的东西分享到Github上开始接触Git, 整理一下Git常用知识点.</p>
+<a id="more"></a>
+<blockquote>
+<p>条件: 本地安装<code>Git</code></p>
+</blockquote>
+<h3 id="创建仓库-repository"><a href="#创建仓库-repository" class="headerlink" title="创建仓库(repository)"></a><strong>创建仓库(repository)</strong></h3><p>创建新文件夹, 进入文件夹执行下面命令</p>
+<p><code>git init</code></p>
+<h3 id="克隆仓库-clone"><a href="#克隆仓库-clone" class="headerlink" title="克隆仓库(clone)"></a><strong>克隆仓库(clone)</strong></h3><p><code>git clone /path/to/repository</code></p>
+<ul>
+<li>克隆本地仓库</li>
+</ul>
+<p><code>git clone username@host:/path/to/repository</code></p>
+<ul>
+<li>克隆远端服务器上的仓库</li>
+</ul>
+<h3 id="工作流"><a href="#工作流" class="headerlink" title="工作流"></a><strong>工作流</strong></h3><p><img src="/img/Git指南/trees.png" alt=""></p>
+<p>如上图所示, Git的有三个区域组成, <code>工作目录(working dir)</code>, <code>暂存区（Index or Stage）</code>和<code>HEAD</code>, <code>HEAD</code>指向你最后一次提交的结果</p>
+<p><code>git add &lt;filename&gt;</code>或者<code>git add *</code></p>
+<ul>
+<li>将<code>工作目录</code>中没有被跟踪的文件添加到暂存区, 这样当这些文件产生变化的时候Git就可以跟踪到了</li>
+</ul>
+<p><code>git commit -m &quot;代码提交的备注&quot;</code></p>
+<ul>
+<li><code>add</code>命令并没有把文件真正的添加到本地的分支里, 只是放在了暂存区, 需要用<code>commit</code>真正的提交到本地分支</li>
+</ul>
+<p><code>git status</code></p>
+<ul>
+<li>查看仓库里文件的跟踪状态</li>
+</ul>
+<p><code>git log</code></p>
+<ul>
+<li>查看<code>commit</code>的记录</li>
+</ul>
+<p><code>git commit --amend</code></p>
+<ul>
+<li>修改最后一次提交</li>
+</ul>
+<p><code>git reset HEAD &lt;file&gt;</code></p>
+<ul>
+<li>取消已经暂存的文件</li>
+</ul>
+<p><code>git checkout -- &lt;file&gt;</code></p>
+<ul>
+<li>在暂存状态下，取消对文件的修改</li>
+</ul>
+<blockquote>
+<p>一定要明确文件所在的工作区（工作区，暂存区，本地代码库）</p>
+</blockquote>
+<p><code>git reset --hard commit-id</code></p>
+<ul>
+<li>本地代码库回滚到commit-id</li>
+</ul>
+<p><strong>远程代码库回滚</strong>：</p>
+<p>先将本地分支退回到某个commit，删除远程分支，再重新push本地分支。</p>
+<p><code>git checkout the_branch</code></p>
+<ul>
+<li>切换到the_branch分支</li>
+</ul>
+<p><code>git pull</code></p>
+<ul>
+<li>更新文件</li>
+</ul>
+<p><code>git branch the_branch_backup</code></p>
+<ul>
+<li>备份当前分支</li>
+</ul>
+<p><code>git reset --hard the_commit_id</code></p>
+<ul>
+<li>回滚到某一commit_id</li>
+</ul>
+<p><code>git push origin :the_branch</code></p>
+<ul>
+<li>删除远程 the_branch</li>
+</ul>
+<p><code>git push origin the_branch</code></p>
+<ul>
+<li>用回滚后的本地分支重新建立远程分支</li>
+</ul>
+<p><code>git push origin :the_branch_backup</code></p>
+<ul>
+<li>删除备份分支</li>
+</ul>
+<h3 id="Push本地分支"><a href="#Push本地分支" class="headerlink" title="Push本地分支"></a><strong>Push本地分支</strong></h3><p><code>git push [origin master]</code></p>
+<ul>
+<li>在<code>commit</code>改动之后就有了新的本地分支, 执行<code>push</code>将这些改动提交到远端仓库, 可以把<code>master</code>换成你想要推送的任何分支</li>
+</ul>
+<p><code>git remote add origin &lt;server&gt;</code></p>
+<ul>
+<li>如果没有克隆现有仓库，并想将仓库连接到某个远程服务器，使用<code>remote add</code>添加远程分支</li>
+</ul>
+<h3 id="分支-brancd"><a href="#分支-brancd" class="headerlink" title="分支(brancd)"></a><strong>分支(brancd)</strong></h3><p><img src="/img/Git指南/branches.png" alt=""></p>
+<p>在创建一个仓库的时候, <code>master</code>是<code>默认的</code>主分支</p>
+<p><code>git checkout -b feature_brancd</code></p>
+<ul>
+<li>创建一个叫<code>feature_brand</code>的分支, 并切换到该分支下</li>
+</ul>
+<p><code>git checkout master</code></p>
+<ul>
+<li>切换回主分支</li>
+</ul>
+<p><code>git branch</code></p>
+<ul>
+<li>查看所有分支</li>
+</ul>
+<p><code>git branch -d feature_branch</code></p>
+<ul>
+<li>删除新建的分支</li>
+</ul>
+<p><code>git branch -v</code></p>
+<ul>
+<li>查看各个分支最后一个提交对象的信息</li>
+</ul>
+<p><code>git branch --merged/--no-merged</code></p>
+<ul>
+<li>查看哪些分支已被并入当前分支, 所显示的列表中没有<code>*</code>的分支通常都可以用<code>git branch -d</code>删掉</li>
+</ul>
+<blockquote>
+<p>除非你将分支推送到远端仓库，不然该分支都是本地分支与远程服务器交互没有关系：</p>
+</blockquote>
+<p><code>git push origin &lt;branch&gt;</code></p>
+<ul>
+<li><p>将本地分支提交到远程仓库</p>
+</li>
+<li><p><a href="http://iissnan.com/progit/html/zh/ch3_5.html" target="_blank" rel="noopener">远程分支的详细介绍</a></p>
+</li>
+</ul>
+<h3 id="分支衍合（rebase）"><a href="#分支衍合（rebase）" class="headerlink" title="分支衍合（rebase）"></a><strong>分支衍合（rebase）</strong></h3><p><code>git rebase branch_name</code></p>
+<ul>
+<li><p><code>衍合</code>是把在一个分支里提交的改变移到另一个分支里重放一遍</p>
+</li>
+<li><p>实际上是把解决分支补丁同最新主干代码之间冲突的责任，化转为由提交补丁的人来解决，一旦分支中的提交对象发布到公共仓库，就千万不要对该分支进行衍合操作。</p>
+</li>
+<li><p><a href="http://iissnan.com/progit/html/zh/ch3_6.html" target="_blank" rel="noopener">分支的衍合</a></p>
+</li>
+</ul>
+<h3 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a><strong>远程仓库</strong></h3><p><code>git fetch &lt;origin&gt; &lt;master&gt;</code></p>
+<ul>
+<li><p>创建并更新所有远程分支的本地远程分支, 设定当前分支的FETCH_HEAD为远程服务器的master分支</p>
+</li>
+<li><p>FETCH_HEAD指的是: <code>某个branch在服务器上的最新状态</code></p>
+</li>
+</ul>
+<p><code>git fetch origin branch_1</code></p>
+<ul>
+<li>设定当前分支的<code>FETCH_HEAD</code>为远程服务器的branch_1分支</li>
+</ul>
+<p><code>git fetch origin branch_1:branch_2</code></p>
+<ul>
+<li><p>使用远程branch_1分支在本地创建branch_2, 但不会切换到branch_2,</p>
+</li>
+<li><p>如果本地不存在branch_2分支, 则会自动创建一个新的branch2分支</p>
+</li>
+<li><p>如果本地存在branch2分支, 并且是`fast forward’, 则自动合并两个分支, 否则, 会阻止以上操作</p>
+</li>
+</ul>
+<p><code>git fetch origin :branch2</code></p>
+<ul>
+<li>等价于<code>git fetch origin master:branch2</code></li>
+</ul>
+<p><code>git pull</code></p>
+<ul>
+<li><p>更新本地仓库使得和远程仓库一致, 相当于在你的工作目录中 获取（fetch）并合并（merge）远程仓库的改动</p>
+</li>
+<li><p><code>git fetch origin</code> + <code>git merge FETCH_HEAD</code></p>
+</li>
+</ul>
+<h3 id="合并-merge"><a href="#合并-merge" class="headerlink" title="合并(merge)"></a><strong>合并(merge)</strong></h3><p><code>git branch</code></p>
+<ul>
+<li>查看所有分支并确定HEAD在哪个分支上</li>
+</ul>
+<p><code>git merge &lt;branch&gt;</code></p>
+<ul>
+<li>将其他分支和当前分支合并, 合并不是每次都成功，并可能出现冲突（conflicts）, 这时候就需要你修改这些文件来手动合并这些冲突（conflicts）</li>
+</ul>
+<p><code>git status</code></p>
+<ul>
+<li>查看哪些文件有冲突，并人工编辑文件留下想要的代码</li>
+</ul>
+<p><code>git add &lt;filename&gt;</code></p>
+<ul>
+<li>改完之后，你需要执行<code>git add</code>以将它们标记为合并成功，然后<code>git commit</code>进行提交到本地代码库</li>
+</ul>
+<p><code>git branch -d branch_name</code></p>
+<ul>
+<li>合并之后可以将之前的分支删除</li>
+</ul>
+<p><code>git diff &lt;source_branch&gt; &lt;target_branch&gt;</code></p>
+<ul>
+<li>用<code>diff</code>命令预览两个分支的不同</li>
+</ul>
+<h3 id="标签-tag"><a href="#标签-tag" class="headerlink" title="标签(tag)"></a><strong>标签(tag)</strong></h3><p><code>git log</code></p>
+<ul>
+<li>查看标记提交的ID</li>
+</ul>
+<p><code>git tag v_1.0.1 1b2e1d63ff</code></p>
+<ul>
+<li>创建一个叫做<code>v_1.0.1</code>的标签, <code>1b2e1d63ff</code> 是你想要标记的commit_ID的前10位字符</li>
+</ul>
+<h3 id="团队协作"><a href="#团队协作" class="headerlink" title="团队协作"></a><a href="http://iissnan.com/progit/html/zh/ch5_2.html" target="_blank" rel="noopener"><strong>团队协作</strong></a></h3><h3 id="修改commit历史"><a href="#修改commit历史" class="headerlink" title="修改commit历史"></a><strong>修改commit历史</strong></h3><h3 id="子模块"><a href="#子模块" class="headerlink" title="子模块"></a><strong>子模块</strong></h3><p><code>git submodule add &lt;git_url&gt;</code></p>
+<ul>
+<li>将外部项目加为子模块</li>
+</ul>
+<p><code>git submodule init</code></p>
+<ul>
+<li>初始化你的本地配置文件<code>.git/config</code></li>
+</ul>
+<p><code>git submodule update</code></p>
+<ul>
+<li>从子项目拉取所有数据并检出上层项目里所列的合适的提交</li>
+</ul>
+<p><code>git submodule foreach --recursive git pull origin master</code></p>
+<ul>
+<li>一次全部更新所有的<code>submodule</code></li>
+</ul>
+<p><code>git rm --cached /path/to/files</code><br><code>rm -rf /path/to/files</code></p>
+<ul>
+<li>刪除 <code>submodule</code></li>
+</ul>
+<p><code>git submodule sync</code></p>
+<ul>
+<li><code>submodule</code>的远程地址发生改变，编辑<code>.gitmodules</code>中修改，然后执行该命令</li>
+</ul>
+<blockquote>
+<p>改动并提交Submodule代码:</p>
+</blockquote>
+<ul>
+<li>需要单独把<code>submodule</code>的代码提交，把<code>submodule</code> 当做一个独立的 <code>git</code> 工程对待:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd submodules // 进入 submodule 目录</span><br><span class="line">git add .</span><br><span class="line">git commit -m &quot;xxxx&quot;</span><br><span class="line">git push origin master  //提交submodule代码</span><br></pre></td></tr></table></figure>
+<ul>
+<li>返回main工程:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add .</span><br><span class="line">git commit -m &quot;update submodule&quot;</span><br><span class="line">git push origin master  //提交main 代码</span><br></pre></td></tr></table></figure>
+<p>为什么分别提交了两次 ？<br>Git 对submodule 的管理是这样的，在 main 工程中，并不递归记录 submodule 中文件的变动，仅仅记住 submodule 的分支和Commit Id ，这样足够从一个 submodule 中取出需要的代码，而 submodule的管理是完全独立的。所以需要先把submodule的改动提交了，再在 main 工程更新submodule 的分支和commit id 变化。</p>
+<h3 id="更多"><a href="#更多" class="headerlink" title="更多"></a><strong>更多</strong></h3><p><a href="http://iissnan.com/progit/" target="_blank" rel="noopener">Git Pro</a></p>
+<p><a href="http://rogerdudler.github.io/git-guide/index.zh.html" target="_blank" rel="noopener">git简明指南</a></p>
+<p><a href="http://marklodato.github.io/visual-git-guide/index-zh-cn.html" target="_blank" rel="noopener">图解Git</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/11/19/Github指南/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Github指南
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/05/15/关于内存分配/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">关于内存分配</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>
