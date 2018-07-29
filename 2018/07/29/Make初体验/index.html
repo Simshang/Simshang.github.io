@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Make 初体验 | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近在工程中常用到Makefile构建工具，总结一下常用的使用方法。">
+<meta name="keywords" content="Make">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Make 初体验">
+<meta property="og:url" content="http://simtalk.cn/2018/07/29/Make初体验/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="最近在工程中常用到Makefile构建工具，总结一下常用的使用方法。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-29T09:47:07.296Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Make 初体验">
+<meta name="twitter:description" content="最近在工程中常用到Makefile构建工具，总结一下常用的使用方法。">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Make/" style="font-size: 10px;">Make</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 10px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-Make初体验" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/07/29/Make初体验/" class="article-date">
+  	<time datetime="2018-07-29T07:05:21.000Z" itemprop="datePublished">2018-07-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Make 初体验
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Make/">Make</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/计算机/">计算机</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Make"><span class="toc-text">Make</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#规则"><span class="toc-text">规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#变量"><span class="toc-text">变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动推导"><span class="toc-text">自动推导</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#引用"><span class="toc-text">引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拓展"><span class="toc-text">拓展</span></a></li></ol>
+        </div>
+        
+        <p>最近在工程中常用到Makefile构建工具，总结一下常用的使用方法。</p>
+<a id="more"></a>
+<h3 id="Make"><a href="#Make" class="headerlink" title="Make"></a><strong>Make</strong></h3><p>使用Makefile维护的工程, 通常我们使用<code>make</code>命令去构建一个工程, 整个构建的过程通常包括<code>编译(Compile)</code>和<code>链接(Link)</code>两个过程, 对于C++工程来说, 通常编译是把源文件编译成中间代码文件，在Windows下也就是<code>.obj 文件</code>，UNIX下是<code>.o 文件</code>，即<code>Object File</code>, 最后通过链接的过程将大量的目标文件合成可执行文件. </p>
+<ul>
+<li><p>在编译时，编译器只检测程序语法，和函数、变量是否被声明。如果函数未被声明，编译器会给出一个警告，但可以生成Object File </p>
+</li>
+<li><p>在链接程序时，链接器会在所有的Object File中找寻函数的实现，如果找不到，那到就会报链接错误码（Linker Error）</p>
+</li>
+</ul>
+<p>Makefile中定义了整个工程的构建规则, 所谓的规则就是描述了源代码中的依赖关系, 也就是如何去编译和链接程序</p>
+<h3 id="规则"><a href="#规则" class="headerlink" title="规则"></a><strong>规则</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;target&gt; : &lt;prerequisites&gt; </span><br><span class="line">[tab]  &lt;commands&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>上面第一行冒号前面的部分，叫做”目标”（target）</p>
+</li>
+<li><p>冒号后面的部分叫做”前置条件”（prerequisites）, 就是要生成target所需要的中间文件或是依赖的其他目标。</p>
+</li>
+<li><p>第二行必须由一个tab键起首，后面跟着make 可执行的”命令”（commands）</p>
+</li>
+</ul>
+<p>target是一个或多个的目标文件依赖于prerequisites中的文件，其生成规则定义在command中, 当prerequisites中有一个以上的文件比target文件要新，command所定义的命令就会被执行</p>
+<p>下面我们举个例子:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">edit : main.o kbd.o command.o display.o /</span><br><span class="line">insert.o search.o files.o utils.o</span><br><span class="line">    cc -o edit main.o kbd.o command.o display.o /</span><br><span class="line">insert.o search.o files.o utils.o</span><br><span class="line"></span><br><span class="line">main.o : main.c defs.h</span><br><span class="line">    cc -c main.c</span><br><span class="line">kbd.o : kbd.c defs.h command.h</span><br><span class="line">    cc -c kbd.c</span><br><span class="line">command.o : command.c defs.h command.h</span><br><span class="line">    cc -c command.c</span><br><span class="line">display.o : display.c defs.h buffer.h</span><br><span class="line">    cc -c display.c</span><br><span class="line">insert.o : insert.c defs.h buffer.h</span><br><span class="line">    cc -c insert.c</span><br><span class="line">search.o : search.c defs.h buffer.h</span><br><span class="line">    cc -c search.c</span><br><span class="line">files.o : files.c defs.h buffer.h command.h</span><br><span class="line">    cc -c files.c</span><br><span class="line">utils.o : utils.c defs.h</span><br><span class="line">    cc -c utils.c</span><br><span class="line"></span><br><span class="line">clean :</span><br><span class="line">    rm edit main.o kbd.o command.o display.o /</span><br><span class="line">insert.o search.o files.o utils.o</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>\</code>表示换行符, 为了更方便地进行Makefile的阅读</p>
+</li>
+<li><p>可执行文件<code>edit</code>是一个target, 是由<code>main.o</code>等中间的Object File通过链接而成的</p>
+</li>
+<li><p>对于<code>main.o</code>来说, 其本身也是一个target, 并依赖<code>main.c defs.h</code>这两个文件, 通过命令<code>cc -c main.c</code>进行编译, <strong>依赖关系的实质上就是说明了目标文件是由哪些文件生成的</strong></p>
+</li>
+<li><p>对于是否执行命令, make会比较targets文件和prerequisites文件的修改日期，如果prerequisites文件的日期要比targets文件的日期要新，或者target不存在的话，make就会执行后续定义的命令, 这一点对于大型项目来说十分重要, 因为大型项目的编译过程十分耗时, 我们通常不会因为改了一个变量名而重新编译这个工程, make的这种机制可以使得只编译更改过的文件</p>
+</li>
+<li><p>clean不是target，其冒号后什么也没有，make不会自动去找文件的依赖性，在make命令后明显得指出clean, 即<code>make clean</code>, 才能自动执行其后所定义的命令, 这样的方法非常有用，我们可以在一个makefile中定义不用的编译或是和编译无关的命令，比如程序的打包，程序的备份等.</p>
+</li>
+</ul>
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a><strong>变量</strong></h3><p>我们重新看一下Makefile里的内容, 发现其中main.o等文件特别的冗长并且出现了三次, </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">edit : main.o kbd.o command.o display.o /</span><br><span class="line">insert.o search.o files.o utils.o</span><br><span class="line">    cc -o edit main.o kbd.o command.o display.o /</span><br><span class="line">insert.o search.o files.o utils.o</span><br></pre></td></tr></table></figure>
+<p>如果随着edit功能的增加, 会产生越来越多的Object Files, 那么维护Makefile的成本会越来越高, make提供了变量来解决这个问题:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">OBJECTS = main.o kbd.o command.o display.o /</span><br><span class="line">insert.o search.o files.o utils.o</span><br><span class="line"></span><br><span class="line">edit : $(OBJECTS)</span><br><span class="line">    cc -o edit $(OBJECTS)</span><br><span class="line">main.o : main.c defs.h</span><br><span class="line">    cc -c main.c</span><br><span class="line">kbd.o : kbd.c defs.h command.h</span><br><span class="line">    cc -c kbd.c</span><br><span class="line">command.o : command.c defs.h command.h</span><br><span class="line">    cc -c command.c</span><br><span class="line">display.o : display.c defs.h buffer.h</span><br><span class="line">    cc -c display.c</span><br><span class="line">insert.o : insert.c defs.h buffer.h</span><br><span class="line">    cc -c insert.c</span><br><span class="line">search.o : search.c defs.h buffer.h</span><br><span class="line">    cc -c search.c</span><br><span class="line">files.o : files.c defs.h buffer.h command.h</span><br><span class="line">    cc -c files.c</span><br><span class="line">utils.o : utils.c defs.h</span><br><span class="line">    cc -c utils.c</span><br><span class="line">clean :</span><br><span class="line">    rm edit $(OBJECTS)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>OBJECTS</code>是一个变量, 当有新的功能的<code>.o</code>文件加进来, 我们只需要更改这个变量就好</li>
+</ul>
+<h3 id="自动推导"><a href="#自动推导" class="headerlink" title="自动推导"></a><strong>自动推导</strong></h3><p>Make的强大之处在于它可以根据文件和文件依赖自动推导<code>命令</code>, 比如make看到一个main.o文件，它就会自动的把main.c文件加在依赖关系中，那么main.c就是main.o的依赖文件, 并且<code>cc -c main.c</code>也会被推导出来，makefile不用写得这么复杂, 如下所示:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">OBJECTS = main.o kbd.o command.o display.o /</span><br><span class="line">insert.o search.o files.o utils.o</span><br><span class="line"></span><br><span class="line">edit : $(OBJECTS)</span><br><span class="line">    cc -o edit $(OBJECTS)</span><br><span class="line">main.o : defs.h</span><br><span class="line">kbd.o : defs.h command.h</span><br><span class="line">command.o : defs.h command.h</span><br><span class="line">display.o : defs.h buffer.h</span><br><span class="line">insert.o : defs.h buffer.h</span><br><span class="line">search.o : defs.h buffer.h</span><br><span class="line">files.o : defs.h buffer.h command.h</span><br><span class="line">utils.o : defs.h</span><br><span class="line"></span><br><span class="line">.PHONY : clean</span><br><span class="line">clean :</span><br><span class="line">    -rm edit $(OBJECTS)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>由规则可知, <code>name.o</code>后面不用加上<code>name.c</code>文件, 同时编译命令也不需要显示的写出来</p>
+</li>
+<li><p><code>.PHONY</code>表示，clean是个伪目标文件, <code>-</code>表示某些文件出现问题，忽略问题继续做后面的事, clean都是要放在文件的最后的</p>
+</li>
+</ul>
+<h3 id="引用"><a href="#引用" class="headerlink" title="引用"></a><strong>引用</strong></h3><p>在Makefile使用include关键字可以把别的Makefile包含进来，这很像C语言的#include，被包含的文件会原模原样的放在当前文件的包含位置。</p>
+<p>具体的语法是:</p>
+<p><code>include &lt;filename&gt;</code></p>
+<ul>
+<li><code>filename</code>可以是当前操作系统Shell的文件模式, 也就是可以包含路径和通配符</li>
+</ul>
+<p>举个例子:</p>
+<ul>
+<li>有a.mk、b.mk、c.mk三个Makefile文件, 还有一个文件叫foo.make，以及一个变量$(bar)，其包含了e.mk和f.mk</li>
+</ul>
+<p><code>include foo.make *.mk $(bar)</code></p>
+<p>等价于：</p>
+<p><code>include foo.make a.mk b.mk c.mk e.mk f.mk</code></p>
+<p>make命令会把include所指出的其它Makefile的内容安置在当前的位置, 如果文件都没有指定绝对路径或是相对路径的话，make首先会在当前目录下寻找，如果当前目录下没有找到，make还会在下面的几个目录下找：</p>
+<ol>
+<li><p>如果make执行时，有<code>-I</code>或<code>--include-dir</code>参数，那么make就会在这个参数所指定的目录下去寻找</p>
+</li>
+<li><p>如果目录<prefix>/include（一般是：<code>/usr/local/bin</code>或<code>/usr/include</code>）存在的话，make也会去找</prefix></p>
+</li>
+</ol>
+<p>如果有文件没有找到的话，make会生成一条警告信息，但不会马上出现错误信息。它会继续载入其它的文件，一旦完成makefile的读取，make会再重新寻找没有找到或是不能读取的文件，如果还是不行，make才会出现错误信息。</p>
+<p>如果你想让make不理那些无法读取的文件，而继续执行，你可以在include前加一个<code>-</code>, 即无论include过程中出现什么错误，都不要报错继续执行：</p>
+<p><code>-include &lt;filename&gt;</code></p>
+<h3 id="拓展"><a href="#拓展" class="headerlink" title="拓展"></a><strong>拓展</strong></h3><p>通常我们的项目中难免会引用一些外部库, 在编译成可执行文件之后, 我们希望将可执行文件和外部库同时打包在任何的路径下都可以运行, 如果想让可执行文件成功的找到外部库就需要在<code>RPATH</code>中使用相对路径:</p>
+<p>例如要指定相对于可执行文件的路径，可以这样：</p>
+<p><code>gcc -L/foo/lib/location -lfoo -Wl,--rpath=&#39;$$ORIGIN/../lib&#39; source.c -o binary</code></p>
+<ul>
+<li>在执行<code>binary</code>可执行文件时，这里的<code>$ORIGIN</code>变量会被链接器替换为可执行文件所在的路径, 如果将可执行文件和动态库一起移动到别的位置, 链接器也能通过相对位置找到对应的动态库正常运行</li>
+</ul>
+<blockquote>
+<p><a href="https://blog.theerrorlog.com/the-gnu-linker-and-rpath.html" target="_blank" rel="noopener">https://blog.theerrorlog.com/the-gnu-linker-and-rpath.html</a></p>
+</blockquote>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/06/05/HDRNET/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">HDRNET</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>
