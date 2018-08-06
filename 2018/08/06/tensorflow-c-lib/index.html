@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>TensorFlow C++ Lib | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本篇介绍了编译TensorFlow的C++接口, 包括CPU版和GPU版.">
+<meta name="keywords" content="TensorFlow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow C++ Lib">
+<meta property="og:url" content="http://simtalk.cn/2018/08/06/tensorflow-c-lib/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="本篇介绍了编译TensorFlow的C++接口, 包括CPU版和GPU版.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-06T09:16:52.220Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TensorFlow C++ Lib">
+<meta name="twitter:description" content="本篇介绍了编译TensorFlow的C++接口, 包括CPU版和GPU版.">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Make/" style="font-size: 10px;">Make</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 12px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/并发编程/" style="font-size: 10px;">并发编程</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">北邮在读，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/shangyan" title="zhihu">zhihu</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-tensorflow-c-lib" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/08/06/tensorflow-c-lib/" class="article-date">
+  	<time datetime="2018-08-06T08:41:34.000Z" itemprop="datePublished">2018-08-06</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      TensorFlow C++ Lib
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TensorFlow/">TensorFlow</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/深度学习/">深度学习</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本环境"><span class="toc-text">基本环境:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CPU"><span class="toc-text">CPU</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GPU"><span class="toc-text">GPU</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Debug"><span class="toc-text">Debug</span></a></li></ol>
+        </div>
+        
+        <p>本篇介绍了编译TensorFlow的C++接口, 包括CPU版和GPU版.</p>
+<a id="more"></a>
+<h3 id="基本环境"><a href="#基本环境" class="headerlink" title="基本环境:"></a><strong>基本环境:</strong></h3><ul>
+<li><p>TensorFlow源码</p>
+</li>
+<li><p>Anaconda Python 2.X</p>
+</li>
+<li><p>bazel : 注意TensorFlow1.7.0 需要`bazel-0.11.1版本才能编译通过</p>
+</li>
+</ul>
+<p><code>bazel:0.11.1的安装:</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install -y --no-install-recommends bash-completion g++ zlib1g-dev</span><br><span class="line">$ curl -LO <span class="string">"https://github.com/bazelbuild/bazel/releases/download/0.11.1/bazel_0.11.1-linux-x86_64.deb"</span> </span><br><span class="line">$ sudo dpkg -i bazel_*.deb</span><br></pre></td></tr></table></figure>
+<ul>
+<li>也可以下载离线的安装文件进行安装, 文件名<code>bazel-0.11.1-installer-linux-x86_64.sh</code></li>
+</ul>
+<h3 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a><strong>CPU</strong></h3><blockquote>
+<p>CPU版的TensorFlow的C++ 接口比较容易编译</p>
+</blockquote>
+<ul>
+<li>运行<code>./configure</code>文件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">simshang@simshang:~/PycharmProjects/tensorflow170$ ./configure </span><br><span class="line">WARNING: Running Bazel server needs to be killed, because the startup options are different.</span><br><span class="line">You have bazel 0.11.1 installed.</span><br><span class="line">Please specify the location of python. [Default is /home/simshang/anaconda2/bin/python]: </span><br><span class="line"></span><br><span class="line">Found possible Python library paths:</span><br><span class="line">  /home/simshang/anaconda2/lib/python2.7/site-packages</span><br><span class="line">Please input the desired Python library path to use.  Default is [/home/simshang/anaconda2/lib/python2.7/site-packages]</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with jemalloc as malloc support? [Y/n]: n</span><br><span class="line">No jemalloc as malloc support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with Google Cloud Platform support? [Y/n]: n</span><br><span class="line">No Google Cloud Platform support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with Hadoop File System support? [Y/n]: n</span><br><span class="line">No Hadoop File System support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with Amazon S3 File System support? [Y/n]: n</span><br><span class="line">No Amazon S3 File System support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with Apache Kafka Platform support? [y/N]: n</span><br><span class="line">No Apache Kafka Platform support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with XLA JIT support? [y/N]: n</span><br><span class="line">No XLA JIT support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with GDR support? [y/N]: n</span><br><span class="line">No GDR support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with VERBS support? [y/N]: n</span><br><span class="line">No VERBS support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with OpenCL SYCL support? [y/N]: n</span><br><span class="line">No OpenCL SYCL support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with CUDA support? [y/N]: n</span><br><span class="line">No CUDA support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with MPI support? [y/N]: n</span><br><span class="line">No MPI support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Please specify optimization flags to use during compilation when bazel option <span class="string">"--config=opt"</span> is specified [Default is -march=native]: </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Would you like to interactively configure ./WORKSPACE <span class="keyword">for</span> Android builds? [y/N]: n</span><br><span class="line">Not configuring the WORKSPACE <span class="keyword">for</span> Android builds.</span><br><span class="line"></span><br><span class="line">Preconfigured Bazel build configs. You can use any of the below by adding <span class="string">"--config=&lt;&gt;"</span> to your build <span class="built_in">command</span>. See tools/bazel.rc <span class="keyword">for</span> more details.</span><br><span class="line">	--config=mkl         	<span class="comment"># Build with MKL support.</span></span><br><span class="line">	--config=monolithic  	<span class="comment"># Config for mostly static monolithic build.</span></span><br><span class="line">Configuration finished</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编译TensorFlow的C++ API, 这个过程需要联网, 如果没法联网, 可以将相关的离线库下载下来复制到相应文件夹</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">simshang@simshang:~/PycharmProjects/tensorflow170$ bazel build -c opt --verbose_failures //tensorflow:libtensorflow_cc.so</span><br><span class="line">loginfo: ..........</span><br></pre></td></tr></table></figure>
+<h3 id="GPU"><a href="#GPU" class="headerlink" title="GPU"></a><strong>GPU</strong></h3><blockquote>
+<p>GPU版本的C++ lib需要安装cuda和cudnn这些在configure的时候都会要求指定, 并且要知道自己的GPU的算力</p>
+</blockquote>
+<ul>
+<li>运行<code>./configure</code>文件</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">[root@xlinux-centos ~/tensorflow170]$./configure </span><br><span class="line">WARNING: Running Bazel server needs to be killed, because the startup options are different.</span><br><span class="line">You have bazel 0.11.1 installed.</span><br><span class="line">Please specify the location of python. [Default is /root/anaconda2/bin/python]: </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Found possible Python library paths:</span><br><span class="line">  /root/anaconda2/lib/python2.7/site-packages</span><br><span class="line">Please input the desired Python library path to use.  Default is [/root/anaconda2/lib/python2.7/site-packages]</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with jemalloc as malloc support? [Y/n]: n</span><br><span class="line">No jemalloc as malloc support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with Google Cloud Platform support? [Y/n]: n</span><br><span class="line">No Google Cloud Platform support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with Hadoop File System support? [Y/n]: n</span><br><span class="line">No Hadoop File System support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with Amazon S3 File System support? [Y/n]: n</span><br><span class="line">No Amazon S3 File System support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with Apache Kafka Platform support? [y/N]: n</span><br><span class="line">No Apache Kafka Platform support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with XLA JIT support? [y/N]: n</span><br><span class="line">No XLA JIT support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with GDR support? [y/N]: n</span><br><span class="line">No GDR support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with VERBS support? [y/N]: n</span><br><span class="line">No VERBS support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with OpenCL SYCL support? [y/N]: n</span><br><span class="line">No OpenCL SYCL support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with CUDA support? [y/N]: y</span><br><span class="line">CUDA support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Please specify the CUDA SDK version you want to use, e.g. 7.0. [Leave empty to default to CUDA 9.0]: 8.0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Please specify the location <span class="built_in">where</span> CUDA 8.0 toolkit is installed. Refer to README.md <span class="keyword">for</span> more details. [Default is /usr/<span class="built_in">local</span>/cuda]: </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Please specify the cuDNN version you want to use. [Leave empty to default to cuDNN 7.0]: 6.0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Please specify the location <span class="built_in">where</span> cuDNN 6 library is installed. Refer to README.md <span class="keyword">for</span> more details. [Default is /usr/<span class="built_in">local</span>/cuda]:</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with TensorRT support? [y/N]: n</span><br><span class="line">No TensorRT support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Please specify a list of comma-separated Cuda compute capabilities you want to build with.</span><br><span class="line">You can find the compute capability of your device at: https://developer.nvidia.com/cuda-gpus.</span><br><span class="line">Please note that each additional compute capability significantly increases your build time and binary size. [Default is: 3.5,5.2]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Do you want to use clang as CUDA compiler? [y/N]: n</span><br><span class="line">nvcc will be used as CUDA compiler.</span><br><span class="line"></span><br><span class="line">Please specify <span class="built_in">which</span> gcc should be used by nvcc as the host compiler. [Default is /usr/bin/gcc]: </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Do you wish to build TensorFlow with MPI support? [y/N]: n</span><br><span class="line">No MPI support will be enabled <span class="keyword">for</span> TensorFlow.</span><br><span class="line"></span><br><span class="line">Please specify optimization flags to use during compilation when bazel option <span class="string">"--config=opt"</span> is specified [Default is -march=native]: </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Would you like to interactively configure ./WORKSPACE <span class="keyword">for</span> Android builds? [y/N]: n</span><br><span class="line">Not configuring the WORKSPACE <span class="keyword">for</span> Android builds.</span><br><span class="line"></span><br><span class="line">Preconfigured Bazel build configs. You can use any of the below by adding <span class="string">"--config=&lt;&gt;"</span> to your build <span class="built_in">command</span>. See tools/bazel.rc <span class="keyword">for</span> more details.</span><br><span class="line">	--config=mkl         	<span class="comment"># Build with MKL support.</span></span><br><span class="line">	--config=monolithic  	<span class="comment"># Config for mostly static monolithic build.</span></span><br><span class="line">Configuration finished</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编译TensorFlow的C++ API, 这个过程需要联网, 如果没法联网, 可以将相关的离线库下载下来复制到相应文件夹</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@xlinux-centos ~/tensorflow170]$ bazel build -c opt --config=cuda //tensorflow:libtensorflow_cc.so</span><br><span class="line">loginfo: ..........</span><br></pre></td></tr></table></figure>
+<h3 id="Debug"><a href="#Debug" class="headerlink" title="Debug"></a>Debug</h3><blockquote>
+<p>can not find libdevice.10.bc</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$cd</span> /usr/<span class="built_in">local</span>/cuda/nvvm/libdevice/</span><br><span class="line">[root@xlinux-centos /usr/<span class="built_in">local</span>/cuda/nvvm/libdevice]<span class="variable">$ls</span></span><br><span class="line">libdevice.10.bc  libdevice.compute_20.10.bc  libdevice.compute_30.10.bc  libdevice.compute_35.10.bc  libdevice.compute_50.10.bc</span><br><span class="line">[root@xlinux-centos /usr/<span class="built_in">local</span>/cuda/nvvm/libdevice]<span class="variable">$cp</span> libdevice.compute_50.10.bc libdevice.10.bc</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/07/31/并发编程/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">并发编程</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>
