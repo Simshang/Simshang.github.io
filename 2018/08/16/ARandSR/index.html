@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>AR and SR | 简说</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Artifact Reduction 和 Super Resolution的相关论文">
+<meta name="keywords" content="AR,SR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AR and SR">
+<meta property="og:url" content="http://simtalk.cn/2018/08/16/ARandSR/index.html">
+<meta property="og:site_name" content="简说">
+<meta property="og:description" content="Artifact Reduction 和 Super Resolution的相关论文">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-16T08:15:08.592Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AR and SR">
+<meta name="twitter:description" content="Artifact Reduction 和 Super Resolution的相关论文">
+  
+    <link rel="alternative" href="/atom.xml" title="简说" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">simshang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>菜单</li>
+						<li>标签</li>
+						
+						
+						<li>关于我</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+							<li><a href="/categories/life">生活</a></li>
+				        
+							<li><a href="/categories/Ukelele">音乐</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+					        
+								<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/proto/" style="font-size: 10px;">.proto</a> <a href="/tags/3dConv/" style="font-size: 10px;">3dConv</a> <a href="/tags/AR/" style="font-size: 10px;">AR</a> <a href="/tags/AlexNet/" style="font-size: 10px;">AlexNet</a> <a href="/tags/BN/" style="font-size: 10px;">BN</a> <a href="/tags/BRIEF/" style="font-size: 10px;">BRIEF</a> <a href="/tags/BigO/" style="font-size: 10px;">BigO</a> <a href="/tags/Blobs/" style="font-size: 10px;">Blobs</a> <a href="/tags/BoW/" style="font-size: 10px;">BoW</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/CDC/" style="font-size: 10px;">CDC</a> <a href="/tags/CNN/" style="font-size: 10px;">CNN</a> <a href="/tags/Caffe/" style="font-size: 18px;">Caffe</a> <a href="/tags/Container/" style="font-size: 10px;">Container</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Dockerhub/" style="font-size: 10px;">Dockerhub</a> <a href="/tags/Dropout/" style="font-size: 10px;">Dropout</a> <a href="/tags/FCN/" style="font-size: 12px;">FCN</a> <a href="/tags/FTP/" style="font-size: 10px;">FTP</a> <a href="/tags/GBD/" style="font-size: 10px;">GBD</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/Github/" style="font-size: 10px;">Github</a> <a href="/tags/GoogLeNet/" style="font-size: 10px;">GoogLeNet</a> <a href="/tags/Harris/" style="font-size: 10px;">Harris</a> <a href="/tags/Hexo/" style="font-size: 14px;">Hexo</a> <a href="/tags/IDE/" style="font-size: 10px;">IDE</a> <a href="/tags/Java/" style="font-size: 10px;">Java</a> <a href="/tags/LSTM/" style="font-size: 10px;">LSTM</a> <a href="/tags/LaTeX/" style="font-size: 10px;">LaTeX</a> <a href="/tags/Layers/" style="font-size: 12px;">Layers</a> <a href="/tags/Linux/" style="font-size: 12px;">Linux</a> <a href="/tags/Make/" style="font-size: 10px;">Make</a> <a href="/tags/Markdown/" style="font-size: 10px;">Markdown</a> <a href="/tags/Mysql/" style="font-size: 16px;">Mysql</a> <a href="/tags/NIN/" style="font-size: 10px;">NIN</a> <a href="/tags/Nets/" style="font-size: 10px;">Nets</a> <a href="/tags/ORB/" style="font-size: 10px;">ORB</a> <a href="/tags/OS/" style="font-size: 12px;">OS</a> <a href="/tags/Paddle/" style="font-size: 12px;">Paddle</a> <a href="/tags/PyCaffe/" style="font-size: 10px;">PyCaffe</a> <a href="/tags/Python/" style="font-size: 12px;">Python</a> <a href="/tags/RNN/" style="font-size: 10px;">RNN</a> <a href="/tags/ResNet/" style="font-size: 10px;">ResNet</a> <a href="/tags/SIFT/" style="font-size: 10px;">SIFT</a> <a href="/tags/SR/" style="font-size: 10px;">SR</a> <a href="/tags/SURF/" style="font-size: 10px;">SURF</a> <a href="/tags/SVM/" style="font-size: 10px;">SVM</a> <a href="/tags/Shell/" style="font-size: 10px;">Shell</a> <a href="/tags/Softmax/" style="font-size: 10px;">Softmax</a> <a href="/tags/Staple/" style="font-size: 10px;">Staple</a> <a href="/tags/TensorFlow/" style="font-size: 12px;">TensorFlow</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/VGG/" style="font-size: 10px;">VGG</a> <a href="/tags/Vim/" style="font-size: 10px;">Vim</a> <a href="/tags/kNN/" style="font-size: 10px;">kNN</a> <a href="/tags/内存/" style="font-size: 10px;">内存</a> <a href="/tags/单元测试/" style="font-size: 10px;">单元测试</a> <a href="/tags/反向传播算法/" style="font-size: 10px;">反向传播算法</a> <a href="/tags/图像增强/" style="font-size: 10px;">图像增强</a> <a href="/tags/图说/" style="font-size: 20px;">图说</a> <a href="/tags/工厂模式/" style="font-size: 10px;">工厂模式</a> <a href="/tags/并发编程/" style="font-size: 10px;">并发编程</a> <a href="/tags/摇滚/" style="font-size: 14px;">摇滚</a> <a href="/tags/文本分类/" style="font-size: 10px;">文本分类</a> <a href="/tags/最小二乘法/" style="font-size: 10px;">最小二乘法</a> <a href="/tags/梯度下降法/" style="font-size: 14px;">梯度下降法</a> <a href="/tags/模型优化/" style="font-size: 12px;">模型优化</a> <a href="/tags/正则化/" style="font-size: 12px;">正则化</a> <a href="/tags/激活函数/" style="font-size: 10px;">激活函数</a> <a href="/tags/电影/" style="font-size: 10px;">电影</a> <a href="/tags/神经网络/" style="font-size: 12px;">神经网络</a> <a href="/tags/算法/" style="font-size: 10px;">算法</a> <a href="/tags/线性模型/" style="font-size: 12px;">线性模型</a> <a href="/tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="/tags/随笔/" style="font-size: 12px;">随笔</a> <a href="/tags/面向对象/" style="font-size: 10px;">面向对象</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+				
+				<section class="switch-part switch-part3">
+				
+					<div id="js-aboutme">技术研究，计算机视觉与深度学习，喜欢摇滚乐，爱打篮球，极简主义。</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">simshang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xqkff.com1.z0.glb.clouddn.com/AIer.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">simshang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">英泰勒吉斯就一定要实现</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+					<li><a href="/categories/life">生活</a></li>
+		        
+					<li><a href="/categories/Ukelele">音乐</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/Simshang" title="github">github</a>
+			        
+						<a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=l_T-9vnwue72_dfx_O-69v77ufT4_g" title="mail">mail</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-ARandSR" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2018/08/16/ARandSR/" class="article-date">
+  	<time datetime="2018-08-16T13:41:44.000Z" itemprop="datePublished">2018-08-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      AR and SR
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/AR/">AR</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SR/">SR</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/深度学习/">深度学习</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Image-Compression-Improvement"><span class="toc-text">Image Compression Improvement</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Artifact-Reduction-based-on-CNN"><span class="toc-text">Artifact Reduction based on CNN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CNN-Network-Optimization"><span class="toc-text">CNN Network Optimization</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Video-Restoration"><span class="toc-text">Video Restoration</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Image-Restoration-and-SR"><span class="toc-text">Image Restoration and SR</span></a></li></ol>
+        </div>
+        
+        <p>Artifact Reduction 和 Super Resolution的相关论文</p>
+<a id="more"></a>
+<h3 id="Image-Compression-Improvement"><a href="#Image-Compression-Improvement" class="headerlink" title="Image Compression Improvement"></a><strong>Image Compression Improvement</strong></h3><ul>
+<li><a href="http://www2.comp.polyu.edu.hk/~15903062r/content-weighted-image-compression.html" target="_blank" rel="noopener">Learning Convolutional Networks for Content-weighted Image Compression</a> </li>
+</ul>
+<p><a href="http://www2.comp.polyu.edu.hk/~15903062r/project_image_compression/egpaper_final.pdf" target="_blank" rel="noopener"><code>pdf</code></a></p>
+<p><a href="https://github.com/limuhit/ImageCompression" target="_blank" rel="noopener"><code>ImageCompression testcode</code></a></p>
+<blockquote>
+<p>本文将加权重要性图和二进制量化应用在图像压缩系统中, 在图像压缩时引入important map来引导比特率分配，结果比jpeg、jpeg2000保留更多细节</p>
+</blockquote>
+<ul>
+<li><a href="https://rd.springer.com/content/pdf/10.1007%2F978-3-319-91189-2_2.pdf" target="_blank" rel="noopener">FARIP: Framework for Artifact Removal for Image Processing Using JPEG</a></li>
+</ul>
+<blockquote>
+<p>本文优化了JPEG压缩方法</p>
+</blockquote>
+<ul>
+<li><a href="http://openaccess.thecvf.com/content_cvpr_2018/CameraReady/1904.pdf" target="_blank" rel="noopener">Improved Lossy Image Compression with Priming and Spatially Adaptive Bit Rates for Recurrent Networks</a></li>
+</ul>
+<h3 id="Artifact-Reduction-based-on-CNN"><a href="#Artifact-Reduction-based-on-CNN" class="headerlink" title="Artifact Reduction based on CNN"></a><strong>Artifact Reduction based on CNN</strong></h3><ul>
+<li><a href="http://openaccess.thecvf.com/content_cvpr_2018_workshops/papers/w50/Maleki_BlockCNN_A_Deep_CVPR_2018_paper.pdf" target="_blank" rel="noopener">2018-CVPR:  BlockCNN: A Deep Network for Artifact Removal and Image Compression</a></li>
+</ul>
+<blockquote>
+<p>ARmodel:输入24X24X3图像块，输出8X8X3图像块（3通道）。网络有一系列的卷积和残差块。残差块包含多个操作，包括卷积、批量归一化和leaky ReLU激活函数。其采用9个残差块，6百万个图像对做训练集。lr=10-3 use Adam with weightdecay of 10−4. 120, 000 iterations.和ARCNN做主观对比差异不大，无客观对比，无性能分析，无开源代码。</p>
+</blockquote>
+<ul>
+<li><a href="http://openaccess.thecvf.com/content_ICCV_2017/papers/Galteri_Deep_Generative_Adversarial_ICCV_2017_paper.pdf" target="_blank" rel="noopener">2017ICCV: Deep Generative Adversarial Compression Artifact Removal</a></li>
+</ul>
+<blockquote>
+<p>利用生成对抗网络GAN做AR,效果优于ARCNN,能保留更多细节，无性能分析。两个网络，生成网络采用多层残差块，引入MSEloss+SSIMloss；判决网络采用多层卷积，输出2X2X1的判决结果，引入perceptualloss+AdversarialPatchloss；训练集16随机128×128 patches, with flipping and rotation data augmentation.learning rate of 10−4. 70, 000 iterations.无开源代码</p>
+</blockquote>
+<ul>
+<li><a href="https://arxiv.org/pdf/1611.07233.pdf" target="_blank" rel="noopener">2016arxiv: cas-cnn</a></li>
+</ul>
+<blockquote>
+<p>提出了一种的12层深度卷积网络具有分层跳过的卷积层连接和定义multi-scale MSE loss。训练集：50k images of the 120 ×120 pixel。</p>
+</blockquote>
+<ul>
+<li><a href="https://arxiv.org/pdf/1804.00256.pdf" target="_blank" rel="noopener">2018arxiv: One-Two-One Networks for Compression Artifacts Reduction in Remote Sensing</a></li>
+</ul>
+<blockquote>
+<p>应用于遥感图像的OTO网络：利用差分获得高频信息，利用求和来聚合低频信息。网络复杂度较高，其网络嵌套其他网络模型：densenet/resnet,共3路卷积网络相加/相减再处理。</p>
+</blockquote>
+<h3 id="CNN-Network-Optimization"><a href="#CNN-Network-Optimization" class="headerlink" title="CNN Network Optimization"></a><strong>CNN Network Optimization</strong></h3><ul>
+<li><a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=7797130" target="_blank" rel="noopener">2017TRANSACTIONS ON COMPUTATIONAL IMAGING: Loss Functions for Image Restoration With Neural Networks</a></li>
+</ul>
+<blockquote>
+<p>作者提出对于图像恢复算法的神经网络中，提出Multiscale SSIM loss,建议使用l1 loss+MSSSIMloss 能获得更好的恢复效果，能够有效去除块效应，尤其在天空等颜色变化较小的区域。</p>
+</blockquote>
+<h3 id="Video-Restoration"><a href="#Video-Restoration" class="headerlink" title="Video Restoration"></a><strong>Video Restoration</strong></h3><ul>
+<li>2018TRANSACTIONS ON CIRCUITS AND SYSTEMS FOR VIDEO TECHNOLOGY: <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=7563448" target="_blank" rel="noopener">Understanding and Removal of False Contour in HEVC Compressed Images</a></li>
+</ul>
+<blockquote>
+<p>应用传统方法去伪影</p>
+</blockquote>
+<h3 id="Image-Restoration-and-SR"><a href="#Image-Restoration-and-SR" class="headerlink" title="Image Restoration and SR"></a><strong>Image Restoration and SR</strong></h3><ul>
+<li><p>Underwater Image Restoration Based on Image Blurriness and Light Absorption</p>
+</li>
+<li><p><a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=7839189" target="_blank" rel="noopener">2017TIP：Beyond a Gaussian Denoiser: Residual Learning of Deep CNN for Image Denoising</a> </p>
+</li>
+<li><p><a href="https://github.com/cszn/DnCNN/blob/master/TrainingCodes/DnCNN_TrainingCodes_v1.0/README.txt" target="_blank" rel="noopener">code</a></p>
+</li>
+<li><a href="https://github.com/crisb-DUT/DnCNN-tensorflow" target="_blank" rel="noopener">code-tensorflow</a></li>
+</ul>
+<blockquote>
+<p>作者介绍该网络可以有效去噪、去压缩失真、超分辨率。该网络利用20层conv-BN-RELU层输出残差，计算残差后与原图相加得到恢复图像.<br>128×8,000 image patch (the size is 50 × 50) pairs for training。 denoise、SR、AR效果均比经典算法psnr明显提升；计算时间(GPU):512x512-0.06S;1024X1024-0.235S</p>
+</blockquote>
+<ul>
+<li><p><a href="https://arxiv.org/pdf/1806.03275.pdf" target="_blank" rel="noopener">2018icip：DUAL-DOMAIN MULTI-SCALE CONVOLUTIONAL NEURAL NETWORK FOR COMPRESSION ARTIFACTS REMOVAL</a> </p>
+</li>
+<li><p><a href="https://i.buriedjet.com/projects/DMCNN/" target="_blank" rel="noopener">Project Page</a></p>
+</li>
+</ul>
+<blockquote>
+<p>主观效果比arcnn/DNCNN/DDCN/TNRD要好，但网络较复杂，未有时间复杂度的对比。</p>
+</blockquote>
+<ul>
+<li><a href="http://openaccess.thecvf.com/content_cvpr_2017_workshops/w12/papers/Bae_Beyond_Deep_Residual_CVPR_2017_paper.pdf" target="_blank" rel="noopener">2017cvpr: Beyond Deep Residual Learning for Image Restoration: Persistent Homology-Guided Manifold Simplification</a></li>
+</ul>
+<blockquote>
+<p>应用于图像去噪/图像超分辨率</p>
+</blockquote>
+<ul>
+<li><a href="https://blog.csdn.net/szfhy/article/details/80519563" target="_blank" rel="noopener">从SRCNN到EDSR，总结深度学习端到端超分辨率方法发展历程</a></li>
+<li><p><a href="http://openaccess.thecvf.com/content_cvpr_2017/papers/Tai_Image_Super-Resolution_via_CVPR_2017_paper.pdf" target="_blank" rel="noopener">DRRN: Image Super-Resolution via Deep Recursive Residual Network, CVPR2017</a></p>
+</li>
+<li><p><a href="https://github.com/tyshiwo/DRRN_CVPR17" target="_blank" rel="noopener">code</a></p>
+</li>
+</ul>
+<blockquote>
+<p>选用的是1个递归块和25个残差单元，深度为52层的网络结构。是通过对之前已有的ResNet等结构进行调整，采取更深的网络结构得到结果的提升。</p>
+</blockquote>
+<ul>
+<li><a href="https://arxiv.org/abs/1704.03915" target="_blank" rel="noopener">LapSRN: Deep Laplacian Pyramid Networks for Fast and Accurate Super-Resolution, CVPR2017</a></li>
+<li><p><a href="https://github.com/zjuela/LapSRN-tensorflow" target="_blank" rel="noopener">code</a></p>
+</li>
+<li><p><a href="https://arxiv.org/abs/1609.04802" target="_blank" rel="noopener">SRGAN: Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network, CVPR2017</a></p>
+</li>
+</ul>
+<p>Code:</p>
+<p>github(tensorflow): <a href="https://github.com/zsdonghao/SRGAN" target="_blank" rel="noopener">https://github.com/zsdonghao/SRGAN</a><br>github(tensorflow): <a href="https://github.com/buriburisuri/SRGAN" target="_blank" rel="noopener">https://github.com/buriburisuri/SRGAN</a><br>github(torch): <a href="https://github.com/junhocho/SRGAN" target="_blank" rel="noopener">https://github.com/junhocho/SRGAN</a><br>github(caffe): <a href="https://github.com/ShenghaiRong/caffe_srgan" target="_blank" rel="noopener">https://github.com/ShenghaiRong/caffe_srgan</a><br>github(tensorflow): <a href="https://github.com/brade31919/SRGAN-tensorflow" target="_blank" rel="noopener">https://github.com/brade31919/SRGAN-tensorflow</a></p>
+<p><a href="https://github.com/JustinhoCHN/SRGAN_Wasserstein" target="_blank" rel="noopener">SRGAN+WGAN</a></p>
+<ul>
+<li><a href="https://arxiv.org/abs/1707.02921" target="_blank" rel="noopener">EDSR: Enhanced Deep Residual Networks for Single Image Super-Resolution, CVPR2017</a> </li>
+</ul>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/08/06/tensorflow-c-lib/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">TensorFlow C++ Lib</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 simshang
+			<a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia Theme</a>
+		</div>
+      	<div class="footer-right">
+			<a href="https://www.google.com/chrome/browser/desktop/index.html" target="_blank">Chrome Recommended </a>
+		</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<div id="totop" style="position:fixed;bottom:85px;right:-5px;cursor: pointer;">
+    <a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="/js/totop.js"></script>
+
+  </div>
+</body>
+</html>
