@@ -14,7 +14,7 @@
 <meta property="og:site_name" content="简说">
 <meta property="og:description" content="在Mac平台下编译caffe并编译caffe的Python接口, 添加到环境变量中.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-25T13:14:28.450Z">
+<meta property="og:updated_time" content="2018-10-26T02:22:25.933Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Caffe on Mac">
 <meta name="twitter:description" content="在Mac平台下编译caffe并编译caffe的Python接口, 添加到环境变量中.">
@@ -222,7 +222,7 @@
         
         <div id="toc" class="toc-article">
             <strong class="toc-title">文章目录</strong>
-            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python环境"><span class="toc-text">Python环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Caffe环境"><span class="toc-text">Caffe环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Caffe编译"><span class="toc-text">Caffe编译</span></a></li></ol>
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Python环境"><span class="toc-text">Python环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#brew-指定版本"><span class="toc-text">brew 指定版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Caffe环境"><span class="toc-text">Caffe环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Caffe编译"><span class="toc-text">Caffe编译</span></a></li></ol>
         </div>
         
         <p>在Mac平台下编译caffe并编译caffe的Python接口, 添加到环境变量中.</p>
@@ -230,6 +230,13 @@
 <h3 id="Python环境"><a href="#Python环境" class="headerlink" title="Python环境"></a><strong>Python环境</strong></h3><p>在Mac下, Python的环境有很多, 系统自带的Python环境一般不要动, 有些依赖可能因为系统Python而Crash, 可以使用<code>brew install</code>来安装一个Python环境, 这个路径和系统路径不同, 我的本机路径是<code>/usr/local/Cellar/python@2/2.7.15_1/bin/python</code>, 可以用<code>which python</code>来查看当前Python环境.</p>
 <ul>
 <li><code>brew install python</code> : 安装Python</li>
+</ul>
+<h3 id="brew-指定版本"><a href="#brew-指定版本" class="headerlink" title="brew 指定版本"></a><strong>brew 指定版本</strong></h3><p>如果之前使用<code>brew install protobuf</code>安装过<code>protobuf</code>,需要先执行<code>brew unlink protobuf</code>来’解绑’protobuf</p>
+<ul>
+<li>查找可用的protobuf版本<code>brew search protobuf</code></li>
+<li>安装你需要的版本, 比如<code>brew install protobuf@3.1</code></li>
+<li><code>brew link protobuf@3.1</code>, 如果报错执行<code>brew link --overwrite --force protobuf@3.1</code></li>
+<li><code>protobuf -v</code>验证安装的protobuf版本</li>
 </ul>
 <h3 id="Caffe环境"><a href="#Caffe环境" class="headerlink" title="Caffe环境"></a><strong>Caffe环境</strong></h3><p>在Mac下我们是用Cmake来构建Caffe的, 保证cmake安装正确:</p>
 <ul>
